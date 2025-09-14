@@ -30,3 +30,32 @@ body {
     padding: 60px 40px;
   }
 }
+
+/* Page Container */
+.pageContainer {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.pageTitle {
+  font-size: 28px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.cardsContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 480px) {
+  .cardsContainer {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}

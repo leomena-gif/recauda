@@ -1,0 +1,155 @@
+.card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  flex: 0 0 calc(50% - 12px);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Status Tags */
+.statusTags {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.tagOrange {
+  background-color: #FF9500;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+}
+
+.tagRed {
+  background-color: #FF3B30;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+  height: 24px;
+  display: inline-flex;
+  align-items: center;
+}
+
+/* Event Title */
+.eventTitle {
+  font-size: 20px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 20px;
+  line-height: 1.3;
+}
+
+/* Details Rows */
+.detailsRow {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.detailsRow:last-of-type {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.label {
+  font-size: 14px;
+  color: #666;
+  font-weight: 400;
+}
+
+.value {
+  font-size: 16px;
+  color: #000;
+  font-weight: bold;
+}
+
+/* Progress Bar */
+.progressContainer {
+  margin: 20px 0;
+}
+
+.progressBar {
+  background-color: #f0f0f0;
+  border-radius: 20px;
+  height: 30px;
+  position: relative;
+  overflow: hidden;
+}
+
+.progressIndicator {
+  background-color: #007AFF;
+  border-radius: 20px;
+  height: 100%;
+  width: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.progressText {
+  color: white;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Action Button */
+.actionButton {
+  background-color: #007AFF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
+}
+
+.actionButton:hover {
+  background-color: #0056CC;
+}
+
+.actionButton:active {
+  transform: translateY(1px);
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+  .detailsRow {
+    flex-direction: column;
+    gap: 16px;
+  }
+  
+  .eventTitle {
+    font-size: 18px;
+  }
+  
+  .card {
+    padding: 16px;
+  }
+}
