@@ -98,8 +98,15 @@
   white-space: nowrap;
 }
 
-/* Action Button */
-.actionButton {
+/* Button Container */
+.buttonContainer {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+}
+
+.detailButton {
+  flex: 1;
   background-color: transparent;
   color: #007AFF;
   border: 2px solid #007AFF;
@@ -109,19 +116,35 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: auto;
 }
 
-.actionButton:hover {
+.detailButton:hover {
   background-color: #007AFF;
   color: white;
 }
 
-.actionButton:active {
+.detailButton:active {
+  transform: translateY(1px);
+}
+
+.addSellersButton {
+  flex: 1;
+  background-color: #007AFF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.addSellersButton:hover {
+  background-color: #0056CC;
+}
+
+.addSellersButton:active {
   transform: translateY(1px);
 }
 
@@ -138,5 +161,10 @@
   
   .card {
     padding: 16px;
+  }
+
+  .buttonContainer {
+    flex-direction: column;
+    gap: 12px;
   }
 }

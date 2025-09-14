@@ -2,12 +2,12 @@
   background: white;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  min-height: 400px;
+  padding: 20px;
+  flex: 0 0 calc(50% - 12px);
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto;
-  max-width: 800px;
+  min-height: 400px;
 }
 
 .emptyState {

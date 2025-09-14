@@ -1,0 +1,85 @@
+.container {
+  display: flex;
+  gap: 16px;
+  margin-top: 32px;
+}
+
+.backButton {
+  flex: 1;
+  background-color: white;
+  color: #007AFF;
+  border: 2px solid #007AFF;
+  border-radius: 8px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.backButton:hover {
+  background-color: #007AFF;
+  color: white;
+}
+
+.backButton:active {
+  transform: translateY(1px);
+}
+
+.continueButton {
+  flex: 1;
+  background-color: #007AFF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.continueButton:hover {
+  background-color: #0056CC;
+}
+
+.continueButton:active {
+  transform: translateY(1px);
+}
+
+.continueButton:disabled {
+  background: #CCCCCC;
+  cursor: not-allowed;
+}
+
+.continueButton.loading {
+  background: #007AFF;
+  cursor: wait;
+}
+
+.loadingContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid white;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.backButton:disabled {
+  background: #F2F2F7;
+  color: #C7C7CC;
+  cursor: not-allowed;
+}
+

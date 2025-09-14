@@ -1,11 +1,14 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './BlockedEventCard.module.css';
 
 const BlockedEventCard: React.FC = () => {
+  const router = useRouter();
+  
   const handleAddSellers = () => {
-    console.log('Agregar vendedores clicked');
+    router.push('/add-seller');
   };
 
   return (

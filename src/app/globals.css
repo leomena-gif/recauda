@@ -33,6 +33,21 @@ body {
   text-align: left;
 }
 
+.cardsContainer {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 24px;
+  align-items: stretch;
+}
+
+@media (max-width: 480px) {
+  .cardsContainer {
+    flex-direction: column;
+    flex-wrap: nowrap;
+  }
+}
+
 /* Responsive Design */
 @media (min-width: 768px) {
   .mainContent {

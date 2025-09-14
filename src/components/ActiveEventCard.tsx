@@ -1,13 +1,19 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './ActiveEventCard.module.css';
 
 const ActiveEventCard: React.FC = () => {
+  const router = useRouter();
+  
   const handleGoToDetail = () => {
-    console.log('Ir al detalle clicked');
+    router.push('/add-seller');
   };
 
+  const handleAddSellers = () => {
+    router.push('/add-seller');
+  };
   return (
     <div className={styles.card}>
       {/* Status Tag */}
@@ -55,10 +61,15 @@ const ActiveEventCard: React.FC = () => {
         </div>
       </div>
 
-      {/* Action Button */}
-      <button className={styles.actionButton} onClick={handleGoToDetail}>
-        Ir al detalle
-      </button>
+      {/* Action Buttons */}
+      <div className={styles.buttonContainer}>
+        <button className={styles.detailButton} onClick={handleGoToDetail}>
+          Ir al detalle
+        </button>
+        <button className={styles.addSellersButton} onClick={handleAddSellers}>
+          Agregar vendedores
+        </button>
+      </div>
     </div>
   );
 };
