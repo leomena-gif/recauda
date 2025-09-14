@@ -1,0 +1,18 @@
+/* Header */
+.header {
+  background: linear-gradient(90deg, #007AFF 0%, #34C759 100%);
+  color: white;
+  padding: 0;
+}
+
+.headerContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.appTitle {
+  font-size: 24px;
+  font-weight: bold;
+}
