@@ -8,11 +8,55 @@
 .headerContent {
   display: flex;
   align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.leftSection {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
   justify-content: center;
-  padding: 16px;
+}
+
+.hamburgerIcon {
+  font-size: 20px;
+  font-weight: bold;
 }
 
 .appTitle {
   font-size: 24px;
   font-weight: bold;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+}
+
+.userInfo {
+  text-align: right;
+}
+
+.greeting {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.role {
+  font-size: 14px;
+  opacity: 0.9;
+  margin-top: 2px;
 }
