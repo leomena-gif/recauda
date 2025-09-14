@@ -13,8 +13,8 @@
   margin-bottom: 16px;
 }
 
-.tagGreen {
-  background-color: #2A9D47;
+.tagGray {
+  background-color: #8E8E93;
   color: white;
   padding: 6px 12px;
   border-radius: 12px;
@@ -81,10 +81,10 @@
 }
 
 .progressIndicator {
-  background-color: #007AFF;
+  background-color: #34C759;
   border-radius: 20px;
   height: 100%;
-  width: 80%;
+  width: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -98,37 +98,8 @@
   white-space: nowrap;
 }
 
-/* Button Container */
-.buttonContainer {
-  display: flex;
-  gap: 12px;
-  margin-top: auto;
-}
-
-.detailButton {
-  flex: 1;
-  background-color: transparent;
-  color: #007AFF;
-  border: 2px solid #007AFF;
-  border-radius: 8px;
-  padding: 16px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.detailButton:hover {
-  background-color: #007AFF;
-  color: white;
-}
-
-.detailButton:active {
-  transform: translateY(1px);
-}
-
-.addSellersButton {
-  flex: 1;
+/* Action Button */
+.actionButton {
   background-color: #007AFF;
   color: white;
   border: none;
@@ -138,13 +109,18 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: auto;
 }
 
-.addSellersButton:hover {
+.actionButton:hover {
   background-color: #0056CC;
 }
 
-.addSellersButton:active {
+.actionButton:active {
   transform: translateY(1px);
 }
 
@@ -161,10 +137,5 @@
   
   .card {
     padding: 16px;
-  }
-
-  .buttonContainer {
-    flex-direction: column;
-    gap: 12px;
   }
 }

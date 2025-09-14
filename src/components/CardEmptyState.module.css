@@ -1,0 +1,49 @@
+.container {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  flex: 0 0 calc(50% - 12px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.emptyState {
+  text-align: center;
+  padding: 40px 20px;
+}
+
+.flagIcon {
+  font-size: 48px;
+  margin-bottom: 24px;
+  display: block;
+}
+
+.message {
+  font-size: 18px;
+  color: #333;
+  margin-bottom: 32px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+.createButton {
+  background-color: #007AFF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.createButton:hover {
+  background-color: #0056CC;
+}
+
+.createButton:active {
+  transform: translateY(1px);
+}

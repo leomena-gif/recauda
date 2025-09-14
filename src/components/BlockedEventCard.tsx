@@ -68,4 +68,7 @@ const BlockedEventCard: React.FC = () => {
 };
 
 export default BlockedEventCard;
+<<<<<<< HEAD
 
+=======
+>>>>>>> origin/main

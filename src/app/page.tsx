@@ -1,8 +1,9 @@
 import React from 'react';
 import Header from '@/components/Header';
-import ActiveEventCard from '@/components/ActiveEventCard';
 import BlockedEventCard from '@/components/BlockedEventCard';
-import EventsEmptyState from '@/components/EventsEmptyState';
+import ActiveEventCard from '@/components/ActiveEventCard';
+import CompletedEventCard from '@/components/CompletedEventCard';
+import CardEmptyState from '@/components/CardEmptyState';
 import './globals.css';
 
 export const metadata = {
@@ -20,7 +21,8 @@ export default function Home() {
           <div className="cardsContainer">
             <ActiveEventCard />
             <BlockedEventCard />
-            <EventsEmptyState />
+            <CompletedEventCard />
+            <CardEmptyState />
           </div>
         </div>
       </main>
