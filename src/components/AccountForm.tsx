@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './AccountForm.module.css';
 
 interface FormData {
@@ -23,6 +24,7 @@ const AccountForm: React.FC = () => {
   });
 
   const [errors, setErrors] = useState<FormErrors>({});
+  const router = useRouter();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -61,9 +63,10 @@ const AccountForm: React.FC = () => {
 
     setErrors(newErrors);
 
-    // If no errors, show success message
+    // If no errors, navigate to home
     if (Object.keys(newErrors).length === 0) {
-      alert('Formulario enviado correctamente');
+      // Simular creación exitosa de cuenta
+      router.push('/');
     }
   };
 
@@ -128,7 +131,7 @@ const AccountForm: React.FC = () => {
         </div>
 
         <button type="submit" className={styles.submitButton}>
-          Ingresar
+          Crear cuenta
         </button>
       </form>
     </div>
