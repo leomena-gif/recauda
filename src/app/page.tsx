@@ -1,5 +1,7 @@
 import React from 'react';
 import Header from '@/components/Header';
+import ActiveEventCard from '@/components/ActiveEventCard';
+import BlockedEventCard from '@/components/BlockedEventCard';
 import EventsEmptyState from '@/components/EventsEmptyState';
 import './globals.css';
 
@@ -15,7 +17,11 @@ export default function Home() {
       <main className="mainContent">
         <div className="pageContainer">
           <h1 className="pageTitle">Mis eventos</h1>
-          <EventsEmptyState />
+          <div className="cardsContainer">
+            <ActiveEventCard />
+            <BlockedEventCard />
+            <EventsEmptyState />
+          </div>
         </div>
       </main>
     </>

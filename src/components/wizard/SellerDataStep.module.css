@@ -1,0 +1,101 @@
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.formCard {
+  background: white;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 100%;
+}
+
+.fieldGroup {
+  margin-bottom: 24px;
+}
+
+.fieldGroup:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.input {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border: 2px solid #007AFF;
+  box-shadow: none;
+}
+
+.input:focus-visible {
+  outline: none;
+}
+
+.input::placeholder {
+  color: #999;
+  font-size: 16px;
+}
+
+.instruction {
+  font-size: 14px;
+  color: #8E8E93;
+  margin-top: 4px;
+}
+
+.error .label {
+  color: #FF3B30;
+}
+
+.error .input {
+  border-color: #FF3B30;
+}
+
+.error .instruction {
+  color: #FF3B30;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .formCard {
+    max-width: 100%;
+    padding: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formCard {
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+}

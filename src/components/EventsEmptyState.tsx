@@ -1,12 +1,14 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './EventsEmptyState.module.css';
 
 const EventsEmptyState: React.FC = () => {
+  const router = useRouter();
+  
   const handleCreateEvent = () => {
-    // Aquí se puede agregar la lógica para crear un evento
-    console.log('Crear evento clicked');
+    router.push('/add-seller');
   };
 
   return (
