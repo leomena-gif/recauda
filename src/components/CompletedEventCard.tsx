@@ -1,11 +1,14 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import styles from './CompletedEventCard.module.css';
 
 const CompletedEventCard: React.FC = () => {
+  const router = useRouter();
+  
   const handleGoToDetail = () => {
-    console.log('Ir al detalle clicked');
+    router.push('/event-detail');
   };
 
   return (

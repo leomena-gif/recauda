@@ -1,7 +1,7 @@
 .card {
   background: white;
   border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e0e0e0;
   padding: 20px;
   flex: 0 0 calc(50% - 12px);
   display: flex;
