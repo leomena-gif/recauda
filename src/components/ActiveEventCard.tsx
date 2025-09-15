@@ -8,7 +8,7 @@ const ActiveEventCard: React.FC = () => {
   const router = useRouter();
   
   const handleGoToDetail = () => {
-    router.push('/add-seller');
+    router.push('/event-detail');
   };
 
   const handleAddSellers = () => {
