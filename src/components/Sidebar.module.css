@@ -94,56 +94,12 @@
 /* Responsive Design */
 @media (max-width: 768px) {
   .sidebar {
-    width: 100%;
-    height: auto;
-    position: relative;
-    border-right: none;
-    border-bottom: 1px solid #e0e0e0;
-  }
-
-  .sidebarHeader {
-    padding: 16px 20px;
-  }
-
-  .sidebarTitle {
-    font-size: 18px;
-  }
-
-  .sidebarNav {
-    padding: 12px 0;
-  }
-
-  .sidebarButton {
-    padding: 12px 20px;
-    font-size: 14px;
-  }
-
-  .sidebarIcon {
-    width: 18px;
-    height: 18px;
+    display: none; /* Hide sidebar on mobile */
   }
 }
 
 @media (max-width: 480px) {
   .sidebar {
-    width: 100%;
-  }
-
-  .sidebarHeader {
-    padding: 12px 16px;
-  }
-
-  .sidebarTitle {
-    font-size: 16px;
-  }
-
-  .sidebarButton {
-    padding: 10px 16px;
-    font-size: 13px;
-  }
-
-  .sidebarIcon {
-    width: 16px;
-    height: 16px;
+    display: none; /* Hide sidebar on mobile */
   }
 }

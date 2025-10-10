@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Header from '@/components/Header';
+import Sidebar from '@/components/Sidebar';
 import ProgressIndicator from './ProgressIndicator';
 import ActionButtons from './ActionButtons';
 import SellerDataStep, { SellerDataStepRef } from './SellerDataStep';
@@ -148,7 +148,7 @@ const AddSellerWizard: React.FC = () => {
   if (showSuccess) {
     return (
       <div className={styles.wizardContainer}>
-        <Header />
+        <Sidebar />
         <main className={styles.mainContent}>
           <div className={styles.wizardContent}>
             <SuccessScreen onAddAnother={handleAddAnother} />
@@ -160,7 +160,7 @@ const AddSellerWizard: React.FC = () => {
 
   return (
     <div className={styles.wizardContainer}>
-      <Header />
+      <Sidebar />
       <main className={styles.mainContent}>
         <div className={styles.wizardContent}>
           <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />

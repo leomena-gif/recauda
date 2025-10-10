@@ -65,6 +65,7 @@ body {
   .mainContent {
     margin-left: 0;
     padding: 16px;
+    padding-top: 80px; /* Offset for mobile header (64px + 16px) */
   }
 }
 
