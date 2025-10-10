@@ -27,64 +27,28 @@ body {
   min-height: 100vh;
 }
 
-/* Page Container */
-.pageContainer {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.pageTitle {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 24px;
-  text-align: left;
-}
-
-.cardsContainer {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 24px;
-  align-items: stretch;
-}
-
-@media (max-width: 480px) {
-  .cardsContainer {
-    flex-direction: column;
-    flex-wrap: nowrap;
-  }
-}
-
-/* Responsive Design */
+/* Mobile Layout */
 @media (max-width: 768px) {
-  .appLayout {
-    flex-direction: column;
-  }
-
   .mainContent {
     margin-left: 0;
-    padding: 16px;
-    padding-top: 80px; /* Offset for mobile header (64px + 16px) */
+    padding: 16px 12px;
+    padding-top: 80px; /* Space for mobile header */
   }
-}
-
-@media (min-width: 768px) {
-  .mainContent {
-    padding: 40px 24px;
+  
+  .pageContainer {
+    padding: 0 16px;
   }
-}
-
-@media (min-width: 1024px) {
-  .mainContent {
-    padding: 60px 40px;
+  
+  .pageTitle {
+    font-size: 24px;
+    margin-bottom: 16px;
   }
 }
 
 /* Page Container */
 .pageContainer {
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%;
+  padding: 0 20px;
 }
 
 .pageTitle {
@@ -108,4 +72,11 @@ body {
     flex-direction: column;
     flex-wrap: nowrap;
   }
+}
+
+/* Force opaque tooltip - Global override */
+.checkboxTooltip {
+  background-color: #000000 !important;
+  color: #FFFFFF !important;
+  border: none !important;
 }

@@ -22,7 +22,7 @@
   margin-top: 40px;
 }
 
-.celebrationIcon {
+.successIcon {
   font-size: 80px;
   animation: bounce 1s ease-in-out;
 }
@@ -46,6 +46,13 @@
   margin-bottom: 48px;
   line-height: 1.3;
   text-align: center;
+}
+
+.description {
+  font-size: 16px;
+  color: #8E8E93;
+  line-height: 1.5;
+  margin-bottom: 32px;
 }
 
 .actions {
@@ -104,10 +111,6 @@
   .iconContainer {
     margin-top: 20px;
     margin-bottom: 17px;
-  }
-  
-  .celebrationIcon {
-    font-size: 64px;
   }
   
   .title {

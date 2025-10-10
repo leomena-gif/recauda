@@ -1,0 +1,1692 @@
+/* Header Section */
+.header {
+  margin-bottom: 32px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.titleSection {
+  flex: 1;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+}
+
+.addSellerButton {
+  background: transparent;
+  color: #007AFF;
+  border: 2px solid #007AFF;
+  border-radius: 8px;
+  padding: 12px 20px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.addSellerButton:hover {
+  background-color: #007AFF;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.addSellerButton:active {
+  transform: translateY(0);
+}
+
+.subtitle {
+  color: #6B7280;
+  font-size: 16px;
+  margin: 16px 0 0 0;
+  font-weight: 400;
+}
+
+/* Action Bar */
+.actionBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 16px 24px;
+  margin-bottom: 24px;
+  gap: 20px;
+}
+
+.leftSection {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  flex: 1;
+}
+
+.rightSection {
+  display: flex;
+  align-items: center;
+}
+
+.assignButton {
+  background-color: #007AFF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.2s ease;
+}
+
+.assignButton:hover {
+  background-color: #0056CC;
+}
+
+.assignButton:active {
+  transform: translateY(1px);
+}
+
+.searchContainer {
+  position: relative;
+  flex: 1;
+}
+
+.searchIcon {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9CA3AF;
+  pointer-events: none;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 12px 12px 12px 44px;
+  border: 2px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+  transition: all 0.2s ease;
+}
+
+.searchInput:focus {
+  outline: none;
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.statusFilter {
+  min-width: 180px;
+}
+
+.filterSelect {
+  width: 100%;
+  padding: 12px 16px;
+  border: 2px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 16px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filterSelect:focus {
+  outline: none;
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+/* Table Container */
+.tableContainer {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #E5E7EB;
+  overflow: visible;
+  position: relative;
+  z-index: 1;
+}
+
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+}
+
+.table th {
+  background: #F9FAFB;
+  padding: 16px 20px;
+  text-align: left;
+  font-weight: 600;
+  color: #374151;
+  border-bottom: 1px solid #E5E7EB;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.table th:nth-child(1) {
+  width: 60px; /* Checkbox column */
+  text-align: center;
+}
+
+.table th:nth-child(2) {
+  width: 25%; /* Vendedor name */
+}
+
+.table th:nth-child(3) {
+  width: 20%; /* Teléfono */
+}
+
+.table th:nth-child(4) {
+  width: 15%; /* Estado */
+}
+
+.table th:nth-child(5) {
+  width: 20%; /* Última Actividad */
+}
+
+.table th:nth-child(6) {
+  width: 10%; /* Acciones */
+  text-align: center;
+}
+
+.checkboxColumn {
+  width: 60px;
+  text-align: center;
+}
+
+.checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #007AFF;
+  cursor: pointer;
+}
+
+.checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+/* Checkbox Wrapper and Tooltip */
+.checkboxWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.checkboxTooltip {
+  position: fixed;
+  background-color: #000000;
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 600;
+  padding: 12px 16px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.2s ease;
+  pointer-events: none;
+  z-index: 999999;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.8);
+  min-width: 280px;
+  text-align: center;
+  line-height: 1.4;
+  display: none;
+  border: none;
+  outline: none;
+}
+
+.checkboxWrapper:hover .checkboxTooltip {
+  opacity: 1 !important;
+  visibility: visible !important;
+  display: block !important;
+}
+
+.tableRow {
+  border-bottom: 1px solid #F3F4F6;
+  transition: all 0.2s ease;
+}
+
+.tableRow:hover {
+  background: #F8FAFC;
+}
+
+.tableRow:last-child {
+  border-bottom: none;
+}
+
+.tableRowInactive {
+  opacity: 0.6;
+  color: #9CA3AF;
+}
+
+.tableRowInactive:hover {
+  background-color: #FEF2F2;
+}
+
+.tableRowInactive .sellerName,
+.tableRowInactive .phone,
+.tableRowInactive .lastActivity {
+  color: #9CA3AF;
+}
+
+.tableRow td {
+  padding: 16px 20px;
+  vertical-align: middle;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+
+.tableRow td:nth-child(1) {
+  text-align: center;
+  padding: 16px 10px;
+}
+
+.tableRow td:nth-child(2) {
+  padding: 16px 15px 16px 20px;
+}
+
+.tableRow td:nth-child(3) {
+  padding: 16px 15px;
+}
+
+.tableRow td:nth-child(4) {
+  padding: 16px 10px;
+}
+
+.tableRow td:nth-child(5) {
+  padding: 16px 15px;
+}
+
+.tableRow td:nth-child(6) {
+  text-align: center;
+  padding: 16px 10px;
+}
+
+/* Seller Info */
+.sellerInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.sellerName {
+  font-weight: 600;
+  color: #111827;
+  font-size: 16px;
+}
+
+/* Phone */
+.phone {
+  font-weight: 500;
+  color: #374151;
+  font-size: 15px;
+}
+
+/* Status Badge - Removed, using switch instead */
+
+/* Mobile Cards View */
+.mobileCardsContainer {
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.mobileCard {
+  background: white;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.mobileCard:hover {
+  border-color: #007AFF;
+}
+
+.mobileEditButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: #F3F4F6;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #6B7280;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  z-index: 1;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.mobileEditButton:hover {
+  background: #E5E7EB;
+  color: #007AFF;
+}
+
+.mobileEditButton:active {
+  transform: scale(0.95);
+}
+
+.mobileCardInactive {
+  opacity: 0.6;
+}
+
+.mobileCardHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.mobileCheckboxWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-top: 2px;
+}
+
+.mobileCheckbox {
+  width: 20px;
+  height: 20px;
+  accent-color: #007AFF;
+  cursor: pointer;
+}
+
+.mobileCheckbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.mobileSellerInfo {
+  flex: 1;
+}
+
+.mobileSellerName {
+  font-weight: 600;
+  color: #111827;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.mobilePhone {
+  font-weight: 500;
+  color: #6B7280;
+  font-size: 14px;
+}
+
+.mobileCardFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 12px;
+  border-top: 1px solid #F3F4F6;
+}
+
+.mobileLastActivity {
+  color: #6B7280;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.mobileSwitchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Last Activity */
+.lastActivity {
+  color: #374151;
+  font-weight: 500;
+  font-size: 15px;
+}
+
+/* Actions Column */
+.actionsColumn {
+  width: 10%;
+  text-align: center;
+  min-width: 90px;
+}
+
+/* Edit Button - Tertiary style (appears on hover) */
+.editButton {
+  background: none;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #6B7280;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  opacity: 0;
+  visibility: hidden;
+  font-size: 14px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tableRow:hover .editButton {
+  opacity: 1;
+  visibility: visible;
+}
+
+.editButton:hover {
+  background: #F3F4F6;
+  color: #007AFF;
+}
+
+.editButton:active {
+  transform: scale(0.95);
+}
+
+/* Toggle Switch */
+.switchWrapper {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.switchContainer {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.switchInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.switchSlider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #D1D5DB;
+  border-radius: 24px;
+  transition: all 0.3s ease;
+}
+
+.switchSlider::before {
+  content: '';
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.switchInput:checked + .switchSlider {
+  background-color: #10B981;
+}
+
+.switchInput:not(:checked) + .switchSlider {
+  background-color: #EF4444;
+}
+
+.switchInput:checked + .switchSlider::before {
+  transform: translateX(20px);
+}
+
+.switchContainer:hover .switchSlider {
+  opacity: 0.9;
+}
+
+.switchInput:checked:focus + .switchSlider {
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+}
+
+.switchInput:not(:checked):focus + .switchSlider {
+  box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.2);
+}
+
+.switchLabel {
+  font-size: 15px;
+  font-weight: 700;
+  white-space: nowrap;
+  user-select: none;
+}
+
+.switchLabelActive {
+  color: #10B981;
+  font-weight: 700;
+}
+
+.switchLabelInactive {
+  color: #9CA3AF;
+  font-weight: 700;
+}
+
+/* Empty State */
+.emptyState {
+  text-align: center;
+  padding: 60px 20px;
+  color: #6B7280;
+}
+
+.emptyState svg {
+  margin-bottom: 16px;
+}
+
+.emptyState h3 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #374151;
+}
+
+.emptyState p {
+  font-size: 14px;
+  margin: 0;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  border: 1px solid #e0e0e0;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #6B7280;
+  transition: all 0.2s ease;
+}
+
+.closeButton:hover {
+  background: #F3F4F6;
+  color: #374151;
+}
+
+.modalContent {
+  padding: 24px;
+}
+
+.modalContent p {
+  margin: 0 0 24px 0;
+  color: #6B7280;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+.assignmentOptions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.optionButton {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 20px;
+  border: 2px solid #E5E7EB;
+  border-radius: 12px;
+  background: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-align: left;
+  width: 100%;
+}
+
+.optionButton:hover {
+  border-color: #007AFF;
+  background: #F8FAFF;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.15);
+}
+
+.optionIcon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: #F3F4F6;
+  border-radius: 12px;
+  color: #007AFF;
+  flex-shrink: 0;
+}
+
+.optionButton:hover .optionIcon {
+  background: #E3F2FD;
+}
+
+.optionContent h3 {
+  margin: 0 0 4px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.optionContent p {
+  margin: 0;
+  font-size: 14px;
+  color: #6B7280;
+  line-height: 1.4;
+}
+
+/* Edit Modal Styles - Based on SellerDataStep */
+.editModal {
+  background: white;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid #e0e0e0;
+}
+
+.editModalContent {
+  padding: 24px;
+}
+
+.editFormCard {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  padding: 24px;
+  width: 100%;
+  margin-bottom: 24px;
+}
+
+.editFieldGroup {
+  margin-bottom: 24px;
+}
+
+.editFieldGroup:last-of-type {
+  margin-bottom: 0;
+}
+
+.editLabel {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.editInput {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.editInput:focus {
+  outline: none;
+  border: 2px solid #007AFF;
+  box-shadow: none;
+}
+
+.editInput::placeholder {
+  color: #999;
+  font-size: 16px;
+}
+
+.editInstruction {
+  font-size: 14px;
+  color: #8E8E93;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.editError .editLabel {
+  color: #FF3B30;
+}
+
+.editError .editInput {
+  border-color: #FF3B30;
+}
+
+.editError .editInstruction {
+  color: #FF3B30;
+}
+
+.editErrorMessage {
+  font-size: 14px;
+  color: #FF3B30;
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.editModalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.cancelButton {
+  background: #F3F4F6;
+  color: #374151;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cancelButton:hover {
+  background: #E5E7EB;
+}
+
+.saveButton {
+  background-color: #007AFF;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.saveButton:hover {
+  background-color: #0056CC;
+}
+
+.saveButton:active {
+  transform: translateY(1px);
+}
+
+/* Success Snackbar */
+.snackbar {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #10B981;
+  color: white;
+  padding: 14px 24px;
+  border-radius: 8px;
+  border: 1px solid #059669;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 9999;
+  font-size: 15px;
+  font-weight: 600;
+  animation: slideUp 0.3s ease-out;
+}
+
+.snackbar svg {
+  flex-shrink: 0;
+}
+
+.snackbarClosing {
+  animation: slideDown 0.3s ease-out forwards;
+}
+
+/* Error Snackbar */
+.snackbarError {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #EF4444;
+  color: white;
+  padding: 14px 24px;
+  border-radius: 8px;
+  border: 1px solid #DC2626;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  z-index: 9999;
+  font-size: 15px;
+  font-weight: 600;
+  animation: slideUp 0.3s ease-out;
+  max-width: 90vw;
+}
+
+.snackbarError svg {
+  flex-shrink: 0;
+}
+
+@keyframes slideUp {
+  from {
+    bottom: -60px;
+    opacity: 0;
+  }
+  to {
+    bottom: 32px;
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    bottom: 32px;
+    opacity: 1;
+  }
+  to {
+    bottom: -60px;
+    opacity: 0;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .header {
+    margin-bottom: 20px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+  }
+
+  .headerActions {
+    justify-content: flex-start;
+  }
+
+  .addSellerButton {
+    padding: 14px 20px;
+    font-size: 16px;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    margin-top: 6px;
+  }
+
+  .actionBar {
+    flex-direction: column;
+    gap: 12px;
+    padding: 16px;
+    margin-bottom: 20px;
+    border-radius: 16px;
+  }
+
+  .leftSection {
+    flex-direction: column;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .searchContainer {
+    max-width: none;
+  }
+
+  .searchInput {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 14px 12px 14px 44px;
+    border-radius: 12px;
+  }
+
+  .statusFilter {
+    min-width: auto;
+    width: 100%;
+  }
+
+  .filterSelect {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 14px 16px;
+    border-radius: 12px;
+  }
+
+  .rightSection {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .assignButton {
+    width: 100%;
+    justify-content: center;
+    padding: 16px 20px;
+    font-size: 16px;
+    border-radius: 12px;
+    font-weight: 600;
+  }
+
+  .tableContainer {
+    overflow-x: auto;
+    overflow-y: visible;
+    border-radius: 16px;
+  }
+
+  .table {
+    min-width: 700px;
+  }
+
+  .table th,
+  .table td {
+    padding: 12px 16px;
+  }
+
+  /* Adjust column widths for tablet */
+  .table th:nth-child(1) {
+    width: 50px;
+  }
+
+  .table th:nth-child(2) {
+    width: 28%;
+  }
+
+  .table th:nth-child(3) {
+    width: 22%;
+  }
+
+  .table th:nth-child(4) {
+    width: 15%;
+  }
+
+  .table th:nth-child(5) {
+    width: 15%;
+  }
+
+  .table th:nth-child(6) {
+    width: 10%;
+  }
+
+  .tableRow td:nth-child(1) {
+    padding: 12px 8px;
+  }
+
+  .tableRow td:nth-child(2) {
+    padding: 12px 12px 12px 16px;
+  }
+
+  .tableRow td:nth-child(3) {
+    padding: 12px 12px;
+  }
+
+  .tableRow td:nth-child(4) {
+    padding: 12px 8px;
+  }
+
+  .tableRow td:nth-child(5) {
+    padding: 12px 12px;
+  }
+
+  .tableRow td:nth-child(6) {
+    padding: 12px 8px;
+  }
+
+  .switchLabel {
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  .modal {
+    margin: 20px;
+    max-width: calc(100vw - 40px);
+    border-radius: 20px;
+  }
+
+  .modalContent {
+    padding: 20px;
+  }
+
+  .optionButton {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .optionIcon {
+    width: 40px;
+    height: 40px;
+  }
+
+  /* Edit Modal Responsive */
+  .editModal {
+    margin: 20px;
+    max-width: calc(100vw - 40px);
+    border-radius: 20px;
+  }
+
+  .editModalContent {
+    padding: 20px;
+  }
+
+  .editFormCard {
+    padding: 20px;
+  }
+
+  .editModalActions {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .cancelButton,
+  .saveButton {
+    width: 100%;
+    padding: 16px 20px;
+    border-radius: 12px;
+  }
+
+  /* Snackbar Responsive */
+  .snackbar,
+  .snackbarError {
+    bottom: 24px;
+    left: 20px;
+    right: 20px;
+    transform: none;
+    max-width: calc(100vw - 40px);
+    font-size: 14px;
+    padding: 12px 20px;
+  }
+
+  @keyframes slideUp {
+    from {
+      bottom: -60px;
+      opacity: 0;
+    }
+    to {
+      bottom: 24px;
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      bottom: 24px;
+      opacity: 1;
+    }
+    to {
+      bottom: -60px;
+      opacity: 0;
+    }
+  }
+}
+
+@media (max-width: 640px) {
+  .header {
+    margin-bottom: 16px;
+  }
+
+  .addSellerButton {
+    padding: 16px 20px;
+    font-size: 16px;
+  }
+
+  /* Hide table, show mobile cards */
+  .tableContainer {
+    display: none;
+  }
+
+  .mobileCardsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 0 4px;
+  }
+
+  .actionBar {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 16px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .searchInput {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 16px 12px 16px 44px;
+    border-radius: 12px;
+  }
+
+  .filterSelect {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  /* Mobile Cards - Event Detail Style */
+  .mobileCard {
+    background: white;
+    border: 1px solid #f0f0f0;
+    border-radius: 0;
+    padding: 0;
+    box-shadow: none;
+    transition: all 0.2s ease;
+    position: relative;
+    cursor: pointer;
+    min-height: 60px;
+  }
+
+  .mobileCard:hover {
+    background-color: #f0f8ff;
+    border-left: 4px solid #007AFF;
+    padding-left: 0;
+  }
+
+  .mobileCardInactive {
+    opacity: 0.6;
+    background: #fafafa;
+    color: #9CA3AF;
+  }
+
+  .mobileCardInactive:hover {
+    background-color: #f5f5f5;
+  }
+
+  .mobileCardInactive .mobileSellerName,
+  .mobileCardInactive .mobilePhone,
+  .mobileCardInactive .mobileLastActivity {
+    color: #9CA3AF;
+  }
+
+  /* Grid Layout - 2 rows like event detail */
+  .mobileCardHeader {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: auto auto;
+    gap: 4px 12px;
+    padding: 12px 16px;
+    min-height: 60px;
+    align-items: center;
+  }
+
+  .mobileCheckboxWrapper {
+    position: absolute;
+    left: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 24px;
+    height: 24px;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+  }
+
+  .mobileCheckboxWrapper:hover {
+    transform: translateY(-50%) scale(1.1);
+  }
+
+  .mobileCheckbox {
+    width: 18px;
+    height: 18px;
+    accent-color: #007AFF;
+    cursor: pointer;
+  }
+
+  .mobileCheckbox:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  .mobileSellerInfo {
+    grid-column: 1;
+    grid-row: 1;
+    padding-left: 32px;
+    display: flex;
+    align-items: center;
+  }
+
+  .mobileSellerName {
+    font-weight: 600;
+    color: #000;
+    font-size: 15px;
+    line-height: 1.3;
+    margin: 0;
+  }
+
+  .mobilePhone {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: 13px;
+    color: #666;
+    font-weight: 400;
+    padding-left: 32px;
+    margin: 0;
+  }
+
+  .mobileCardFooter {
+    grid-column: 2;
+    grid-row: 1;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0;
+  }
+
+  .mobileLastActivity {
+    grid-column: 2;
+    grid-row: 2;
+    color: #666;
+    font-size: 13px;
+    font-weight: 400;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding: 0;
+    margin: 0;
+  }
+
+  .mobileSwitchWrapper {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 12px;
+  }
+
+  /* Clean Switch - Event Detail Style */
+  .switchContainer {
+    width: 44px;
+    height: 24px;
+    position: relative;
+  }
+
+  .switchSlider {
+    border-radius: 24px;
+    background-color: #f0f0f0;
+    border: none;
+    box-shadow: none;
+  }
+
+  .switchSlider::before {
+    height: 18px;
+    width: 18px;
+    left: 3px;
+    bottom: 3px;
+    background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    border: none;
+  }
+
+  .switchInput:checked + .switchSlider {
+    background-color: #10B981;
+  }
+
+  .switchInput:not(:checked) + .switchSlider {
+    background-color: #EF4444;
+  }
+
+  .switchInput:checked + .switchSlider::before {
+    transform: translateX(20px);
+    background-color: white;
+  }
+
+  .switchInput:not(:checked) + .switchSlider::before {
+    background-color: white;
+  }
+
+  .switchLabel {
+    font-size: 14px;
+    font-weight: 600;
+    color: #007AFF;
+    background-color: rgba(0, 122, 255, 0.1);
+    padding: 4px 8px;
+    border-radius: 12px;
+    min-width: 45px;
+    text-align: center;
+  }
+
+  .switchLabelActive {
+    color: #007AFF;
+    background-color: rgba(0, 122, 255, 0.1);
+  }
+
+  .switchLabelInactive {
+    color: #9CA3AF;
+    background-color: rgba(156, 163, 175, 0.1);
+  }
+}
+
+@media (max-width: 480px) {
+  .actionBar {
+    padding: 16px;
+    margin-bottom: 16px;
+    border-radius: 16px;
+  }
+
+  .assignButton {
+    padding: 16px 20px;
+    font-size: 16px;
+    border-radius: 12px;
+  }
+
+  .searchInput {
+    padding: 16px 12px 16px 44px;
+    font-size: 16px;
+  }
+
+  .filterSelect {
+    padding: 16px;
+    font-size: 16px;
+  }
+
+  /* Mobile Cards for Small Screens - Event Detail Style */
+  .mobileCard {
+    min-height: 56px;
+  }
+
+  .mobileCardHeader {
+    padding: 10px 12px;
+    gap: 4px 10px;
+    min-height: 56px;
+  }
+
+  .mobileCheckboxWrapper {
+    left: 6px;
+    width: 20px;
+    height: 20px;
+  }
+
+  .mobileCheckbox {
+    width: 16px;
+    height: 16px;
+  }
+
+  .mobileSellerInfo {
+    padding-left: 28px;
+  }
+
+  .mobileSellerName {
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .mobilePhone {
+    font-size: 12px;
+    padding-left: 28px;
+  }
+
+  .mobileLastActivity {
+    font-size: 12px;
+  }
+
+  .mobileSwitchWrapper {
+    gap: 6px;
+    margin-left: 8px;
+  }
+
+  /* Clean Switch for Small Screens */
+  .switchContainer {
+    width: 40px;
+    height: 22px;
+  }
+
+  .switchSlider {
+    border-radius: 22px;
+  }
+
+  .switchSlider::before {
+    height: 16px;
+    width: 16px;
+    left: 3px;
+    bottom: 3px;
+  }
+
+  .switchInput:checked + .switchSlider::before {
+    transform: translateX(18px);
+  }
+
+  .switchLabel {
+    font-size: 12px;
+    padding: 3px 6px;
+    border-radius: 10px;
+    min-width: 40px;
+  }
+
+  /* Tooltip adjustments */
+  .checkboxTooltip {
+    font-size: 13px;
+    padding: 10px 14px;
+    max-width: 240px;
+    line-height: 1.4;
+  }
+
+  /* Modal optimizations */
+  .modal {
+    margin: 16px;
+    max-width: calc(100vw - 32px);
+    border-radius: 20px;
+  }
+
+  .modalContent {
+    padding: 20px;
+  }
+
+  .optionButton {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .optionIcon {
+    width: 44px;
+    height: 44px;
+  }
+
+  /* Edit Modal Responsive for Small Screens */
+  .editModal {
+    margin: 16px;
+    max-width: calc(100vw - 32px);
+    border-radius: 20px;
+  }
+
+  .editFormCard {
+    padding: 16px;
+  }
+
+  .editLabel {
+    font-size: 15px;
+  }
+
+  .editInput {
+    padding: 14px;
+    font-size: 16px;
+  }
+
+  .editInstruction {
+    font-size: 13px;
+  }
+
+  .mobileEditButton {
+    padding: 5px 8px;
+    font-size: 12px;
+    gap: 4px;
+    top: 12px;
+    right: 12px;
+  }
+
+  .mobileEditButton svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  /* Snackbar for Small Screens */
+  .snackbar,
+  .snackbarError {
+    bottom: 20px;
+    left: 16px;
+    right: 16px;
+    max-width: calc(100vw - 32px);
+    font-size: 13px;
+    padding: 12px 16px;
+    gap: 8px;
+  }
+
+  .snackbar svg,
+  .snackbarError svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  @keyframes slideUp {
+    from {
+      bottom: -60px;
+      opacity: 0;
+    }
+    to {
+      bottom: 20px;
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideDown {
+    from {
+      bottom: 20px;
+      opacity: 1;
+    }
+    to {
+      bottom: -60px;
+      opacity: 0;
+    }
+  }
+}
+
+/* Enhanced Touch Interactions */
+@media (max-width: 768px) {
+  /* Improve touch targets */
+  .checkbox {
+    width: 24px;
+    height: 24px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+
+  .mobileCheckbox {
+    width: 24px;
+    height: 24px;
+    min-width: 44px;
+    min-height: 44px;
+    padding: 10px;
+  }
+
+  .switchContainer {
+    min-width: 44px;
+    min-height: 44px;
+    padding: 8px;
+    margin: -8px;
+  }
+
+  /* Enhanced button interactions */
+  .assignButton {
+    min-height: 48px;
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .assignButton:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+
+  /* Improved card interactions */
+  .mobileCard {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobileCard:active {
+    transform: scale(0.99);
+    transition: transform 0.1s ease;
+  }
+
+  /* Better input focus states */
+  .searchInput:focus,
+  .filterSelect:focus {
+    border-color: #007AFF;
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+    outline: none;
+  }
+
+  /* Improved switch interactions */
+  .switchContainer:active .switchSlider {
+    transform: scale(0.95);
+  }
+
+  .switchInput:focus + .switchSlider {
+    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+  }
+
+  /* Smooth scrolling */
+  .mobileCardsContainer {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+
+  /* Clean selection states - Event Detail Style */
+  .mobileCard:has(.mobileCheckbox:checked) {
+    background-color: #f0f8ff;
+    border-left: 4px solid #007AFF;
+  }
+
+  .mobileCard:has(.mobileCheckbox:checked):hover {
+    background-color: #e6f3ff;
+  }
+
+  .mobileCard:last-child {
+    border-bottom: none;
+  }
+}

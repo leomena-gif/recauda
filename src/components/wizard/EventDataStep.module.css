@@ -1,0 +1,283 @@
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.formCard {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  padding: 24px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.fieldGroup {
+  margin-bottom: 24px;
+}
+
+.fieldGroup:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 8px;
+  text-align: left;
+}
+
+.input {
+  width: 100%;
+  padding: 16px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.input:focus {
+  outline: none;
+  border: 2px solid #007AFF;
+  box-shadow: none;
+}
+
+.input:focus-visible {
+  outline: none;
+}
+
+.input::placeholder {
+  color: #999;
+  font-size: 16px;
+}
+
+.input:disabled {
+  background-color: #f9fafb;
+  color: #9ca3af;
+  cursor: not-allowed;
+}
+
+.inputError {
+  border-color: #FF3B30;
+}
+
+.inputError:focus {
+  border-color: #FF3B30;
+  box-shadow: none;
+}
+
+.errorText {
+  display: block;
+  color: #FF3B30;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.toggleGroup {
+  margin-bottom: 24px;
+}
+
+.toggleContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.toggleInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggleSlider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: 0.3s;
+  border-radius: 34px;
+}
+
+.toggleSlider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.toggleInput:checked + .toggleSlider {
+  background-color: #007AFF;
+}
+
+.toggleInput:checked + .toggleSlider:before {
+  transform: translateX(26px);
+}
+
+.toggleLabel {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+}
+
+.dateRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.dateInputContainer {
+  position: relative;
+}
+
+.dateInput {
+  padding-right: 48px;
+}
+
+.calendarIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.prizesSection {
+  border-top: 1px solid #e5e7eb;
+  padding-top: 24px;
+}
+
+.sectionLabel {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 16px;
+}
+
+.prizeItem {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+  align-items: flex-start;
+}
+
+.prizeItem input {
+  flex: 1;
+}
+
+.removePrizeButton {
+  background: none;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.2s ease;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.removePrizeButton:hover {
+  background-color: #fef2f2;
+}
+
+.addPrizeButton {
+  background: none;
+  border: 2px solid #007AFF;
+  color: #007AFF;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  width: 100%;
+  margin-top: 8px;
+}
+
+.addPrizeButton:hover {
+  background-color: #007AFF;
+  color: white;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    min-height: 300px;
+    padding: 16px 0;
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .formCard {
+    padding: 24px;
+  }
+  
+  .dateRow {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .toggleText {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+  
+  .formCard {
+    padding: 20px;
+  }
+  
+  .input {
+    font-size: 15px;
+    padding: 10px 14px;
+  }
+  
+  .prizeItem {
+    flex-direction: column;
+    gap: 8px;
+  }
+  
+  .removePrizeButton {
+    align-self: flex-end;
+  }
+}

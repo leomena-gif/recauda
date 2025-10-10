@@ -1,0 +1,101 @@
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.optionsCard {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  padding: 24px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.optionItem {
+  margin-bottom: 16px;
+}
+
+.optionItem:last-child {
+  margin-bottom: 0;
+}
+
+.radioLabel {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 12px 0;
+  transition: all 0.2s ease;
+  border-radius: 8px;
+}
+
+.radioLabel:hover {
+  background-color: #f8f9fa;
+}
+
+.radioInput {
+  display: none;
+}
+
+.radioCustom {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d1d5db;
+  border-radius: 50%;
+  margin-right: 16px;
+  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.radioInput:checked + .radioCustom {
+  border-color: #007AFF;
+  background-color: #007AFF;
+}
+
+.radioInput:checked + .radioCustom::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.optionText {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  flex: 1;
+  text-align: left;
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .optionsCard {
+    max-width: 100%;
+    padding: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .optionsCard {
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+}

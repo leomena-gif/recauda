@@ -67,7 +67,10 @@ export default function EventDetail() {
           {/* Navigation */}
           <div className={styles.navigationContainer}>
             <button className={styles.backButton} onClick={handleBackToEvents}>
-              ← Volver a mis eventos
+              <svg className={styles.chevronIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+              Volver a mis eventos
             </button>
           </div>
 
@@ -226,18 +229,12 @@ export default function EventDetail() {
               </div>
             )}
             
-            {/* Summary Section - Moved inside tab content */}
-            <div className={styles.summarySection}>
-              <div className={styles.summaryItem}>
-                <span className={styles.summaryLabel}>Total cobrado</span>
-                <span className={styles.summaryValue}>$5.000 de $64.000</span>
-              </div>
-              <div className={styles.summaryNote}>
-                <span className={styles.chartIcon}>📊</span>
-                <span className={styles.noteText}>
-                  Te falta cobrar el 92,19% del total vendido
-                </span>
-              </div>
+            {/* Summary Section - Total row with all columns */}
+            <div className={styles.summaryRow}>
+              <div className={styles.summaryCell}>Total cobrado</div>
+              <div className={styles.summaryCell}>45/50</div>
+              <div className={styles.summaryCell}>90%</div>
+              <div className={styles.summaryCell}>$5.000 de $64.000</div>
             </div>
           </div>
     </div>

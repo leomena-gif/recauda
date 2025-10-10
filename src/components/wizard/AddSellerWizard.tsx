@@ -56,6 +56,10 @@ const AddSellerWizard: React.FC = () => {
     }
   };
 
+  const handleBackToSellers = () => {
+    router.push('/sellers-list');
+  };
+
   const handleContinue = () => {
     switch (currentStep) {
       case 1:
@@ -163,13 +167,25 @@ const AddSellerWizard: React.FC = () => {
       <Sidebar />
       <main className={styles.mainContent}>
         <div className={styles.wizardContent}>
+          {/* Navigation - Only show on step 1 */}
+          {currentStep === 1 && (
+            <div className={styles.navigationContainer}>
+              <button className={styles.backButton} onClick={handleBackToSellers}>
+                <svg className={styles.chevronIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Volver a lista de vendedores
+              </button>
+            </div>
+          )}
+          
           <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
           {renderCurrentStep()}
           <ActionButtons
             onBack={handleBack}
             onContinue={handleContinue}
             onConfirm={handleConfirm}
-            showBack={true}
+            showBack={currentStep > 1}
             isLastStep={currentStep === totalSteps}
             isLoading={isConfirming}
           />

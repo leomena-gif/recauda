@@ -1,0 +1,166 @@
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #000;
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.confirmationCard {
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e0e0e0;
+  padding: 24px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid #F2F2F7;
+}
+
+.detailRow:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.label {
+  font-size: 16px;
+  color: #8E8E93;
+  font-weight: 500;
+}
+
+.value {
+  font-size: 16px;
+  color: #000;
+  font-weight: 600;
+  text-align: right;
+}
+
+.prizesSection {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #F2F2F7;
+}
+
+.sectionLabel {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  margin-bottom: 16px;
+}
+
+.prizesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prizeItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid #F2F2F7;
+}
+
+.prizeItem:last-child {
+  border-bottom: none;
+}
+
+.prizeNumber {
+  font-size: 16px;
+  color: #8E8E93;
+  font-weight: 500;
+}
+
+.prizeValue {
+  font-size: 16px;
+  color: #000;
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    min-height: 300px;
+    padding: 16px 0;
+  }
+  
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .confirmationCard {
+    padding: 24px;
+  }
+  
+  .detailRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 16px 0;
+  }
+  
+  .label {
+    font-size: 13px;
+  }
+  
+  .value {
+    font-size: 15px;
+    text-align: left;
+    margin-left: 0;
+  }
+  
+  .prizeItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+  
+  .prizeValue {
+    text-align: left;
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+  
+  .confirmationCard {
+    padding: 20px;
+  }
+  
+  .label {
+    font-size: 12px;
+  }
+  
+  .value {
+    font-size: 14px;
+  }
+  
+  .prizeNumber {
+    font-size: 13px;
+  }
+  
+  .prizeValue {
+    font-size: 14px;
+  }
+}

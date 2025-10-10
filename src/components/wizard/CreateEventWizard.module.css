@@ -48,7 +48,6 @@
 
 .mainContent {
   flex: 1;
-  margin-left: 280px;
   padding: 24px 16px;
   min-height: 100vh;
 }
@@ -62,7 +61,7 @@
 /* Responsive */
 @media (max-width: 768px) {
   .mainContent {
-    margin-left: 0; /* Remove margin on mobile since sidebar is hidden */
+    padding: 16px;
   }
 }
 
