@@ -15,8 +15,8 @@ interface EventDataStepProps {
     numberValue?: string;
     totalNumbers?: string;
     autoAdjust?: boolean;
-    startDate?: string | Date;
-    endDate?: string | Date;
+    startDate?: string | Date | null;
+    endDate?: string | Date | null;
     prizes?: string[];
   };
   onNext: (data: {
@@ -38,8 +38,8 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
       numberValue: initialData?.numberValue || '',
       totalNumbers: initialData?.totalNumbers || '',
       autoAdjust: initialData?.autoAdjust ?? true,
-      startDate: initialData?.startDate instanceof Date ? initialData.startDate : null,
-      endDate: initialData?.endDate instanceof Date ? initialData.endDate : null,
+      startDate: (initialData?.startDate instanceof Date ? initialData.startDate : null),
+      endDate: (initialData?.endDate instanceof Date ? initialData.endDate : null),
       prizes: initialData?.prizes && initialData.prizes.length > 0 ? initialData.prizes : [''],
     });
 
