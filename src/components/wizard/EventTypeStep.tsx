@@ -39,35 +39,25 @@ const EventTypeStep = forwardRef<EventTypeStepRef, EventTypeStepProps>(
           ¿Qué tipo de evento querés crear?
         </h1>
         
-        <div className={styles.optionsCard}>
-          <div className={styles.optionItem}>
-            <label className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="eventType"
-                value="food_sale"
-                checked={selectedType === 'food_sale'}
-                onChange={() => handleTypeChange('food_sale')}
-                className={styles.radioInput}
-              />
-              <span className={styles.radioCustom}></span>
-              <span className={styles.optionText}>Venta de comida</span>
-            </label>
+        <div className={styles.optionsGrid}>
+          <div 
+            className={`${styles.optionBox} ${selectedType === 'food_sale' ? styles.selected : ''}`}
+            onClick={() => handleTypeChange('food_sale')}
+          >
+            <div className={styles.iconContainer}>
+              <div className={styles.emojiIcon}>🍲</div>
+            </div>
+            <span className={styles.optionText}>Venta de comida</span>
           </div>
           
-          <div className={styles.optionItem}>
-            <label className={styles.radioLabel}>
-              <input
-                type="radio"
-                name="eventType"
-                value="raffle"
-                checked={selectedType === 'raffle'}
-                onChange={() => handleTypeChange('raffle')}
-                className={styles.radioInput}
-              />
-              <span className={styles.radioCustom}></span>
-              <span className={styles.optionText}>Sorteo</span>
-            </label>
+          <div 
+            className={`${styles.optionBox} ${selectedType === 'raffle' ? styles.selected : ''}`}
+            onClick={() => handleTypeChange('raffle')}
+          >
+            <div className={styles.iconContainer}>
+              <div className={styles.emojiIcon}>🎁</div>
+            </div>
+            <span className={styles.optionText}>Sorteo</span>
           </div>
         </div>
       </div>

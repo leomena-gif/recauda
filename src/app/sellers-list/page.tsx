@@ -1,26 +1,26 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
+import { Seller, Event, StatusFilter } from '@/types/models';
+import { STATUS_OPTIONS } from '@/constants';
+import { validateName, validatePhone, formatPhone } from '@/utils/validation';
+import { useSnackbar } from '@/hooks/useSnackbar';
+import { MOCK_SELLERS, MOCK_EVENTS } from '@/mocks/data';
 import styles from './SellersList.module.css';
-
-interface Seller {
-  id: string;
-  firstName: string;
-  lastName: string;
-  phone: string;
-  email: string;
-  status: 'active' | 'inactive';
-  eventsAssigned: number;
-  totalSold: number;
-  lastActivity: string;
-}
 
 export default function SellersList() {
   const router = useRouter();
+  
+  // State
   const [sellers, setSellers] = useState<Seller[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
   const [selectedSellers, setSelectedSellers] = useState<string[]>([]);
-  const [isAssignmentModalOpen, setIsAssignmentModalOpen] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [showEventSelector, setShowEventSelector] = useState(false);
+  
+  // Edit modal state
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingSeller, setEditingSeller] = useState<Seller | null>(null);
   const [editFormData, setEditFormData] = useState({
@@ -33,83 +33,35 @@ export default function SellersList() {
     lastName?: string;
     phone?: string;
   }>({});
-  const [showSuccessSnackbar, setShowSuccessSnackbar] = useState(false);
-  const [snackbarClosing, setSnackbarClosing] = useState(false);
-  const [showErrorSnackbar, setShowErrorSnackbar] = useState(false);
-  const [errorSnackbarClosing, setErrorSnackbarClosing] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  
+  // Custom hooks
+  const successSnackbar = useSnackbar();
+  const errorSnackbar = useSnackbar(5000);
+  
+  // Computed values
+  const activeEvents = useMemo(
+    () => events.filter(event => event.status === 'active'),
+    [events]
+  );
 
-  // Mock data - En una aplicación real esto vendría de una API
+  // Load mock data (TODO: Replace with API calls)
   useEffect(() => {
-    const mockSellers: Seller[] = [
-      {
-        id: '1',
-        firstName: 'María',
-        lastName: 'González',
-        phone: '3584123456',
-        email: 'maria.gonzalez@email.com',
-        status: 'active',
-        eventsAssigned: 3,
-        totalSold: 45,
-        lastActivity: '2024-01-15'
-      },
-      {
-        id: '2',
-        firstName: 'Carlos',
-        lastName: 'Rodríguez',
-        phone: '3584987654',
-        email: 'carlos.rodriguez@email.com',
-        status: 'active',
-        eventsAssigned: 2,
-        totalSold: 32,
-        lastActivity: '2024-01-14'
-      },
-      {
-        id: '3',
-        firstName: 'Ana',
-        lastName: 'Martínez',
-        phone: '3584555666',
-        email: 'ana.martinez@email.com',
-        status: 'inactive',
-        eventsAssigned: 1,
-        totalSold: 18,
-        lastActivity: '2024-01-10'
-      },
-      {
-        id: '4',
-        firstName: 'Luis',
-        lastName: 'Fernández',
-        phone: '3584777888',
-        email: 'luis.fernandez@email.com',
-        status: 'active',
-        eventsAssigned: 4,
-        totalSold: 67,
-        lastActivity: '2024-01-16'
-      },
-      {
-        id: '5',
-        firstName: 'Sofía',
-        lastName: 'López',
-        phone: '3584999000',
-        email: 'sofia.lopez@email.com',
-        status: 'active',
-        eventsAssigned: 2,
-        totalSold: 29,
-        lastActivity: '2024-01-13'
-      }
-    ];
-    setSellers(mockSellers);
+    setSellers(MOCK_SELLERS);
+    setEvents(MOCK_EVENTS);
   }, []);
 
-  const filteredSellers = sellers.filter(seller => {
-    const matchesSearch = seller.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         seller.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         seller.phone.includes(searchTerm) ||
-                         seller.email.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || seller.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
+  // Filtered sellers with useMemo for performance
+  const filteredSellers = useMemo(() => {
+    return sellers.filter(seller => {
+      const matchesSearch = 
+        seller.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        seller.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        seller.phone.includes(searchTerm) ||
+        seller.email.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesStatus = statusFilter === 'all' || seller.status === statusFilter;
+      return matchesSearch && matchesStatus;
+    });
+  }, [sellers, searchTerm, statusFilter]);
 
   const handleSelectSeller = (sellerId: string) => {
     setSelectedSellers(prev => 
@@ -128,10 +80,8 @@ export default function SellersList() {
     }
   };
 
-  const handleAssignToEvent = () => {
-    if (selectedSellers.length > 0) {
-      setIsAssignmentModalOpen(true);
-    }
+  const toggleEventSelector = () => {
+    setShowEventSelector(!showEventSelector);
   };
 
   const handleToggleSellerStatus = (sellerId: string) => {
@@ -195,19 +145,20 @@ export default function SellersList() {
     }
   };
 
-  const handleAssignToNewEvent = () => {
-    // Lógica para asignar a nuevo evento
-    console.log('Asignar a nuevo evento:', selectedSellers);
-    setIsAssignmentModalOpen(false);
-    setSelectedSellers([]);
-  };
-
-  const handleAssignToExistingEvent = () => {
-    // Lógica para asignar a evento existente
-    console.log('Asignar a evento existente:', selectedSellers);
-    setIsAssignmentModalOpen(false);
-    setSelectedSellers([]);
-  };
+  const handleAssignToEvent = useCallback((eventId: string) => {
+    if (eventId && selectedSellers.length > 0) {
+      const event = events.find(e => e.id === eventId);
+      console.log('Asignar vendedores al evento:', {
+        eventId,
+        sellers: selectedSellers,
+        eventName: event?.name
+      });
+      
+      setSelectedSellers([]);
+      setShowEventSelector(false);
+      successSnackbar.showSnackbar();
+    }
+  }, [selectedSellers, events, successSnackbar]);
 
   const handleEditSeller = (seller: Seller) => {
     setEditingSeller(seller);
@@ -268,40 +219,11 @@ export default function SellersList() {
         );
         setIsEditModalOpen(false);
         setEditingSeller(null);
-        
-        // Show success snackbar
-        setShowSuccessSnackbar(true);
-        setSnackbarClosing(false);
-        
-        // Start closing animation after 2.7 seconds
-        setTimeout(() => {
-          setSnackbarClosing(true);
-        }, 2700);
-        
-        // Hide completely after animation finishes
-        setTimeout(() => {
-          setShowSuccessSnackbar(false);
-          setSnackbarClosing(false);
-        }, 3000);
+        successSnackbar.showSnackbar();
       } catch (error) {
-        // Handle error - close modal and show error snackbar
         setIsEditModalOpen(false);
         setEditingSeller(null);
-        
-        // Show error snackbar
-        setShowErrorSnackbar(true);
-        setErrorSnackbarClosing(false);
-        
-        // Start closing animation after 4.7 seconds (more time for error messages)
-        setTimeout(() => {
-          setErrorSnackbarClosing(true);
-        }, 4700);
-        
-        // Hide completely after animation finishes
-        setTimeout(() => {
-          setShowErrorSnackbar(false);
-          setErrorSnackbarClosing(false);
-        }, 5000);
+        errorSnackbar.showSnackbar();
       }
     }
   };
@@ -350,26 +272,56 @@ export default function SellersList() {
           </div>
           
           <div className={styles.statusFilter}>
-            <select 
-              value={statusFilter} 
-              onChange={(e) => setStatusFilter(e.target.value as 'all' | 'active' | 'inactive')}
-              className={styles.filterSelect}
+            <select
+              className={styles.statusSelect}
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
             >
-              <option value="all">Todos los estados</option>
-              <option value="active">Activos</option>
-              <option value="inactive">Inactivos</option>
+              {STATUS_OPTIONS.map(option => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
             </select>
           </div>
         </div>
 
         <div className={styles.rightSection}>
           {selectedSellers.length > 0 && (
-            <button 
-              className={styles.assignButton}
-              onClick={handleAssignToEvent}
-            >
-              Asignar a evento ({selectedSellers.length})
-            </button>
+            <div className={styles.assignmentContainer}>
+              <button 
+                className={styles.assignButton}
+                onClick={toggleEventSelector}
+              >
+                {showEventSelector ? 'Cancelar' : `Asignar ${selectedSellers.length} vendedor${selectedSellers.length > 1 ? 'es' : ''}`}
+              </button>
+              
+              {showEventSelector && activeEvents.length > 0 && (
+                <div className={styles.inlineEventSelector}>
+                  <span className={styles.selectorLabel}>Selecciona un evento:</span>
+                  <div className={styles.eventButtons}>
+                    {activeEvents.map((event) => (
+                      <button
+                        key={event.id}
+                        className={styles.eventButton}
+                        onClick={() => handleAssignToEvent(event.id)}
+                      >
+                        <span className={styles.eventButtonName}>{event.name}</span>
+                        <span className={styles.eventButtonInfo}>
+                          {event.soldNumbers}/{event.totalNumbers} vendidos
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+              
+              {showEventSelector && activeEvents.length === 0 && (
+                <div className={styles.noEventsMessage}>
+                  No hay eventos activos disponibles
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
@@ -563,60 +515,6 @@ export default function SellersList() {
           </div>
         )}
 
-      {/* Assignment Modal */}
-      {isAssignmentModalOpen && (
-        <div className={styles.modalOverlay} onClick={() => setIsAssignmentModalOpen(false)}>
-          <div className={styles.modal} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.modalHeader}>
-              <h2>Asignar Vendedores</h2>
-              <button 
-                className={styles.closeButton}
-                onClick={() => setIsAssignmentModalOpen(false)}
-              >
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-              </button>
-            </div>
-            
-            <div className={styles.modalContent}>
-              <p>Selecciona cómo quieres asignar los {selectedSellers.length} vendedores seleccionados:</p>
-              
-              <div className={styles.assignmentOptions}>
-                <button 
-                  className={styles.optionButton}
-                  onClick={handleAssignToNewEvent}
-                >
-                  <div className={styles.optionIcon}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                  <div className={styles.optionContent}>
-                    <h3>Nuevo Evento</h3>
-                    <p>Crear un nuevo evento y asignar los vendedores</p>
-                  </div>
-                </button>
-                
-                <button 
-                  className={styles.optionButton}
-                  onClick={handleAssignToExistingEvent}
-                >
-                  <div className={styles.optionIcon}>
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M9 12L11 14L15 10M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </div>
-                  <div className={styles.optionContent}>
-                    <h3>Evento Existente</h3>
-                    <p>Agregar vendedores a un evento ya creado</p>
-                  </div>
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* Edit Seller Modal */}
       {isEditModalOpen && editingSeller && (
@@ -702,25 +600,25 @@ export default function SellersList() {
       )}
 
       {/* Success Snackbar */}
-      {showSuccessSnackbar && (
-        <div className={`${styles.snackbar} ${snackbarClosing ? styles.snackbarClosing : ''}`}>
+      {successSnackbar.isVisible && (
+        <div className={`${styles.snackbar} ${successSnackbar.isClosing ? styles.snackbarClosing : ''}`}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.7088 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
             <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          <span>Vendedor editado con éxito</span>
+          <span>Operación exitosa</span>
         </div>
       )}
 
       {/* Error Snackbar */}
-      {showErrorSnackbar && (
-        <div className={`${styles.snackbarError} ${errorSnackbarClosing ? styles.snackbarClosing : ''}`}>
+      {errorSnackbar.isVisible && (
+        <div className={`${styles.snackbarError} ${errorSnackbar.isClosing ? styles.snackbarClosing : ''}`}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
             <path d="M12 8V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
             <circle cx="12" cy="16" r="1" fill="currentColor"/>
           </svg>
-          <span>No se pudieron realizar los cambios. Intente nuevamente en unos minutos</span>
+          <span>Error al procesar la solicitud</span>
         </div>
       )}
 

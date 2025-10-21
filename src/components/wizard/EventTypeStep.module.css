@@ -12,90 +12,118 @@
   text-align: left;
 }
 
-.optionsCard {
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
-  padding: 24px;
+.optionsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
   width: 100%;
-  max-width: 100%;
 }
 
-.optionItem {
+.optionBox {
+  background: white;
+  border: 2px solid #e0e0e0;
+  border-radius: 16px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  min-height: 180px;
+  position: relative;
+  overflow: hidden;
+}
+
+.optionBox:hover {
+  border-color: #007AFF;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 122, 255, 0.15);
+}
+
+.optionBox.selected {
+  border-color: #007AFF;
+  background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(0, 122, 255, 0.3);
+}
+
+.iconContainer {
   margin-bottom: 16px;
-}
-
-.optionItem:last-child {
-  margin-bottom: 0;
-}
-
-.radioLabel {
   display: flex;
   align-items: center;
-  cursor: pointer;
-  padding: 12px 0;
-  transition: all 0.2s ease;
-  border-radius: 8px;
+  justify-content: center;
+  flex: 1;
 }
 
-.radioLabel:hover {
-  background-color: #f8f9fa;
+.emojiIcon {
+  font-size: 90px;
+  line-height: 1;
+  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.radioInput {
-  display: none;
+.optionBox:hover .emojiIcon {
+  transform: scale(1.1);
 }
 
-.radioCustom {
-  width: 20px;
-  height: 20px;
-  border: 2px solid #d1d5db;
-  border-radius: 50%;
-  margin-right: 16px;
-  position: relative;
-  transition: all 0.2s ease;
-  flex-shrink: 0;
-}
-
-.radioInput:checked + .radioCustom {
-  border-color: #007AFF;
-  background-color: #007AFF;
-}
-
-.radioInput:checked + .radioCustom::after {
-  content: '';
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  width: 8px;
-  height: 8px;
-  background-color: white;
-  border-radius: 50%;
+.optionBox.selected .emojiIcon {
+  transform: scale(1.15);
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
 }
 
 .optionText {
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   color: #000;
-  flex: 1;
-  text-align: left;
+  transition: color 0.3s ease;
+}
+
+.optionBox.selected .optionText {
+  color: white;
 }
 
 /* Responsive */
 @media (min-width: 768px) {
-  .optionsCard {
-    max-width: 100%;
+  .optionsGrid {
+    gap: 24px;
+  }
+  
+  .optionBox {
     padding: 32px;
+    min-height: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .optionsGrid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  
+  .optionBox {
+    min-height: 160px;
   }
 }
 
 @media (max-width: 480px) {
-  .optionsCard {
+  .optionBox {
     padding: 20px;
+    min-height: 140px;
   }
   
   .title {
     font-size: 20px;
+  }
+  
+  .optionText {
+    font-size: 14px;
+  }
+  
+  .emojiIcon {
+    font-size: 67px;
   }
 }

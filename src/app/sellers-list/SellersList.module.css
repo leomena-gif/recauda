@@ -1690,3 +1690,175 @@
     border-bottom: none;
   }
 }
+
+/* Inline Event Selector Styles - No Modal */
+.assignmentContainer {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 16px;
+}
+
+.inlineEventSelector {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 12px;
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  min-width: 400px;
+  max-width: 500px;
+  z-index: 100;
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.selectorLabel {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 12px;
+}
+
+.eventButtons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.eventButtons::-webkit-scrollbar {
+  width: 6px;
+}
+
+.eventButtons::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 3px;
+}
+
+.eventButtons::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.eventButtons::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+.eventButton {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 16px 20px;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  text-align: left;
+  width: 100%;
+}
+
+.eventButton:hover {
+  border-color: #007AFF;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f3ff 100%);
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.15);
+}
+
+.eventButton:active {
+  transform: translateX(2px);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.2);
+}
+
+.eventButtonName {
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 4px;
+}
+
+.eventButtonInfo {
+  font-size: 13px;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.noEventsMessage {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 12px;
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  min-width: 300px;
+  z-index: 100;
+  text-align: center;
+  color: #6b7280;
+  font-size: 14px;
+  animation: slideDown 0.3s ease-out;
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+  .inlineEventSelector {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+    min-width: unset;
+    max-width: unset;
+    width: 100%;
+    max-height: 70vh;
+    animation: slideUp 0.3s ease-out;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(100%);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .noEventsMessage {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: 0;
+    border-radius: 16px 16px 0 0;
+    min-width: unset;
+    width: 100%;
+    animation: slideUp 0.3s ease-out;
+  }
+  
+  .eventButtons {
+    max-height: calc(70vh - 100px);
+  }
+}

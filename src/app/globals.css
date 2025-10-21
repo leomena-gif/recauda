@@ -1,3 +1,83 @@
+/* CSS Variables */
+:root {
+  /* Colors - Primary */
+  --color-primary: #007AFF;
+  --color-primary-hover: #0056CC;
+  --color-primary-light: #E6F3FF;
+  
+  /* Colors - Semantic */
+  --color-success: #34C759;
+  --color-error: #FF3B30;
+  --color-warning: #FF9500;
+  --color-info: #5AC8FA;
+  
+  /* Colors - Neutral */
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+  --color-gray-50: #F9FAFB;
+  --color-gray-100: #F3F4F6;
+  --color-gray-200: #E5E7EB;
+  --color-gray-300: #D1D5DB;
+  --color-gray-400: #9CA3AF;
+  --color-gray-500: #6B7280;
+  --color-gray-600: #4B5563;
+  --color-gray-700: #374151;
+  --color-gray-800: #1F2937;
+  --color-gray-900: #111827;
+  
+  /* Spacing */
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 20px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
+  
+  /* Typography */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 32px;
+  
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+  
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-full: 9999px;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.1);
+  --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.1);
+  
+  /* Transitions */
+  --transition-fast: 0.15s ease;
+  --transition-base: 0.2s ease;
+  --transition-slow: 0.3s ease;
+  
+  /* Layout */
+  --sidebar-width: 280px;
+  --header-height: 64px;
+  --mobile-header-height: 80px;
+  
+  /* Breakpoints (for reference) */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+}
+
 /* Reset and base styles */
 * {
   margin: 0;
@@ -7,8 +87,8 @@
 
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  background-color: #f5f5f5;
-  color: #333;
+  background-color: var(--color-gray-50);
+  color: var(--color-gray-900);
   line-height: 1.6;
 }
 
@@ -21,9 +101,9 @@ body {
 /* Main Content */
 .mainContent {
   flex: 1;
-  padding: 24px 16px;
-  margin-left: 280px;
-  background-color: #f5f5f5;
+  padding: var(--space-xl) var(--space-md);
+  margin-left: var(--sidebar-width);
+  background-color: var(--color-gray-50);
   min-height: 100vh;
 }
 
@@ -31,31 +111,31 @@ body {
 @media (max-width: 768px) {
   .mainContent {
     margin-left: 0;
-    padding: 16px 12px;
-    padding-top: 80px; /* Space for mobile header */
+    padding: var(--space-md) var(--space-sm);
+    padding-top: var(--mobile-header-height);
   }
   
   .pageContainer {
-    padding: 0 16px;
+    padding: 0 var(--space-md);
   }
   
   .pageTitle {
-    font-size: 24px;
-    margin-bottom: 16px;
+    font-size: var(--font-size-2xl);
+    margin-bottom: var(--space-md);
   }
 }
 
 /* Page Container */
 .pageContainer {
   width: 100%;
-  padding: 0 20px;
+  padding: 0 var(--space-lg);
 }
 
 .pageTitle {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  margin-bottom: 24px;
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-gray-900);
+  margin-bottom: var(--space-xl);
   text-align: left;
 }
 
@@ -63,7 +143,7 @@ body {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  gap: 24px;
+  gap: var(--space-xl);
   align-items: stretch;
 }
 
@@ -74,9 +154,26 @@ body {
   }
 }
 
-/* Force opaque tooltip - Global override */
+/* Global Overrides */
 .checkboxTooltip {
-  background-color: #000000 !important;
-  color: #FFFFFF !important;
+  background-color: var(--color-black) !important;
+  color: var(--color-white) !important;
   border: none !important;
+}
+
+/* Smooth Scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Focus Visible - Accessibility */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Selection Color */
+::selection {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
 }
