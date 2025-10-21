@@ -100,15 +100,15 @@
 
 /* Action Button */
 .actionButton {
-  background-color: #007AFF;
-  color: white;
-  border: none;
+  background-color: transparent;
+  color: #007AFF;
+  border: 2px solid #007AFF;
   border-radius: 8px;
   padding: 16px 24px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
   width: 100%;
   display: flex;
   align-items: center;
@@ -117,7 +117,8 @@
 }
 
 .actionButton:hover {
-  background-color: #0056CC;
+  background-color: #007AFF;
+  color: white;
 }
 
 .actionButton:active {

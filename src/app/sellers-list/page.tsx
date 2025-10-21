@@ -7,6 +7,7 @@ import { STATUS_OPTIONS } from '@/constants';
 import { validateName, validatePhone, formatPhone } from '@/utils/validation';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { MOCK_SELLERS, MOCK_EVENTS } from '@/mocks/data';
+import CustomDropdown from '@/components/CustomDropdown';
 import styles from './SellersList.module.css';
 
 export default function SellersList() {
@@ -272,17 +273,15 @@ export default function SellersList() {
           </div>
           
           <div className={styles.statusFilter}>
-            <select
-              className={styles.statusSelect}
+            <CustomDropdown
+              options={STATUS_OPTIONS.map(opt => ({
+                value: opt.value,
+                label: opt.label
+              }))}
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as StatusFilter)}
-            >
-              {STATUS_OPTIONS.map(option => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </select>
+              onChange={(value) => setStatusFilter(value as StatusFilter)}
+              placeholder="Filtrar por estado"
+            />
           </div>
         </div>
 
@@ -307,9 +306,6 @@ export default function SellersList() {
                         onClick={() => handleAssignToEvent(event.id)}
                       >
                         <span className={styles.eventButtonName}>{event.name}</span>
-                        <span className={styles.eventButtonInfo}>
-                          {event.soldNumbers}/{event.totalNumbers} vendidos
-                        </span>
                       </button>
                     ))}
                   </div>
@@ -318,7 +314,7 @@ export default function SellersList() {
               
               {showEventSelector && activeEvents.length === 0 && (
                 <div className={styles.noEventsMessage}>
-                  No hay eventos activos disponibles
+                  No hay eventos en estado ACTIVO
                 </div>
               )}
             </div>
@@ -402,7 +398,7 @@ export default function SellersList() {
                       <span className={styles.switchSlider}></span>
                     </label>
                     <span className={`${styles.switchLabel} ${seller.status === 'active' ? styles.switchLabelActive : styles.switchLabelInactive}`}>
-                      {seller.status === 'active' ? 'Activo' : 'Inactivo'}
+                      {seller.status === 'active' ? 'ACTIVO' : 'INACTIVO'}
                     </span>
                   </div>
                 </td>

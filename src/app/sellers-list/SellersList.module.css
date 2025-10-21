@@ -114,38 +114,90 @@
 .searchInput {
   width: 100%;
   padding: 12px 12px 12px 44px;
-  border: 2px solid #E5E7EB;
-  border-radius: 8px;
-  font-size: 16px;
-  background: white;
-  transition: all 0.2s ease;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.searchInput:hover {
+  border-color: #007AFF;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f3ff 100%);
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.1);
 }
 
 .searchInput:focus {
   outline: none;
   border-color: #007AFF;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
 }
 
 .statusFilter {
-  min-width: 180px;
+  min-width: 200px;
 }
 
 .filterSelect {
   width: 100%;
-  padding: 12px 16px;
-  border: 2px solid #E5E7EB;
-  border-radius: 8px;
-  font-size: 16px;
-  background: white;
+  padding: 12px 40px 12px 16px;
+  border: 2px solid #e5e7eb;
+  border-radius: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #374151;
+  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23374151' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.filterSelect:hover {
+  border-color: #007AFF;
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f3ff 100%);
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23374151' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.1);
 }
 
 .filterSelect:focus {
   outline: none;
   border-color: #007AFF;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
+  background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23374151' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+}
+
+/* Dropdown Options - Premium Styles */
+.filterSelect option {
+  padding: 12px 16px;
+  background: white;
+  color: #374151;
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.filterSelect option:hover {
+  background: linear-gradient(135deg, #f0f7ff 0%, #e6f3ff 100%);
+  color: #007AFF;
+}
+
+.filterSelect option:checked {
+  background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
+  color: white;
+  font-weight: 700;
 }
 
 /* Table Container */
@@ -212,6 +264,8 @@
   height: 18px;
   accent-color: #007AFF;
   cursor: pointer;
+  vertical-align: middle;
+  margin: 0;
 }
 
 .checkbox:disabled {
@@ -222,7 +276,10 @@
 /* Checkbox Wrapper and Tooltip */
 .checkboxWrapper {
   position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
 }
 
 .checkboxTooltip {
@@ -292,6 +349,7 @@
 .tableRow td:nth-child(1) {
   text-align: center;
   padding: 16px 10px;
+  vertical-align: middle;
 }
 
 .tableRow td:nth-child(2) {
@@ -995,8 +1053,9 @@
 
   .filterSelect {
     font-size: 16px; /* Prevent zoom on iOS */
-    padding: 14px 16px;
+    padding: 14px 40px 14px 16px;
     border-radius: 12px;
+    background-position: right 16px center;
   }
 
   .rightSection {
@@ -1055,6 +1114,7 @@
 
   .tableRow td:nth-child(1) {
     padding: 12px 8px;
+    vertical-align: middle;
   }
 
   .tableRow td:nth-child(2) {
@@ -1707,11 +1767,12 @@
   margin-top: 12px;
   background: white;
   border-radius: 16px;
-  padding: 20px;
+  padding: 24px;
   box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
   border: 1px solid #e5e7eb;
-  min-width: 400px;
-  max-width: 500px;
+  min-width: 450px;
+  max-width: 550px;
+  max-height: 400px;
   z-index: 100;
   animation: slideDown 0.3s ease-out;
 }
@@ -1729,18 +1790,19 @@
 
 .selectorLabel {
   display: block;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: #374151;
-  margin-bottom: 12px;
+  margin-bottom: 16px;
 }
 
 .eventButtons {
   display: flex;
   flex-direction: column;
   gap: 12px;
-  max-height: 300px;
+  max-height: 320px;
   overflow-y: auto;
+  padding-right: 4px;
 }
 
 .eventButtons::-webkit-scrollbar {
@@ -1763,15 +1825,15 @@
 
 .eventButton {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  padding: 16px 20px;
+  align-items: center;
+  justify-content: center;
+  padding: 14px 20px;
   background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
   border: 2px solid #e5e7eb;
   border-radius: 12px;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  text-align: left;
+  text-align: center;
   width: 100%;
 }
 
@@ -1788,16 +1850,10 @@
 }
 
 .eventButtonName {
-  font-size: 15px;
+  font-size: 16px;
   font-weight: 600;
   color: #111827;
-  margin-bottom: 4px;
-}
-
-.eventButtonInfo {
-  font-size: 13px;
-  color: #6b7280;
-  font-weight: 500;
+  line-height: 1.4;
 }
 
 .noEventsMessage {

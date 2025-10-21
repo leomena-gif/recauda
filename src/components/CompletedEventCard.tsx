@@ -15,7 +15,7 @@ const CompletedEventCard: React.FC = () => {
     <div className={styles.card}>
       {/* Status Tag */}
       <div className={styles.statusContainer}>
-        <span className={styles.tagGray}>Finalizado</span>
+        <span className={styles.tagGray}>FINALIZADO</span>
       </div>
 
       {/* Event Title */}

@@ -116,6 +116,56 @@
   outline-offset: 2px;
 }
 
+/* Divider */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 24px 0;
+  color: #666;
+  font-size: 14px;
+}
+
+.divider span {
+  padding: 0 12px;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background-color: #e0e0e0;
+}
+
+.backToLoginButton {
+  background-color: transparent;
+  color: #007AFF;
+  border: 2px solid #007AFF;
+  padding: 16px;
+  border-radius: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  width: 100%;
+}
+
+.backToLoginButton:hover {
+  background-color: #007AFF;
+  color: white;
+}
+
+.backToLoginButton:active {
+  transform: translateY(1px);
+}
+
+.backToLoginButton:focus-visible {
+  outline: 2px solid #007AFF;
+  outline-offset: 2px;
+}
+
 /* Responsive Design */
 @media (min-width: 768px) {
   .formContainer {

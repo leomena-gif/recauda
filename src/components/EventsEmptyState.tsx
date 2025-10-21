@@ -2,23 +2,54 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
+import { EventStatusFilter } from '@/types/models';
 import styles from './EventsEmptyState.module.css';
 
-const EventsEmptyState: React.FC = () => {
+interface EventsEmptyStateProps {
+  filterType?: EventStatusFilter;
+}
+
+const EMPTY_STATE_CONFIG = {
+  all: {
+    emoji: '🏁',
+    message: 'Comencemos creando tu primer evento',
+    showButton: true,
+  },
+  active: {
+    emoji: '✅',
+    message: 'No tienes eventos en estado ACTIVO',
+    showButton: true,
+  },
+  completed: {
+    emoji: '🏁',
+    message: 'No tienes eventos en estado FINALIZADO',
+    showButton: false,
+  },
+  blocked: {
+    emoji: '🚫',
+    message: 'No tienes eventos en estado BLOQUEADO',
+    showButton: false,
+  },
+};
+
+const EventsEmptyState: React.FC<EventsEmptyStateProps> = ({ filterType = 'all' }) => {
   const router = useRouter();
+  const config = EMPTY_STATE_CONFIG[filterType];
   
   const handleCreateEvent = () => {
-    router.push('/add-seller');
+    router.push('/create-event');
   };
 
   return (
     <div className={styles.container}>
       <div className={styles.emptyState}>
-        <div className={styles.flagIcon}>🏁</div>
-        <p className={styles.message}>Comencemos creando tu primer evento</p>
-        <button className={styles.createButton} onClick={handleCreateEvent}>
-          Crear evento
-        </button>
+        <div className={styles.flagIcon}>{config.emoji}</div>
+        <p className={styles.message}>{config.message}</p>
+        {config.showButton && (
+          <button className={styles.createButton} onClick={handleCreateEvent}>
+            Crear evento
+          </button>
+        )}
       </div>
     </div>
   );

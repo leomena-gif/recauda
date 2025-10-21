@@ -10,8 +10,15 @@ export const SNACKBAR_DURATION = {
 
 export const STATUS_OPTIONS = [
   { value: 'all', label: 'Todos los estados' },
-  { value: 'active', label: 'Activos' },
-  { value: 'inactive', label: 'Inactivos' },
+  { value: 'active', label: 'ACTIVO' },
+  { value: 'inactive', label: 'INACTIVO' },
+] as const;
+
+export const EVENT_FILTER_OPTIONS = [
+  { value: 'all', label: 'TODAS' },
+  { value: 'active', label: 'ACTIVO' },
+  { value: 'completed', label: 'FINALIZADO' },
+  { value: 'blocked', label: 'BLOQUEADO' },
 ] as const;
 
 export const VALIDATION_RULES = {

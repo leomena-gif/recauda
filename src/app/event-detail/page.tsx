@@ -79,7 +79,7 @@ export default function EventDetail() {
             <h1 className={styles.eventTitle}>
               Rifa día del niño del G.S. General Deheza
             </h1>
-            <span className={styles.statusTag}>Evento en curso</span>
+            <span className={styles.statusTag}>ACTIVO</span>
           </div>
 
           {/* Event Details with Progress */}
@@ -89,11 +89,11 @@ export default function EventDetail() {
               <div className={styles.dropdownContainer} ref={dropdownRef}>
                 <button className={styles.editButton} onClick={toggleDropdown}>
                   <svg className={styles.editIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#007AFF"/>
+                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#374151"/>
                   </svg>
                   Editar evento
-                  <svg className={`${styles.dropdownArrow} ${isDropdownOpen ? styles.dropdownArrowOpen : ''}`} width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M6 9L12 15L18 9" stroke="#007AFF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <svg className={`${styles.dropdownArrow} ${isDropdownOpen ? styles.dropdownArrowOpen : ''}`} width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                   </svg>
                 </button>
                 {isDropdownOpen && (

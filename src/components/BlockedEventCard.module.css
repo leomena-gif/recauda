@@ -8,23 +8,9 @@
   flex-direction: column;
 }
 
-/* Status Tags */
-.statusTags {
-  display: flex;
-  gap: 8px;
+/* Status Container */
+.statusContainer {
   margin-bottom: 16px;
-}
-
-.tagOrange {
-  background-color: #FF9500;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  height: 24px;
-  display: inline-flex;
-  align-items: center;
 }
 
 .tagRed {
@@ -112,6 +98,15 @@
   white-space: nowrap;
 }
 
+/* Action Container */
+.actionContainer {
+  margin-top: auto;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  align-items: center;
+}
+
 /* Action Button */
 .actionButton {
   background-color: #007AFF;
@@ -123,11 +118,12 @@
   font-weight: 600;
   cursor: pointer;
   transition: background-color 0.2s ease;
-  width: 100%;
+  width: 50%;
+  flex-shrink: 0;
+  white-space: nowrap;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: auto;
 }
 
 .actionButton:hover {
@@ -138,7 +134,36 @@
   transform: translateY(1px);
 }
 
+/* Info Message */
+.infoMessage {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  font-weight: 500;
+  color: #FF3B30;
+  text-align: left;
+  line-height: 1.4;
+  flex: 1;
+  min-width: 0;
+}
+
 /* Responsive Design */
+@media (max-width: 768px) {
+  .actionContainer {
+    flex-direction: column;
+    gap: 12px;
+    align-items: stretch;
+  }
+
+  .actionButton {
+    width: 100%;
+  }
+
+  .infoMessage {
+    text-align: left;
+  }
+}
+
 @media (max-width: 480px) {
   .detailsRow {
     flex-direction: column;

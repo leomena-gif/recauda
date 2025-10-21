@@ -13,10 +13,9 @@ const BlockedEventCard: React.FC = () => {
 
   return (
     <div className={styles.card}>
-      {/* Status Tags */}
-      <div className={styles.statusTags}>
-        <span className={styles.tagOrange}>Sin vendedores asignados</span>
-        <span className={styles.tagRed}>Bloqueado</span>
+      {/* Status Tag */}
+      <div className={styles.statusContainer}>
+        <span className={styles.tagRed}>BLOQUEADO</span>
       </div>
 
       {/* Event Title */}
@@ -59,10 +58,15 @@ const BlockedEventCard: React.FC = () => {
         </div>
       </div>
 
-      {/* Action Button */}
-      <button className={styles.actionButton} onClick={handleAddSellers}>
-        Agregar vendedores
-      </button>
+      {/* Action Button and Info Message */}
+      <div className={styles.actionContainer}>
+        <button className={styles.actionButton} onClick={handleAddSellers}>
+          Agregar vendedores
+        </button>
+        <p className={styles.infoMessage}>
+          🚫 El evento se desbloqueará cuando tenga vendedores asignados
+        </p>
+      </div>
     </div>
   );
 };

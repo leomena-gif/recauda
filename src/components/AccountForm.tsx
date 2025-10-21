@@ -70,6 +70,10 @@ const AccountForm: React.FC = () => {
     }
   };
 
+  const handleBackToLogin = () => {
+    router.push('/login');
+  };
+
   return (
     <div className={styles.formContainer}>
       <h1 className={styles.formTitle}>Crear cuenta</h1>
@@ -134,6 +138,18 @@ const AccountForm: React.FC = () => {
           Crear cuenta
         </button>
       </form>
+
+      <div className={styles.divider}>
+        <span>¿Ya tienes cuenta?</span>
+      </div>
+
+      <button 
+        type="button" 
+        className={styles.backToLoginButton}
+        onClick={handleBackToLogin}
+      >
+        Iniciar sesión
+      </button>
     </div>
   );
 };

@@ -28,4 +28,5 @@ export type SellerStatus = 'active' | 'inactive';
 export type EventType = 'raffle' | 'food_sale';
 export type EventStatus = 'active' | 'inactive' | 'completed';
 export type StatusFilter = 'all' | 'active' | 'inactive';
+export type EventStatusFilter = 'all' | 'active' | 'completed' | 'blocked';
 

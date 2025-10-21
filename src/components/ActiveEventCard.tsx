@@ -18,7 +18,7 @@ const ActiveEventCard: React.FC = () => {
     <div className={styles.card}>
       {/* Status Tag */}
       <div className={styles.statusContainer}>
-        <span className={styles.tagGreen}>Evento en curso</span>
+        <span className={styles.tagGreen}>ACTIVO</span>
       </div>
 
       {/* Event Title */}

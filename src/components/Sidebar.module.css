@@ -5,8 +5,8 @@
   left: 0;
   width: 280px;
   height: 100vh;
-  background: white;
-  border-right: 1px solid #e0e0e0;
+  background: #FFFFFF;
+  border-right: 2px solid #E5E7EB;
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -15,80 +15,113 @@
 
 /* Sidebar Header */
 .sidebarHeader {
-  padding: 24px 20px;
-  border-bottom: 1px solid #e0e0e0;
-  background: #f8f9fa;
+  padding: 32px 20px;
+  border-bottom: 2px solid #E5E7EB;
+  background: #FFFFFF;
 }
 
 .sidebarTitle {
-  font-size: 20px;
+  font-size: 24px;
   font-weight: 700;
   color: #007AFF;
   margin: 0;
   text-align: center;
+  letter-spacing: 0.5px;
 }
 
 /* Sidebar Navigation */
 .sidebarNav {
   flex: 1;
-  padding: 20px 0;
+  padding: 24px 0;
 }
 
 .sidebarList {
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 12px;
 }
 
 .sidebarItem {
-  margin: 0;
+  margin: 0 0 8px 0;
 }
 
 .sidebarButton {
   width: 100%;
-  background: none;
-  border: none;
-  padding: 16px 20px;
+  background: #FFFFFF;
+  border: 2px solid #E5E7EB;
+  border-radius: 8px;
+  padding: 10px 16px;
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: left;
-  color: #333;
+  color: #374151;
   font-size: 15px;
-  font-weight: 500;
+  font-weight: 600;
   position: relative;
+  overflow: hidden;
+}
+
+.sidebarButton::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.1), transparent);
+  transition: left 0.5s;
+  z-index: 0;
 }
 
 .sidebarButton:hover {
-  background-color: #F0F8FF;
+  background: #FFFFFF;
+  border-color: #007AFF;
   color: #007AFF;
+  transform: translateY(-2px);
+}
+
+.sidebarButton:hover::before {
+  left: 100%;
 }
 
 .sidebarButtonActive {
-  background-color: #E3F2FD;
+  background: linear-gradient(135deg, #E6F3FF 0%, #D6ECFF 100%);
   color: #007AFF;
-  border-left: 3px solid #007AFF;
+  border-color: #007AFF;
+}
+
+.sidebarButtonActive::before {
+  display: none;
 }
 
 .sidebarButtonActive:hover {
-  background-color: #E3F2FD;
+  background: linear-gradient(135deg, #D6ECFF 0%, #C7E4FF 100%);
+  color: #007AFF;
+  border-color: #007AFF;
+  transform: translateY(-2px);
 }
 
 .sidebarIcon {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: relative;
+  z-index: 1;
 }
 
 .sidebarLabel {
   flex: 1;
   white-space: nowrap;
   text-align: left;
+  position: relative;
+  z-index: 1;
+  letter-spacing: 0.3px;
 }
 
 /* Responsive Design */
