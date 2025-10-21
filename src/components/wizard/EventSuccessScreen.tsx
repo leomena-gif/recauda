@@ -19,7 +19,6 @@ const EventSuccessScreen: React.FC<EventSuccessScreenProps> = ({
       <h1 className={styles.title}>¡Evento creado exitosamente!</h1>
       
       <p className={styles.description}>
-        Tu evento ha sido creado y está listo para comenzar. 
         Ahora podés agregar vendedores y comenzar a recaudar.
       </p>
       
