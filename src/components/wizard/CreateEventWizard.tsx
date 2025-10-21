@@ -16,8 +16,8 @@ interface EventData {
   numberValue: string;
   totalNumbers: string;
   autoAdjust: boolean;
-  startDate: string;
-  endDate: string;
+  startDate: Date | null;
+  endDate: Date | null;
   prizes: string[];
 }
 
@@ -35,7 +35,21 @@ const CreateEventWizard: React.FC = () => {
   const totalSteps = 3;
 
   const handleEventTypeNext = (data: Pick<EventData, 'type'>) => {
-    setEventData(prev => prev ? ({ ...prev, ...data }) : ({ ...data, name: '', numberValue: '', totalNumbers: '', autoAdjust: false, startDate: '', endDate: '', prizes: [] }));
+    setEventData(prev => {
+      if (prev) {
+        return { ...prev, ...data };
+      }
+      return {
+        type: data.type,
+        name: '',
+        numberValue: '',
+        totalNumbers: '',
+        autoAdjust: true,
+        startDate: null,
+        endDate: null,
+        prizes: ['']
+      };
+    });
     setCurrentStep(2);
   };
 
@@ -152,17 +166,8 @@ const CreateEventWizard: React.FC = () => {
     <div className={styles.wizardContainer}>
       <main className={styles.mainContent}>
         <div className={styles.wizardContent}>
-          {/* Navigation - Only show on step 1 */}
-          {currentStep === 1 && (
-            <div className={styles.navigationContainer}>
-              <button className={styles.backButton} onClick={handleBack}>
-                <svg className={styles.chevronIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                Volver a mis eventos
-              </button>
-            </div>
-          )}
+          {/* Page Title */}
+          <h1 className={styles.pageTitle}>Crear evento</h1>
           
           <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
           {renderCurrentStep()}

@@ -11,7 +11,6 @@ interface ProgressIndicatorProps {
 const ProgressIndicator: React.FC<ProgressIndicatorProps> = ({ currentStep, totalSteps }) => {
   return (
     <div className={styles.container}>
-      <span className={styles.stepText}>{currentStep}/{totalSteps}</span>
       <div className={styles.progressBars}>
         {Array.from({ length: totalSteps }, (_, index) => (
           <div

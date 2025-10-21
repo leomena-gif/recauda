@@ -179,6 +179,9 @@ const AddSellerWizard: React.FC = () => {
             </div>
           )}
           
+          {/* Page Title */}
+          <h1 className={styles.pageTitle}>Agregar vendedor</h1>
+          
           <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
           {renderCurrentStep()}
           <ActionButtons

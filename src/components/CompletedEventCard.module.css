@@ -98,33 +98,6 @@
   white-space: nowrap;
 }
 
-/* Action Button */
-.actionButton {
-  background-color: transparent;
-  color: #007AFF;
-  border: 2px solid #007AFF;
-  border-radius: 8px;
-  padding: 16px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-top: auto;
-}
-
-.actionButton:hover {
-  background-color: #007AFF;
-  color: white;
-}
-
-.actionButton:active {
-  transform: translateY(1px);
-}
-
 /* Responsive Design */
 @media (max-width: 480px) {
   .detailsRow {

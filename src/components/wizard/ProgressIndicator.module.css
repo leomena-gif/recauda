@@ -1,34 +1,76 @@
 .container {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin-bottom: 24px;
-}
-
-.stepText {
-  font-size: 16px;
-  font-weight: 600;
-  color: #333;
-  min-width: 32px;
+  margin-bottom: 12px;
 }
 
 .progressBars {
   display: flex;
-  gap: 6px;
-  width: 120px;
+  gap: 12px;
+  max-width: 180px;
 }
 
 .progressBar {
-  height: 4px;
-  border-radius: 2px;
+  height: 8px;
+  border-radius: 8px;
   flex: 1;
-  transition: background-color 0.3s ease;
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: #E5E5EA;
+}
+
+.progressBar::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.3) 50%, 
+    rgba(255, 255, 255, 0) 100%);
+  transform: translateX(-100%);
 }
 
 .active {
-  background-color: #007AFF;
+  background: linear-gradient(90deg, #007AFF 0%, #0066E6 100%);
+  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
+  animation: fillIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.active::before {
+  animation: shimmer 2s infinite;
 }
 
 .inactive {
   background-color: #E5E5EA;
+  transform: scale(1);
+}
+
+.progressBar:hover {
+  transform: scaleY(1.2);
+}
+
+.active:hover {
+  box-shadow: 0 3px 12px rgba(0, 122, 255, 0.4);
+}
+
+@keyframes fillIn {
+  from {
+    transform: scaleX(0);
+    transform-origin: left;
+  }
+  to {
+    transform: scaleX(1);
+    transform-origin: left;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(100%);
+  }
 }

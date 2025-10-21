@@ -59,7 +59,7 @@ const CompletedEventCard: React.FC = () => {
       </div>
 
       {/* Action Button */}
-      <button className={styles.actionButton} onClick={handleGoToDetail}>
+      <button className="btn btn-tertiary btn-full" onClick={handleGoToDetail}>
         Ir al detalle
       </button>
     </div>

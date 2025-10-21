@@ -9,8 +9,8 @@ interface EventData {
   numberValue: string;
   totalNumbers: string;
   autoAdjust: boolean;
-  startDate: string;
-  endDate: string;
+  startDate: Date | null;
+  endDate: Date | null;
   prizes: string[];
 }
 
@@ -27,6 +27,26 @@ const ConfirmEventStep: React.FC<ConfirmEventStepProps> = ({
 }) => {
   const formatEventType = (type: 'raffle' | 'food_sale') => {
     return type === 'raffle' ? 'Sorteo' : 'Venta de comida';
+  };
+
+  const formatDate = (date: Date | null) => {
+    if (!date) return 'No especificada';
+    return date.toLocaleDateString('es-ES', {
+      day: 'numeric',
+      month: 'long',
+      year: 'numeric'
+    });
+  };
+
+  const formatCurrency = (value: string) => {
+    // Si ya tiene símbolo de moneda, devolverlo tal cual
+    if (value.includes('$')) return value;
+    // Eliminar espacios y extraer solo números
+    const numericValue = value.replace(/[^\d]/g, '');
+    if (numericValue) {
+      return `$ ${parseInt(numericValue).toLocaleString('es-AR')}`;
+    }
+    return value;
   };
 
   const formatTotalNumbers = () => {
@@ -57,7 +77,7 @@ const ConfirmEventStep: React.FC<ConfirmEventStepProps> = ({
             <span className={styles.label}>
               Valor de la {eventData.type === 'raffle' ? 'rifa' : 'venta'}
             </span>
-            <span className={styles.value}>{eventData.numberValue}</span>
+            <span className={styles.value}>{formatCurrency(eventData.numberValue)}</span>
           </div>
           
           <div className={styles.detailRow}>
@@ -67,16 +87,16 @@ const ConfirmEventStep: React.FC<ConfirmEventStepProps> = ({
           
           <div className={styles.detailRow}>
             <span className={styles.label}>Fecha de inicio</span>
-            <span className={styles.value}>{eventData.startDate}</span>
+            <span className={styles.value}>{formatDate(eventData.startDate)}</span>
           </div>
           
           <div className={styles.detailRow}>
             <span className={styles.label}>Fecha de finalización</span>
-            <span className={styles.value}>{eventData.endDate}</span>
+            <span className={styles.value}>{formatDate(eventData.endDate)}</span>
           </div>
           
           <div className={styles.prizesSection}>
-            <span className={styles.sectionLabel}>Premios</span>
+            <h2 className={styles.sectionLabel}>🏆 Premios</h2>
             <div className={styles.prizesList}>
               {formatPrizes().map((prize, index) => (
                 <div key={index} className={styles.prizeItem}>

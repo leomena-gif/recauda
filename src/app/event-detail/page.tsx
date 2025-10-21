@@ -74,13 +74,15 @@ export default function EventDetail() {
             </button>
           </div>
 
-          {/* Event Title and Status */}
-          <div className={styles.titleContainer}>
-            <h1 className={styles.eventTitle}>
-              Rifa día del niño del G.S. General Deheza
-            </h1>
+          {/* Status Tag */}
+          <div className={styles.statusContainer}>
             <span className={styles.statusTag}>ACTIVO</span>
           </div>
+
+          {/* Event Title */}
+          <h1 className={styles.eventTitle}>
+            Rifa día del niño del G.S. General Deheza
+          </h1>
 
           {/* Event Details with Progress */}
           <div className={styles.eventDetails}>

@@ -1,3 +1,5 @@
+@import 'react-datepicker/dist/react-datepicker.css';
+
 /* CSS Variables */
 :root {
   /* Colors - Primary */
@@ -111,24 +113,32 @@ body {
 @media (max-width: 768px) {
   .mainContent {
     margin-left: 0;
-    padding: var(--space-md) var(--space-sm);
+    padding: 0;
     padding-top: var(--mobile-header-height);
   }
   
   .pageContainer {
-    padding: 0 var(--space-md);
+    padding: var(--space-md) var(--space-md);
   }
   
   .pageTitle {
     font-size: var(--font-size-2xl);
-    margin-bottom: var(--space-md);
+    margin-bottom: var(--space-lg);
   }
 }
 
-/* Page Container */
+@media (max-width: 480px) {
+  .pageContainer {
+    padding: var(--space-md) var(--space-sm);
+  }
+}
+
+/* Page Container - Sistema consistente de márgenes */
 .pageContainer {
   width: 100%;
-  padding: 0 var(--space-lg);
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
 }
 
 .pageTitle {

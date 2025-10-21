@@ -57,10 +57,10 @@ export default function Home() {
         </div>
         <div className={styles.headerActions}>
           <button
-            className={styles.createEventButton}
+            className="btn btn-primary"
             onClick={handleCreateEvent}
           >
-            <span>Crear evento</span>
+            Crear evento
           </button>
         </div>
       </div>

@@ -107,35 +107,15 @@
   align-items: center;
 }
 
-/* Action Button */
-.actionButton {
-  background-color: #007AFF;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  padding: 16px 24px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
+.actionContainer > button {
+  flex: 0 0 50%;
   width: 50%;
-  flex-shrink: 0;
-  white-space: nowrap;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.actionButton:hover {
-  background-color: #0056CC;
-}
-
-.actionButton:active {
-  transform: translateY(1px);
 }
 
 /* Info Message */
 .infoMessage {
+  flex: 0 0 50%;
+  width: 50%;
   margin: 0;
   padding: 0;
   font-size: 13px;
@@ -143,8 +123,6 @@
   color: #FF3B30;
   text-align: left;
   line-height: 1.4;
-  flex: 1;
-  min-width: 0;
 }
 
 /* Responsive Design */
@@ -152,15 +130,17 @@
   .actionContainer {
     flex-direction: column;
     gap: 12px;
-    align-items: stretch;
   }
 
-  .actionButton {
+  .actionContainer > button {
+    flex: 1;
     width: 100%;
   }
 
   .infoMessage {
-    text-align: left;
+    flex: 1;
+    width: 100%;
+    text-align: center;
   }
 }
 

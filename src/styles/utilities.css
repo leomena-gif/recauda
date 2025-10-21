@@ -312,3 +312,122 @@
   opacity: 1;
 }
 
+/* Button Utilities - Sistema de 3 niveles */
+
+/* Base button styles */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  border: none;
+  text-decoration: none;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+/* Button Sizes */
+.btn-sm {
+  padding: 10px 16px;
+  font-size: 14px;
+}
+
+.btn-md {
+  padding: 16px 24px;
+  font-size: 16px;
+}
+
+.btn-lg {
+  padding: 18px 32px;
+  font-size: 18px;
+}
+
+/* Primary Button - Botón principal (azul sólido) */
+.btn-primary {
+  background-color: #007AFF;
+  color: white;
+  border: none;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background-color: #0056CC;
+}
+
+.btn-primary:active:not(:disabled) {
+  background-color: #004499;
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid #007AFF;
+  outline-offset: 2px;
+}
+
+/* Secondary Button - Botón secundario (quiet - fondo azul claro) */
+.btn-secondary {
+  background-color: rgba(0, 122, 255, 0.12);
+  color: #007AFF;
+  border: none;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  background-color: rgba(0, 122, 255, 0.18);
+}
+
+.btn-secondary:active:not(:disabled) {
+  background-color: rgba(0, 122, 255, 0.24);
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid #007AFF;
+  outline-offset: 2px;
+}
+
+/* Tertiary Button - Botón terciario (outline azul) */
+.btn-tertiary {
+  background-color: transparent;
+  color: #007AFF;
+  border: 2px solid #007AFF;
+}
+
+.btn-tertiary:hover:not(:disabled) {
+  background-color: #007AFF;
+  color: white;
+}
+
+.btn-tertiary:active:not(:disabled) {
+  background-color: #0056CC;
+  border-color: #0056CC;
+  color: white;
+}
+
+.btn-tertiary:focus-visible {
+  outline: 2px solid #007AFF;
+  outline-offset: 2px;
+}
+
+/* Full width button */
+.btn-full {
+  width: 100%;
+}
+
+/* Button with icon */
+.btn-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+

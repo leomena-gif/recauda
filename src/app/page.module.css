@@ -2,7 +2,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 24px;
+  margin-bottom: 12px;
   flex-wrap: wrap;
   gap: 16px;
 }
@@ -16,35 +16,10 @@
   align-items: center;
 }
 
-.createEventButton {
-  background: transparent;
-  color: #007AFF;
-  border: 2px solid #007AFF;
-  border-radius: 8px;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.createEventButton:hover {
-  background-color: #007AFF;
-  color: white;
-  transform: translateY(-1px);
-}
-
-.createEventButton:active {
-  transform: translateY(0);
-}
-
 /* Filter Pills */
 .filtersContainer {
   margin-bottom: var(--space-xl);
-  padding: var(--space-md) 0;
+  margin-top: calc(var(--space-xl) / 2);
 }
 
 .pillsGroup {
@@ -155,13 +130,11 @@
 
   .headerActions {
     justify-content: flex-start;
+    width: 100%;
   }
 
-  .createEventButton {
-    padding: 14px 20px;
-    font-size: 16px;
+  .headerActions > button {
     width: 100%;
-    justify-content: center;
   }
 
   .filtersContainer {
@@ -179,11 +152,6 @@
 }
 
 @media (max-width: 480px) {
-  .createEventButton {
-    padding: 16px 20px;
-    font-size: 16px;
-  }
-
   .pillsGroup {
     justify-content: center;
   }

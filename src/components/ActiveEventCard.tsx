@@ -63,11 +63,11 @@ const ActiveEventCard: React.FC = () => {
 
       {/* Action Buttons */}
       <div className={styles.buttonContainer}>
-        <button className={styles.detailButton} onClick={handleGoToDetail}>
-          Ir al detalle
-        </button>
-        <button className={styles.addSellersButton} onClick={handleAddSellers}>
+        <button className="btn btn-secondary" onClick={handleAddSellers}>
           Agregar vendedores
+        </button>
+        <button className="btn btn-tertiary" onClick={handleGoToDetail}>
+          Ir al detalle
         </button>
       </div>
     </div>

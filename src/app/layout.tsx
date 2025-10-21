@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import ConditionalLayout from '@/components/ConditionalLayout';
 import './globals.css';
+import '@/styles/utilities.css';
 
 export const metadata: Metadata = {
   title: 'Recauda - Gestiona tus eventos',

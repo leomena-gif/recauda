@@ -60,7 +60,7 @@ const BlockedEventCard: React.FC = () => {
 
       {/* Action Button and Info Message */}
       <div className={styles.actionContainer}>
-        <button className={styles.actionButton} onClick={handleAddSellers}>
+        <button className="btn btn-secondary" onClick={handleAddSellers}>
           Agregar vendedores
         </button>
         <p className={styles.infoMessage}>

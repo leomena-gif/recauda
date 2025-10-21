@@ -141,6 +141,66 @@ export const STATUS_OPTIONS = [
 }
 ```
 
+## 🔘 Sistema de Botones
+
+Usamos un sistema de 3 niveles de botones con clases globales de utilidad.
+
+### Botón Principal
+```tsx
+// Color azul sólido - Para acciones principales
+<button className="btn btn-primary">
+  Agregar vendedor
+</button>
+```
+
+### Botón Secundario (Quiet)
+```tsx
+// Texto azul sin borde ni fondo - Para acciones secundarias sutiles
+<button className="btn btn-secondary">
+  Cancelar
+</button>
+```
+
+### Botón Terciario (Outline)
+```tsx
+// Outline azul con fondo transparente - Para acciones alternativas
+<button className="btn btn-tertiary">
+  Ir al detalle
+</button>
+```
+
+### Tamaños
+```tsx
+// Pequeño
+<button className="btn btn-primary btn-sm">Pequeño</button>
+
+// Mediano (default)
+<button className="btn btn-primary btn-md">Mediano</button>
+
+// Grande
+<button className="btn btn-primary btn-lg">Grande</button>
+```
+
+### Ancho completo
+```tsx
+<button className="btn btn-primary btn-full">
+  Botón de ancho completo
+</button>
+```
+
+### Con icono
+```tsx
+<button className="btn btn-primary btn-icon">
+  <svg>...</svg>
+  Agregar vendedor
+</button>
+```
+
+### Jerarquía Visual
+1. **Principal**: Usa para la acción más importante en la pantalla
+2. **Secundario**: Usa para acciones de menor prioridad o cancelar
+3. **Terciario**: Usa para acciones alternativas o navegación
+
 ### ❌ Evitar
 ```css
 /* No usar !important sin necesidad */

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useImperativeHandle, forwardRef } from 'react';
+import DatePicker from '@/components/DatePicker';
 import styles from './EventDataStep.module.css';
 
 export interface EventDataStepRef {
@@ -14,8 +15,8 @@ interface EventDataStepProps {
     numberValue?: string;
     totalNumbers?: string;
     autoAdjust?: boolean;
-    startDate?: string;
-    endDate?: string;
+    startDate?: string | Date;
+    endDate?: string | Date;
     prizes?: string[];
   };
   onNext: (data: {
@@ -23,8 +24,8 @@ interface EventDataStepProps {
     numberValue: string;
     totalNumbers: string;
     autoAdjust: boolean;
-    startDate: string;
-    endDate: string;
+    startDate: Date | null;
+    endDate: Date | null;
     prizes: string[];
   }) => void;
   onBack: () => void;
@@ -33,13 +34,13 @@ interface EventDataStepProps {
 const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
   ({ initialData, onNext, onBack }, ref) => {
     const [formData, setFormData] = useState({
-      name: initialData?.name || 'Rifa día del niño',
-      numberValue: initialData?.numberValue || '$ 100',
-      totalNumbers: initialData?.totalNumbers || '1.000',
-      autoAdjust: initialData?.autoAdjust || false,
-      startDate: initialData?.startDate || '1/07/25',
-      endDate: initialData?.endDate || '12/08/25',
-      prizes: initialData?.prizes || ['Bicicleta rodado 29', 'Televisor 32 pulgadas'],
+      name: initialData?.name || '',
+      numberValue: initialData?.numberValue || '',
+      totalNumbers: initialData?.totalNumbers || '',
+      autoAdjust: initialData?.autoAdjust ?? true,
+      startDate: initialData?.startDate instanceof Date ? initialData.startDate : null,
+      endDate: initialData?.endDate instanceof Date ? initialData.endDate : null,
+      prizes: initialData?.prizes && initialData.prizes.length > 0 ? initialData.prizes : [''],
     });
 
     const [errors, setErrors] = useState<Record<string, string>>({});
@@ -60,11 +61,11 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
           newErrors.totalNumbers = 'La cantidad total de números es requerida';
         }
 
-        if (!formData.startDate.trim()) {
+        if (!formData.startDate) {
           newErrors.startDate = 'La fecha de inicio es requerida';
         }
 
-        if (!formData.endDate.trim()) {
+        if (!formData.endDate) {
           newErrors.endDate = 'La fecha de finalización es requerida';
         }
 
@@ -76,7 +77,7 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
       },
     }));
 
-    const handleInputChange = (field: string, value: string | boolean) => {
+    const handleInputChange = (field: string, value: string | boolean | Date | null) => {
       setFormData(prev => ({ ...prev, [field]: value }));
       // Clear error when user starts typing
       if (errors[field]) {
@@ -85,10 +86,28 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
     };
 
     const handleAddPrize = () => {
-      setFormData(prev => ({
-        ...prev,
-        prizes: [...prev.prizes, '']
-      }));
+      if (formData.prizes.length < 10) {
+        setFormData(prev => ({
+          ...prev,
+          prizes: [...prev.prizes, '']
+        }));
+      }
+    };
+    
+    const getPrizeLabel = (index: number): string => {
+      const labels = [
+        'Primer premio',
+        'Segundo premio',
+        'Tercer premio',
+        'Cuarto premio',
+        'Quinto premio',
+        'Sexto premio',
+        'Séptimo premio',
+        'Octavo premio',
+        'Noveno premio',
+        'Décimo premio'
+      ];
+      return labels[index] || `Premio ${index + 1}`;
     };
 
     const handlePrizeChange = (index: number, value: string) => {
@@ -110,135 +129,127 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
         <h1 className={styles.title}>Datos Generales</h1>
         
         <div className={styles.formCard}>
-            <div className={styles.fieldGroup}>
-              <label className={styles.label}>Nombre del evento</label>
-              <input
-                type="text"
-                value={formData.name}
-                onChange={(e) => handleInputChange('name', e.target.value)}
-                className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
-                placeholder="Ingresa el nombre del evento"
-              />
-              {errors.name && <span className={styles.errorText}>{errors.name}</span>}
+            <div className={styles.twoColumnRow}>
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Nombre del evento</label>
+                <input
+                  type="text"
+                  value={formData.name}
+                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
+                  placeholder="Ej: Rifa Aniversario del Club"
+                />
+                {errors.name && <span className={styles.errorText}>{errors.name}</span>}
+              </div>
+
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Valor del número</label>
+                <input
+                  type="text"
+                  value={formData.numberValue}
+                  onChange={(e) => handleInputChange('numberValue', e.target.value)}
+                  className={`${styles.input} ${errors.numberValue ? styles.inputError : ''}`}
+                  placeholder="Ej: $500"
+                />
+                {errors.numberValue && <span className={styles.errorText}>{errors.numberValue}</span>}
+              </div>
             </div>
 
-            <div className={styles.fieldGroup}>
-              <label className={styles.label}>Valor del número</label>
-              <input
-                type="text"
-                value={formData.numberValue}
-                onChange={(e) => handleInputChange('numberValue', e.target.value)}
-                className={`${styles.input} ${errors.numberValue ? styles.inputError : ''}`}
-                placeholder="$ 100"
-              />
-              {errors.numberValue && <span className={styles.errorText}>{errors.numberValue}</span>}
-            </div>
+            <div className={styles.twoColumnRow}>
+              <div className={styles.fieldGroup}>
+                <label className={styles.label}>Cantidad de números totales (opcional)</label>
+                <input
+                  type="text"
+                  value={formData.totalNumbers}
+                  onChange={(e) => handleInputChange('totalNumbers', e.target.value)}
+                  className={`${styles.input} ${errors.totalNumbers ? styles.inputError : ''}`}
+                  placeholder="Ej: 1000"
+                  disabled={formData.autoAdjust}
+                />
+                {errors.totalNumbers && <span className={styles.errorText}>{errors.totalNumbers}</span>}
+              </div>
 
-            <div className={styles.fieldGroup}>
-              <label className={styles.label}>Cantidad de números totales (opcional)</label>
-              <input
-                type="text"
-                value={formData.totalNumbers}
-                onChange={(e) => handleInputChange('totalNumbers', e.target.value)}
-                className={`${styles.input} ${errors.totalNumbers ? styles.inputError : ''}`}
-                placeholder="1.000"
-                disabled={formData.autoAdjust}
-              />
-              {errors.totalNumbers && <span className={styles.errorText}>{errors.totalNumbers}</span>}
-            </div>
-
-            <div className={styles.toggleGroup}>
-              <div className={styles.toggleContainer}>
-                <label className={styles.toggle}>
-                  <input
-                    type="checkbox"
-                    checked={formData.autoAdjust}
-                    onChange={(e) => handleInputChange('autoAdjust', e.target.checked)}
-                    className={styles.toggleInput}
-                  />
-                  <span className={styles.toggleSlider}></span>
-                </label>
-                <span className={styles.toggleLabel}>
-                  Ajustar automáticamente el total de números según la cantidad de vendedores
-                </span>
+              <div className={`${styles.fieldGroup} ${styles.toggleFieldGroup}`}>
+                <div className={styles.toggleContainer}>
+                  <label className={styles.toggle}>
+                    <input
+                      type="checkbox"
+                      checked={formData.autoAdjust}
+                      onChange={(e) => handleInputChange('autoAdjust', e.target.checked)}
+                      className={styles.toggleInput}
+                    />
+                    <span className={styles.toggleSlider}></span>
+                  </label>
+                  <span className={styles.toggleLabel}>
+                    Calcular cantidad total automáticamente
+                  </span>
+                </div>
               </div>
             </div>
 
             <div className={styles.dateRow}>
               <div className={styles.fieldGroup}>
                 <label className={styles.label}>Fecha de inicio</label>
-                <div className={styles.dateInputContainer}>
-                  <input
-                    type="text"
-                    value={formData.startDate}
-                    onChange={(e) => handleInputChange('startDate', e.target.value)}
-                    className={`${styles.input} ${styles.dateInput} ${errors.startDate ? styles.inputError : ''}`}
-                    placeholder="1/07/25"
-                  />
-                  <svg className={styles.calendarIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2"/>
-                    <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="2"/>
-                    <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                </div>
+                <DatePicker
+                  selected={formData.startDate}
+                  onChange={(date) => handleInputChange('startDate', date)}
+                  placeholder="DD/MM/AA"
+                  error={!!errors.startDate}
+                />
                 {errors.startDate && <span className={styles.errorText}>{errors.startDate}</span>}
               </div>
 
               <div className={styles.fieldGroup}>
                 <label className={styles.label}>Fecha de finalización</label>
-                <div className={styles.dateInputContainer}>
-                  <input
-                    type="text"
-                    value={formData.endDate}
-                    onChange={(e) => handleInputChange('endDate', e.target.value)}
-                    className={`${styles.input} ${styles.dateInput} ${errors.endDate ? styles.inputError : ''}`}
-                    placeholder="12/08/25"
-                  />
-                  <svg className={styles.calendarIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" stroke="currentColor" strokeWidth="2"/>
-                    <line x1="16" y1="2" x2="16" y2="6" stroke="currentColor" strokeWidth="2"/>
-                    <line x1="8" y1="2" x2="8" y2="6" stroke="currentColor" strokeWidth="2"/>
-                    <line x1="3" y1="10" x2="21" y2="10" stroke="currentColor" strokeWidth="2"/>
-                  </svg>
-                </div>
+                <DatePicker
+                  selected={formData.endDate}
+                  onChange={(date) => handleInputChange('endDate', date)}
+                  placeholder="DD/MM/AA"
+                  error={!!errors.endDate}
+                />
                 {errors.endDate && <span className={styles.errorText}>{errors.endDate}</span>}
               </div>
             </div>
 
             <div className={styles.prizesSection}>
-              <label className={styles.sectionLabel}>Premios</label>
+              <h2 className={styles.sectionLabel}>🏆 Premios</h2>
               
               {formData.prizes.map((prize, index) => (
-                <div key={index} className={styles.prizeItem}>
-                  <input
-                    type="text"
-                    value={prize}
-                    onChange={(e) => handlePrizeChange(index, e.target.value)}
-                    className={styles.input}
-                    placeholder={`Premio ${index + 1}`}
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemovePrize(index)}
-                    className={styles.removePrizeButton}
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M3 6H5H21" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M10 11V17" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M14 11V17" stroke="#dc2626" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                  </button>
+                <div key={index} className={styles.prizeItemWrapper}>
+                  <label className={styles.label}>
+                    {getPrizeLabel(index)}
+                  </label>
+                  <div className={styles.prizeItem}>
+                    <input
+                      type="text"
+                      value={prize}
+                      onChange={(e) => handlePrizeChange(index, e.target.value)}
+                      className={styles.input}
+                      placeholder={index === 0 ? "Ej: Bicicleta rodado 29" : index === 1 ? "Ej: Smart TV 50 pulgadas" : "Ej: Vale de compra $10.000"}
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemovePrize(index)}
+                      className={styles.removePrizeButton}
+                    >
+                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M3 6H5H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M8 6V4C8 3.46957 8.21071 2.96086 8.58579 2.58579C8.96086 2.21071 9.46957 2 10 2H14C14.5304 2 15.0391 2.21071 15.4142 2.58579C15.7893 2.96086 16 3.46957 16 4V6M19 6V20C19 20.5304 18.7893 21.0391 18.4142 21.4142C18.0391 21.7893 17.5304 22 17 22H7C6.46957 22 5.96086 21.7893 5.58579 21.4142C5.21071 21.0391 5 20.5304 5 20V6H19Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M10 11V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M14 11V17" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </button>
+                  </div>
                 </div>
               ))}
               
               <button
                 type="button"
                 onClick={handleAddPrize}
-                className={styles.addPrizeButton}
+                className={`btn btn-tertiary btn-full ${styles.addPrizeButton}`}
+                disabled={formData.prizes.length >= 10}
               >
-                Agregar otro premio
+                Agregar premio {formData.prizes.length >= 10 ? '(máximo 10)' : ''}
               </button>
             </div>
         </div>
