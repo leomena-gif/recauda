@@ -25,14 +25,14 @@ const EventSuccessScreen: React.FC<EventSuccessScreenProps> = ({
       
       <div className={styles.actions}>
         <button
-          className="btn btn-secondary btn-full"
+          className="btn btn-primary"
           onClick={onBackToEvents}
         >
           Agregar vendedores
         </button>
         
         <button
-          className="btn btn-tertiary btn-full"
+          className="btn btn-secondary"
           onClick={onBackToEvents}
         >
           Volver a Mis eventos
