@@ -265,6 +265,32 @@
   cursor: not-allowed;
 }
 
+/* Food Items Styles */
+.foodItemWrapper {
+  margin-bottom: 24px;
+}
+
+.foodItemRow {
+  display: grid;
+  grid-template-columns: 2fr 1fr auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.foodItemName {
+  display: flex;
+  flex-direction: column;
+}
+
+.foodItemPrice {
+  display: flex;
+  flex-direction: column;
+}
+
+.removePrizeButton:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -350,5 +376,19 @@
   .sectionLabel {
     font-size: 18px;
     margin-bottom: 20px;
+  }
+  
+  .foodItemWrapper {
+    margin-bottom: 20px;
+  }
+  
+  .foodItemRow {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  
+  .removePrizeButton {
+    width: 100%;
+    justify-content: center;
   }
 }

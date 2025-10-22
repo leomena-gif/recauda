@@ -3,17 +3,58 @@
   margin: 0 auto;
   padding: 0;
   text-align: center;
-  animation: slideUp 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
 }
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
+/* Confetti Container */
+.confettiContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.confetti {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  background: linear-gradient(135deg, #007AFF, #5AC8FA);
+  top: -10%;
+  border-radius: 50%;
+  animation: confettiFall 3s ease-in infinite;
+  opacity: 0;
+}
+
+.confetti:nth-child(2n) {
+  background: linear-gradient(135deg, #34C759, #30D158);
+  width: 6px;
+  height: 6px;
+}
+
+.confetti:nth-child(3n) {
+  background: linear-gradient(135deg, #FF9500, #FFCC00);
+  width: 7px;
+  height: 7px;
+}
+
+.confetti:nth-child(4n) {
+  background: linear-gradient(135deg, #FF3B30, #FF6482);
+  width: 5px;
+  height: 5px;
+}
+
+@keyframes confettiFall {
+  0% {
+    transform: translateY(0) rotate(0deg);
     opacity: 1;
-    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(100vh) rotate(360deg);
+    opacity: 0;
   }
 }
 
@@ -24,19 +65,6 @@
 
 .successIcon {
   font-size: 80px;
-  animation: bounce 1s ease-in-out;
-}
-
-@keyframes bounce {
-  0%, 20%, 50%, 80%, 100% {
-    transform: translateY(0);
-  }
-  40% {
-    transform: translateY(-10px);
-  }
-  60% {
-    transform: translateY(-5px);
-  }
 }
 
 .title {
@@ -75,6 +103,10 @@
     margin-bottom: 17px;
   }
   
+  .successIcon {
+    font-size: 60px;
+  }
+  
   .title {
     font-size: 24px;
     margin-bottom: 12px;
@@ -91,6 +123,11 @@
   .actions > button {
     width: 100%;
     min-width: unset;
+  }
+  
+  .confetti {
+    width: 6px;
+    height: 6px;
   }
 }
 

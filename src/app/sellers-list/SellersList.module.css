@@ -16,32 +16,6 @@
   align-items: center;
 }
 
-.addSellerButton {
-  background: transparent;
-  color: #007AFF;
-  border: 2px solid #007AFF;
-  border-radius: 8px;
-  padding: 12px 20px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  white-space: nowrap;
-}
-
-.addSellerButton:hover {
-  background-color: #007AFF;
-  color: white;
-  transform: translateY(-1px);
-}
-
-.addSellerButton:active {
-  transform: translateY(0);
-}
-
 .subtitle {
   color: #6B7280;
   font-size: 16px;
@@ -104,41 +78,44 @@
 
 .searchIcon {
   position: absolute;
-  left: 12px;
+  left: 16px;
   top: 50%;
   transform: translateY(-50%);
-  color: #9CA3AF;
+  color: #999;
   pointer-events: none;
 }
 
 .searchInput {
   width: 100%;
-  padding: 12px 12px 12px 44px;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  color: #374151;
-  background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  padding: 16px 16px 16px 44px;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  background-color: #fff;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
 }
 
 .searchInput:hover {
   border-color: #007AFF;
-  background: linear-gradient(135deg, #f0f7ff 0%, #e6f3ff 100%);
-  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.1);
 }
 
 .searchInput:focus {
   outline: none;
   border-color: #007AFF;
-  box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
-  background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
+  box-shadow: none;
+}
+
+.searchInput::placeholder {
+  color: #999;
+  font-size: 16px;
 }
 
 .statusFilter {
-  min-width: 200px;
+  min-width: 180px;
+  width: auto;
 }
 
 .filterSelect {
@@ -418,30 +395,37 @@
   position: absolute;
   top: 16px;
   right: 16px;
-  background: #F3F4F6;
+  background-color: rgba(0, 122, 255, 0.12);
   border: none;
   padding: 6px 10px;
   border-radius: 6px;
   cursor: pointer;
-  color: #6B7280;
+  color: #007AFF;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
+  gap: 4px;
   z-index: 1;
-  font-size: 13px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 600;
   white-space: nowrap;
 }
 
 .mobileEditButton:hover {
-  background: #E5E7EB;
+  background-color: rgba(0, 122, 255, 0.18);
   color: #007AFF;
+  transform: translateY(-1px);
 }
 
 .mobileEditButton:active {
-  transform: scale(0.95);
+  background-color: rgba(0, 122, 255, 0.22);
+  transform: translateY(0);
+}
+
+.mobileEditButton svg {
+  width: 14px;
+  height: 14px;
 }
 
 .mobileCardInactive {
@@ -525,23 +509,23 @@
   min-width: 90px;
 }
 
-/* Edit Button - Tertiary style (appears on hover) */
+/* Edit Button - Secondary style (appears on hover) */
 .editButton {
-  background: none;
+  background-color: rgba(0, 122, 255, 0.12);
   border: none;
-  padding: 6px 10px;
+  padding: 6px 12px;
   border-radius: 6px;
   cursor: pointer;
-  color: #6B7280;
+  color: #007AFF;
   transition: all 0.2s ease;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 5px;
   opacity: 0;
   visibility: hidden;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 600;
   white-space: nowrap;
 }
 
@@ -551,12 +535,19 @@
 }
 
 .editButton:hover {
-  background: #F3F4F6;
+  background-color: rgba(0, 122, 255, 0.18);
   color: #007AFF;
+  transform: translateY(-1px);
 }
 
 .editButton:active {
-  transform: scale(0.95);
+  background-color: rgba(0, 122, 255, 0.22);
+  transform: translateY(0);
+}
+
+.editButton svg {
+  width: 16px;
+  height: 16px;
 }
 
 /* Toggle Switch */
@@ -1010,13 +1001,6 @@
     justify-content: flex-start;
   }
 
-  .addSellerButton {
-    padding: 14px 20px;
-    font-size: 16px;
-    width: 100%;
-    justify-content: center;
-  }
-
   .subtitle {
     font-size: 14px;
     margin-top: 6px;
@@ -1227,11 +1211,6 @@
 @media (max-width: 640px) {
   .header {
     margin-bottom: 16px;
-  }
-
-  .addSellerButton {
-    padding: 16px 20px;
-    font-size: 16px;
   }
 
   /* Hide table, show mobile cards */

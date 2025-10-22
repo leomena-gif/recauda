@@ -10,8 +10,26 @@ interface EventSuccessScreenProps {
 const EventSuccessScreen: React.FC<EventSuccessScreenProps> = ({
   onBackToEvents,
 }) => {
+  // Generar partículas de confetti
+  const confettiParticles = Array.from({ length: 12 }, (_, i) => (
+    <div
+      key={i}
+      className={styles.confetti}
+      style={{
+        left: `${Math.random() * 100}%`,
+        animationDelay: `${Math.random() * 0.5}s`,
+        animationDuration: `${2 + Math.random() * 2}s`,
+      }}
+    />
+  ));
+
   return (
     <div className={styles.container}>
+      {/* Confetti de fondo */}
+      <div className={styles.confettiContainer}>
+        {confettiParticles}
+      </div>
+
       <div className={styles.iconContainer}>
         <div className={styles.successIcon}>🎉</div>
       </div>

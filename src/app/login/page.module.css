@@ -1,0 +1,22 @@
+/* Login Page Wrapper */
+.pageWrapper {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--space-lg);
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .pageWrapper {
+    padding: var(--space-md) var(--space-md);
+  }
+}
+
+@media (max-width: 480px) {
+  .pageWrapper {
+    padding: var(--space-md) var(--space-sm);
+  }
+}
+
+

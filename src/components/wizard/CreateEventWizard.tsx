@@ -10,15 +10,24 @@ import ConfirmEventStep from './ConfirmEventStep';
 import EventSuccessScreen from './EventSuccessScreen';
 import styles from './CreateEventWizard.module.css';
 
+export interface FoodItem {
+  name: string;
+  price: string;
+}
+
 interface EventData {
   type: 'raffle' | 'food_sale';
   name: string;
-  numberValue: string;
-  totalNumbers: string;
-  autoAdjust: boolean;
+  // Fields for raffle
+  numberValue?: string;
+  totalNumbers?: string;
+  autoAdjust?: boolean;
+  prizes?: string[];
+  // Fields for food sale
+  foodItems?: FoodItem[];
+  // Common fields
   startDate: Date | null;
   endDate: Date | null;
-  prizes: string[];
 }
 
 const CreateEventWizard: React.FC = () => {
@@ -39,16 +48,28 @@ const CreateEventWizard: React.FC = () => {
       if (prev) {
         return { ...prev, ...data };
       }
-      return {
-        type: data.type,
-        name: '',
-        numberValue: '',
-        totalNumbers: '',
-        autoAdjust: true,
-        startDate: null,
-        endDate: null,
-        prizes: ['']
-      };
+      
+      // Initialize based on event type
+      if (data.type === 'food_sale') {
+        return {
+          type: data.type,
+          name: '',
+          startDate: null,
+          endDate: null,
+          foodItems: [{ name: '', price: '' }]
+        };
+      } else {
+        return {
+          type: data.type,
+          name: '',
+          numberValue: '',
+          totalNumbers: '',
+          autoAdjust: true,
+          startDate: null,
+          endDate: null,
+          prizes: ['']
+        };
+      }
     });
     setCurrentStep(2);
   };

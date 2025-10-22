@@ -247,10 +247,10 @@ export default function SellersList() {
         </div>
         <div className={styles.headerActions}>
           <button
-            className={styles.addSellerButton}
+            className="btn btn-primary"
             onClick={handleAddSeller}
           >
-            <span>Agregar vendedor</span>
+            Agregar vendedor
           </button>
         </div>
       </div>
@@ -265,7 +265,7 @@ export default function SellersList() {
             </svg>
             <input
               type="text"
-              placeholder="Buscar por nombre, teléfono o email..."
+              placeholder="Buscar por nombre o teléfono"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className={styles.searchInput}

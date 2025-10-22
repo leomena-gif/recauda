@@ -64,10 +64,10 @@
 
 .mainContent {
   flex: 1;
-  margin-left: var(--sidebar-width);
   padding: var(--space-xl) var(--space-lg);
   min-height: 100vh;
   max-width: 1400px;
+  margin: 0 auto;
   width: 100%;
 }
 
@@ -80,7 +80,6 @@
 /* Responsive */
 @media (max-width: 768px) {
   .mainContent {
-    margin-left: 0;
     padding: var(--space-md) var(--space-md);
   }
 }

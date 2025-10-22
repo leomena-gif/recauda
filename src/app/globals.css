@@ -103,7 +103,7 @@ body {
 /* Main Content */
 .mainContent {
   flex: 1;
-  padding: var(--space-xl) var(--space-md);
+  padding: 0;
   margin-left: var(--sidebar-width);
   background-color: var(--color-gray-50);
   min-height: 100vh;

@@ -1,17 +1,19 @@
 'use client';
 
 import React from 'react';
+import type { FoodItem } from './CreateEventWizard';
 import styles from './ConfirmEventStep.module.css';
 
 interface EventData {
   type: 'raffle' | 'food_sale';
   name: string;
-  numberValue: string;
-  totalNumbers: string;
-  autoAdjust: boolean;
+  numberValue?: string;
+  totalNumbers?: string;
+  autoAdjust?: boolean;
   startDate: Date | null;
   endDate: Date | null;
-  prizes: string[];
+  prizes?: string[];
+  foodItems?: FoodItem[];
 }
 
 interface ConfirmEventStepProps {
@@ -25,6 +27,8 @@ const ConfirmEventStep: React.FC<ConfirmEventStepProps> = ({
   onCreate,
   onBack,
 }) => {
+  const isFoodSale = eventData.type === 'food_sale';
+
   const formatEventType = (type: 'raffle' | 'food_sale') => {
     return type === 'raffle' ? 'Sorteo' : 'Venta de comida';
   };
@@ -53,14 +57,21 @@ const ConfirmEventStep: React.FC<ConfirmEventStepProps> = ({
     if (eventData.autoAdjust) {
       return 'Ajustado según la cantidad de vendedores';
     }
-    return eventData.totalNumbers;
+    return eventData.totalNumbers || '';
   };
 
   const formatPrizes = () => {
-    if (eventData.prizes.length === 0) {
+    if (!eventData.prizes || eventData.prizes.length === 0) {
       return ['Sin premios definidos'];
     }
     return eventData.prizes.filter(prize => prize.trim() !== '');
+  };
+
+  const formatFoodItems = () => {
+    if (!eventData.foodItems || eventData.foodItems.length === 0) {
+      return [];
+    }
+    return eventData.foodItems.filter(item => item.name.trim() !== '' || item.price.trim() !== '');
   };
 
     return (
@@ -73,17 +84,20 @@ const ConfirmEventStep: React.FC<ConfirmEventStepProps> = ({
             <span className={styles.value}>{eventData.name}</span>
           </div>
           
-          <div className={styles.detailRow}>
-            <span className={styles.label}>
-              Valor de la {eventData.type === 'raffle' ? 'rifa' : 'venta'}
-            </span>
-            <span className={styles.value}>{formatCurrency(eventData.numberValue)}</span>
-          </div>
-          
-          <div className={styles.detailRow}>
-            <span className={styles.label}>Cantidad de números totales</span>
-            <span className={styles.value}>{formatTotalNumbers()}</span>
-          </div>
+          {/* Raffle-specific fields */}
+          {!isFoodSale && eventData.numberValue && (
+            <>
+              <div className={styles.detailRow}>
+                <span className={styles.label}>Valor de la rifa</span>
+                <span className={styles.value}>{formatCurrency(eventData.numberValue)}</span>
+              </div>
+              
+              <div className={styles.detailRow}>
+                <span className={styles.label}>Cantidad de números totales</span>
+                <span className={styles.value}>{formatTotalNumbers()}</span>
+              </div>
+            </>
+          )}
           
           <div className={styles.detailRow}>
             <span className={styles.label}>Fecha de inicio</span>
@@ -95,17 +109,35 @@ const ConfirmEventStep: React.FC<ConfirmEventStepProps> = ({
             <span className={styles.value}>{formatDate(eventData.endDate)}</span>
           </div>
           
-          <div className={styles.prizesSection}>
-            <h2 className={styles.sectionLabel}>🏆 Premios</h2>
-            <div className={styles.prizesList}>
-              {formatPrizes().map((prize, index) => (
-                <div key={index} className={styles.prizeItem}>
-                  <span className={styles.prizeNumber}>{index + 1}° premio</span>
-                  <span className={styles.prizeValue}>{prize}</span>
-                </div>
-              ))}
+          {/* Prizes for raffles */}
+          {!isFoodSale && (
+            <div className={styles.prizesSection}>
+              <h2 className={styles.sectionLabel}>🏆 Premios</h2>
+              <div className={styles.prizesList}>
+                {formatPrizes().map((prize, index) => (
+                  <div key={index} className={styles.prizeItem}>
+                    <span className={styles.prizeNumber}>{index + 1}° premio</span>
+                    <span className={styles.prizeValue}>{prize}</span>
+                  </div>
+                ))}
+              </div>
             </div>
+          )}
+
+          {/* Food items for food sales */}
+          {isFoodSale && (
+            <div className={styles.prizesSection}>
+              <h2 className={styles.sectionLabel}>🍽️ Menú</h2>
+              <div className={styles.prizesList}>
+                {formatFoodItems().map((item, index) => (
+                  <div key={index} className={styles.prizeItem}>
+                    <span className={styles.prizeValue}>{item.name}</span>
+                    <span className={styles.prizeNumber}>{formatCurrency(item.price)}</span>
+                  </div>
+                ))}
+              </div>
             </div>
+          )}
         </div>
       </div>
     );

@@ -1,5 +1,6 @@
 import React from 'react';
 import AccountForm from '@/components/AccountForm';
+import styles from './page.module.css';
 
 export const metadata = {
   title: 'Recauda - Crear Cuenta',
@@ -7,5 +8,9 @@ export const metadata = {
 };
 
 export default function CreateAccountPage() {
-  return <AccountForm />;
+  return (
+    <div className={styles.pageWrapper}>
+      <AccountForm />
+    </div>
+  );
 }

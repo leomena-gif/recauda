@@ -13,7 +13,7 @@ const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({ children }) => {
   const pathname = usePathname();
   
   // Pages that should not show the global header and sidebar
-  const noHeaderPages = ['/add-seller'];
+  const noHeaderPages: string[] = [];
   
   const shouldShowHeader = !noHeaderPages.includes(pathname);
   const shouldShowSidebar = !noHeaderPages.includes(pathname);

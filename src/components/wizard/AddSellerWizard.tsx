@@ -2,7 +2,6 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Sidebar from '@/components/Sidebar';
 import ProgressIndicator from './ProgressIndicator';
 import ActionButtons from './ActionButtons';
 import SellerDataStep, { SellerDataStepRef } from './SellerDataStep';
@@ -152,7 +151,6 @@ const AddSellerWizard: React.FC = () => {
   if (showSuccess) {
     return (
       <div className={styles.wizardContainer}>
-        <Sidebar />
         <main className={styles.mainContent}>
           <div className={styles.wizardContent}>
             <SuccessScreen onAddAnother={handleAddAnother} />
@@ -164,7 +162,6 @@ const AddSellerWizard: React.FC = () => {
 
   return (
     <div className={styles.wizardContainer}>
-      <Sidebar />
       <main className={styles.mainContent}>
         <div className={styles.wizardContent}>
           {/* Navigation - Only show on step 1 */}
