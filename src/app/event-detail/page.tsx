@@ -1,244 +1,157 @@
 'use client';
 
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './EventDetail.module.css';
 
 export default function EventDetail() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<'collected' | 'pending'>('collected');
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const handleBackToEvents = () => {
     router.push('/');
   };
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleEditPrice = () => {
-    console.log('Editar precio');
-    setIsDropdownOpen(false);
-  };
-
-  const handleEditDate = () => {
-    console.log('Editar fecha');
-    setIsDropdownOpen(false);
-  };
-
-  const handleAddSellers = () => {
-    router.push('/add-seller');
-    setIsDropdownOpen(false);
-  };
-
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
-
-
   const collectedData = [
-    { name: 'Nombre Apellido', sold: 10, total: 10, amount: 1000, percentage: 100 },
-    { name: 'Nombre Apellido', sold: 8, total: 10, amount: 800, percentage: 80 },
-    { name: 'Nombre Apellido', sold: 7, total: 10, amount: 700, percentage: 70 },
-    { name: 'Nombre Apellido', sold: 10, total: 10, amount: 1000, percentage: 100 },
-    { name: 'Nombre Apellido', sold: 10, total: 10, amount: 1000, percentage: 100 },
+    { name: 'Jacob Jones', sold: 10, total: 10, amount: 8000, percentage: 100 },
+    { name: 'Jerome Bell', sold: 10, total: 10, amount: 8000, percentage: 100 },
+    { name: 'Ronald Richards', sold: 10, total: 10, amount: 8000, percentage: 100 },
+    { name: 'Savannah Nguyen', sold: 10, total: 10, amount: 8000, percentage: 100 },
+    { name: 'Cameron Williamson', sold: 10, total: 10, amount: 8000, percentage: 100 },
+    { name: 'Robert Fox', sold: 10, total: 10, amount: 8000, percentage: 100 },
+    { name: 'Darrell Steward', sold: 10, total: 10, amount: 8000, percentage: 100 },
   ];
 
   const pendingData = [
-    { name: 'Nombre Apellido', sold: 5, total: 10, amount: 500, percentage: 50 },
-    { name: 'Nombre Apellido', sold: 3, total: 10, amount: 300, percentage: 30 },
-    { name: 'Nombre Apellido', sold: 6, total: 10, amount: 600, percentage: 60 },
+    { name: 'Nombre Apellido', sold: 5, total: 10, amount: 5000, percentage: 50 },
+    { name: 'Nombre Apellido', sold: 3, total: 10, amount: 3000, percentage: 30 },
+    { name: 'Nombre Apellido', sold: 6, total: 10, amount: 6000, percentage: 60 },
   ];
 
+  const currentData = activeTab === 'collected' ? collectedData : pendingData;
+  const filteredData = currentData.filter(item =>
+    item.name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
+  // Calculate totals
+  const totalSold = filteredData.reduce((sum, item) => sum + item.sold, 0);
+  const totalNumbers = filteredData.reduce((sum, item) => sum + item.total, 0);
+  const totalAmount = filteredData.reduce((sum, item) => sum + item.amount, 0);
+  const totalPercentage = totalNumbers > 0 ? Math.round((totalSold / totalNumbers) * 100) : 0;
+
   return (
-    <div className="pageContainer">
-          {/* Navigation */}
-          <div className={styles.navigationContainer}>
-            <button className={styles.backButton} onClick={handleBackToEvents}>
-              <svg className={styles.chevronIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              Volver a mis eventos
-            </button>
-          </div>
+    <>
+      <div className={`pageContainer ${styles.eventDetailContainer}`}>
+        {/* Navigation */}
+        <div className={styles.navigationContainer}>
+          <button className={styles.backButton} onClick={handleBackToEvents}>
+            <svg className={styles.chevronIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            Volver a Mis eventos
+          </button>
+        </div>
 
-          {/* Status Tag */}
-          <div className={styles.statusContainer}>
-            <span className={styles.statusTag}>ACTIVO</span>
-          </div>
-
-          {/* Event Title */}
-          <h1 className={styles.eventTitle}>
-            Rifa día del niño del G.S. General Deheza
-          </h1>
-
-          {/* Event Details with Progress */}
-          <div className={styles.eventDetails}>
-            <div className={styles.detailsHeader}>
-              <h3 className={styles.detailsTitle}>Detalle del evento</h3>
-              <div className={styles.dropdownContainer} ref={dropdownRef}>
-                <button className={styles.editButton} onClick={toggleDropdown}>
-                  <svg className={styles.editIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" fill="#374151"/>
-                  </svg>
-                  Editar evento
-                  <svg className={`${styles.dropdownArrow} ${isDropdownOpen ? styles.dropdownArrowOpen : ''}`} width="12" height="8" viewBox="0 0 12 8" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M1 1.5L6 6.5L11 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </button>
-                {isDropdownOpen && (
-                  <div className={styles.dropdownMenu}>
-                    <button className={styles.dropdownItem} onClick={handleEditPrice}>
-                      Editar precio
-                    </button>
-                    <button className={styles.dropdownItem} onClick={handleEditDate}>
-                      Editar fecha
-                    </button>
-                    <button className={styles.dropdownItem} onClick={handleAddSellers}>
-                      Agregar vendedores
-                    </button>
-                  </div>
-                )}
-              </div>
+        {/* Event Card */}
+        <div className={styles.eventCard}>
+          <div className={styles.eventCardHeader}>
+            <div className={styles.statusContainer}>
+              <span className={styles.statusDot}></span>
+              <span className={styles.statusText}>ACTIVO</span>
             </div>
-            <div className={styles.detailsContent}>
-              <div className={styles.progressItem}>
-                <div className={styles.progressContainer}>
-                  <div className={styles.progressBar}>
-                    <div className={styles.progressIndicator}>
-                      <span className={styles.progressText}>80%</span>
-                    </div>
-                  </div>
-                  <div className={styles.progressDetails}>
-                    <div className={styles.daysRemaining}>
-                      <span className={styles.daysValue}>15</span>
-                      <span className={styles.daysLabel}>Días restantes</span>
-                    </div>
-                    <div className={styles.totalSold}>
-                      <span className={styles.soldValue}>$64.000 de $80.000</span>
-                      <span className={styles.soldLabel}>Total vendido</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className={styles.divider}></div>
-              <div className={styles.detailsGroup}>
-                <div className={styles.detailsItems}>
-                  <div className={styles.detailItem}>
-                    <span className={styles.label}>Finaliza</span>
-                    <span className={styles.value}>12/08/25</span>
-                  </div>
-                  <div className={styles.detailItem}>
-                    <span className={styles.label}>Total de números</span>
-                    <span className={styles.value}>800</span>
-                  </div>
-                  <div className={styles.detailItem}>
-                    <span className={styles.label}>Precio</span>
-                    <span className={styles.value}>$100</span>
-                  </div>
-                </div>
+            <div className={styles.dateInfo}>
+              Finaliza el 20 de diciembre de 2025
+            </div>
+          </div>
+
+          <h2 className={styles.eventTitle}>
+            Rifa día del niño del Grupo Scout General Deheza
+          </h2>
+
+          {/* Progress Bar */}
+          <div className={styles.progressContainer}>
+            <div className={styles.progressBar}>
+              <div className={styles.progressFill} style={{ width: '80%' }}>
+                <span className={styles.progressText}>80%</span>
               </div>
             </div>
           </div>
 
-          {/* Tabs */}
-          <div className={styles.tabsContainer}>
-            <button
-              className={`${styles.tab} ${activeTab === 'collected' ? styles.activeTab : ''}`}
-              onClick={() => setActiveTab('collected')}
-            >
-              Dinero cobrado
-            </button>
-            <button
-              className={`${styles.tab} ${activeTab === 'pending' ? styles.activeTab : ''}`}
-              onClick={() => setActiveTab('pending')}
-            >
-              Dinero por cobrar
-            </button>
+          {/* Bottom Details */}
+          <div className={styles.eventDetailsRow}>
+            <span className={styles.detailLeft}>Objetivo $300.000</span>
+            <span className={styles.detailRight}>300 números de $1.000</span>
           </div>
+        </div>
 
-          {/* Tab Content */}
-          <div className={styles.tabContent}>
-            {activeTab === 'collected' ? (
-              <div className={styles.tableSection}>
-                <div className={styles.tableHeader}>
-                  <div className={styles.headerCell}>Vendedor</div>
-                  <div className={styles.headerCell}>Vendidos</div>
-                  <div className={styles.headerCell}>Porcentaje</div>
-                  <div className={styles.headerCell}>Monto</div>
-                </div>
-                <div className={styles.tableBody}>
-                  {collectedData.map((item, index) => (
-                    <div key={index} className={styles.tableRow}>
-                      <div className={styles.tableCell} data-label="Vendedor">
-                        <div className={styles.sellerName}>{item.name}</div>
-                      </div>
-                      <div className={styles.tableCell} data-label="Vendidos">
-                        <div className={styles.sellerStats}>
-                          {item.sold}/{item.total}
-                        </div>
-                      </div>
-                      <div className={styles.tableCell} data-label="Porcentaje">
-                        <div className={styles.percentage}>{item.percentage}%</div>
-                      </div>
-                      <div className={styles.tableCell} data-label="Monto">
-                        <div className={styles.amount}>${item.amount.toLocaleString()}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ) : (
-              <div className={styles.tableSection}>
-                <div className={styles.tableHeader}>
-                  <div className={styles.headerCell}>Vendedor</div>
-                  <div className={styles.headerCell}>Vendidos</div>
-                  <div className={styles.headerCell}>Porcentaje</div>
-                  <div className={styles.headerCell}>Monto</div>
-                </div>
-                <div className={styles.tableBody}>
-                  {pendingData.map((item, index) => (
-                    <div key={index} className={styles.tableRow}>
-                      <div className={styles.tableCell} data-label="Vendedor">
-                        <div className={styles.sellerName}>{item.name}</div>
-                      </div>
-                      <div className={styles.tableCell} data-label="Vendidos">
-                        <div className={styles.sellerStats}>
-                          {item.sold}/{item.total}
-                        </div>
-                      </div>
-                      <div className={styles.tableCell} data-label="Porcentaje">
-                        <div className={styles.percentage}>{item.percentage}%</div>
-                      </div>
-                      <div className={styles.tableCell} data-label="Monto">
-                        <div className={styles.amount}>${item.amount.toLocaleString()}</div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-            
-            {/* Summary Section - Total row with all columns */}
-            <div className={styles.summaryRow}>
-              <div className={styles.summaryCell}>Total cobrado</div>
-              <div className={styles.summaryCell}>45/50</div>
-              <div className={styles.summaryCell}>90%</div>
-              <div className={styles.summaryCell}>$5.000 de $64.000</div>
-            </div>
+        {/* Tabs */}
+        <div className={styles.tabsContainer}>
+          <button
+            className={`${styles.tab} ${activeTab === 'collected' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('collected')}
+          >
+            Dinero cobrado
+          </button>
+          <button
+            className={`${styles.tab} ${activeTab === 'pending' ? styles.activeTab : ''}`}
+            onClick={() => setActiveTab('pending')}
+          >
+            Dinero por cobrar
+          </button>
+        </div>
+
+        {/* Search Bar */}
+        <div className={styles.searchContainer}>
+          <div className={styles.searchBar}>
+            <svg className={styles.searchIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <input
+              type="text"
+              className={styles.searchInput}
+              placeholder="Buscar"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
-    </div>
+        </div>
+
+        {/* Sales List */}
+        <div className={styles.salesList}>
+          {filteredData.map((item, index) => (
+            <div key={index} className={styles.salesItem}>
+              <div className={styles.salesItemLeft}>
+                <div className={styles.sellerName}>{item.name}</div>
+                <div className={styles.sellerStats}>
+                  {item.sold} de {item.total} vendidos
+                </div>
+              </div>
+              <div className={styles.salesItemRight}>
+                <div className={styles.salesAmount}>${item.amount.toLocaleString()}</div>
+                <div className={styles.salesPercentage}>{item.percentage}%</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Fixed Footer */}
+      <div className={styles.footerContainer}>
+        <div className={styles.footerLeft}>
+          <div className={styles.footerLabel}>
+            {activeTab === 'collected' ? 'TOTAL COBRADO' : 'TOTAL POR COBRAR'}
+          </div>
+          <div className={styles.footerCount}>
+            {totalSold} de {totalNumbers} totales
+          </div>
+        </div>
+        <div className={styles.footerRight}>
+          <div className={styles.footerAmount}>${totalAmount.toLocaleString()}</div>
+          <div className={styles.footerPercentage}>{totalPercentage}%</div>
+        </div>
+      </div>
+    </>
   );
 }

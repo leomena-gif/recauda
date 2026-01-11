@@ -32,14 +32,14 @@
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--color-gray-500);
+  background-color: var(--color-error);
   flex-shrink: 0;
 }
 
 .statusText {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-gray-500);
+  color: var(--color-error);
 }
 
 /* Date Info */

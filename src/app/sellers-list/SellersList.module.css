@@ -118,6 +118,11 @@
   width: auto;
 }
 
+.eventFilter {
+  min-width: 220px;
+  width: auto;
+}
+
 .filterSelect {
   width: 100%;
   padding: 12px 40px 12px 16px;
@@ -195,7 +200,6 @@
 
 .table th {
   background: #F9FAFB;
-  padding: 16px 20px;
   text-align: left;
   font-weight: 600;
   color: #374151;
@@ -206,33 +210,35 @@
 }
 
 .table th:nth-child(1) {
-  width: 60px; /* Checkbox column */
-  text-align: center;
+  width: 60px !important; /* Checkbox column - Fixed width */
+  min-width: 60px !important;
+  max-width: 60px !important;
 }
 
 .table th:nth-child(2) {
-  width: 25%; /* Vendedor name */
+  width: 35%; /* Vendedor name + phone */
 }
 
 .table th:nth-child(3) {
-  width: 20%; /* Teléfono */
+  width: 30%; /* Evento Asignado */
 }
 
 .table th:nth-child(4) {
-  width: 15%; /* Estado */
+  width: 12%; /* Estado */
 }
 
 .table th:nth-child(5) {
-  width: 20%; /* Última Actividad */
+  width: 15%; /* Última Actividad */
 }
 
 .table th:nth-child(6) {
-  width: 10%; /* Acciones */
-  text-align: center;
+  width: 8%; /* Acciones */
 }
 
 .checkboxColumn {
-  width: 60px;
+  width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
   text-align: center;
 }
 
@@ -317,37 +323,58 @@
 }
 
 .tableRow td {
-  padding: 16px 20px;
   vertical-align: middle;
   word-wrap: break-word;
   overflow: hidden;
 }
 
-.tableRow td:nth-child(1) {
-  text-align: center;
-  padding: 16px 10px;
-  vertical-align: middle;
+/* Text alignment moved to padding section below */
+
+/* === NORMALIZED COLUMN SPACING === */
+/* Consistent padding across all columns */
+.table th,
+.tableRow td {
+  padding: 16px 12px;
 }
 
+/* Column-specific padding for consistency - Higher specificity */
+.table th:nth-child(1),
+.tableRow td:nth-child(1),
+.table th.checkboxColumn,
+.tableRow td.checkboxColumn {
+  width: 60px !important;
+  min-width: 60px !important;
+  max-width: 60px !important;
+  padding: 12px 8px 12px 4px !important; /* Reduced left padding to bring checkboxes closer to table edge */
+  text-align: center !important;
+  vertical-align: middle !important;
+}
+
+.table th:nth-child(2),
 .tableRow td:nth-child(2) {
-  padding: 16px 15px 16px 20px;
+  padding: 16px 12px !important;
+  vertical-align: middle !important;
 }
 
+.table th:nth-child(3),
 .tableRow td:nth-child(3) {
-  padding: 16px 15px;
+  padding: 16px 12px !important;
+  vertical-align: middle !important;
 }
 
+.table th:nth-child(4),
 .tableRow td:nth-child(4) {
-  padding: 16px 10px;
+  padding: 16px 12px !important;
+  vertical-align: middle !important;
 }
 
-.tableRow td:nth-child(5) {
-  padding: 16px 15px;
-}
-
-.tableRow td:nth-child(6) {
-  text-align: center;
-  padding: 16px 10px;
+.table th:nth-child(5),
+.tableRow td:nth-child(5),
+.table th.actionsColumn,
+.tableRow td.actionsColumn {
+  padding: 16px 20px 16px 12px !important;
+  text-align: center !important;
+  vertical-align: middle !important;
 }
 
 /* Seller Info */
@@ -360,13 +387,33 @@
   font-weight: 600;
   color: #111827;
   font-size: 16px;
+  margin-bottom: 4px;
 }
 
-/* Phone */
-.phone {
+.sellerPhone {
+  font-weight: 500;
+  color: #6B7280;
+  font-size: 14px;
+}
+
+/* Event Info */
+.eventInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.eventName {
   font-weight: 500;
   color: #374151;
   font-size: 15px;
+  line-height: 1.3;
+}
+
+.noEvent {
+  font-weight: 500;
+  color: #9CA3AF;
+  font-size: 15px;
+  font-style: italic;
 }
 
 /* Status Badge - Removed, using switch instead */
@@ -443,19 +490,48 @@
   position: relative;
   display: flex;
   align-items: center;
+  justify-content: center;
   margin-top: 2px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  transition: all 0.2s ease;
+}
+
+.mobileCheckboxWrapper:hover {
+  background: #f1f5f9;
+  border-color: #cbd5e1;
+  transform: scale(1.05);
+}
+
+.mobileCheckboxWrapper:active {
+  transform: scale(0.95);
 }
 
 .mobileCheckbox {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   accent-color: #007AFF;
   cursor: pointer;
+  margin: 0;
 }
 
 .mobileCheckbox:disabled {
   cursor: not-allowed;
-  opacity: 0.4;
+  opacity: 0.3;
+}
+
+.mobileCheckboxWrapper:has(.mobileCheckbox:checked) {
+  background: #f0f8ff;
+  border-color: #007AFF;
+  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+}
+
+.mobileCheckboxWrapper:has(.mobileCheckbox:checked):hover {
+  background: #e6f3ff;
+  border-color: #0056b3;
 }
 
 .mobileSellerInfo {
@@ -473,6 +549,24 @@
   font-weight: 500;
   color: #6B7280;
   font-size: 14px;
+}
+
+.mobileEventInfo {
+  margin-top: 6px;
+}
+
+.mobileEventName {
+  font-weight: 500;
+  color: #374151;
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.mobileNoEvent {
+  font-weight: 500;
+  color: #9CA3AF;
+  font-size: 13px;
+  font-style: italic;
 }
 
 .mobileCardFooter {
@@ -1066,26 +1160,26 @@
     min-width: 700px;
   }
 
-  .table th,
-  .table td {
-    padding: 12px 16px;
+  .table th {
+    /* padding moved to normalized section */
   }
 
-  /* Adjust column widths for tablet */
   .table th:nth-child(1) {
-    width: 50px;
+    width: 60px !important; /* Checkbox column - Fixed width */
+    min-width: 60px !important;
+    max-width: 60px !important;
   }
 
   .table th:nth-child(2) {
-    width: 28%;
+    width: 35%;
   }
 
   .table th:nth-child(3) {
-    width: 22%;
+    width: 30%;
   }
 
   .table th:nth-child(4) {
-    width: 15%;
+    width: 12%;
   }
 
   .table th:nth-child(5) {
@@ -1093,32 +1187,55 @@
   }
 
   .table th:nth-child(6) {
-    width: 10%;
+    width: 8%;
   }
 
-  .tableRow td:nth-child(1) {
-    padding: 12px 8px;
-    vertical-align: middle;
+
+  /* === NORMALIZED COLUMN SPACING FOR TABLET === */
+  /* Consistent padding across all columns */
+  .table th,
+  .tableRow td {
+    padding: 12px 10px;
   }
 
+  /* Column-specific padding for consistency - Higher specificity */
+  .table th:nth-child(1),
+  .tableRow td:nth-child(1),
+  .table th.checkboxColumn,
+  .tableRow td.checkboxColumn {
+    width: 60px !important;
+    min-width: 60px !important;
+    max-width: 60px !important;
+    padding: 10px 6px 10px 3px !important; /* Reduced left padding to bring checkboxes closer to table edge */
+    text-align: center !important;
+    vertical-align: middle !important;
+  }
+
+  .table th:nth-child(2),
   .tableRow td:nth-child(2) {
-    padding: 12px 12px 12px 16px;
+    padding: 12px 10px !important;
+    vertical-align: middle !important;
   }
 
+  .table th:nth-child(3),
   .tableRow td:nth-child(3) {
-    padding: 12px 12px;
+    padding: 12px 10px !important;
+    vertical-align: middle !important;
   }
 
+  .table th:nth-child(4),
   .tableRow td:nth-child(4) {
-    padding: 12px 8px;
+    padding: 12px 10px !important;
+    vertical-align: middle !important;
   }
 
-  .tableRow td:nth-child(5) {
-    padding: 12px 12px;
-  }
-
-  .tableRow td:nth-child(6) {
-    padding: 12px 8px;
+  .table th:nth-child(5),
+  .tableRow td:nth-child(5),
+  .table th.actionsColumn,
+  .tableRow td.actionsColumn {
+    padding: 12px 16px 12px 10px !important;
+    text-align: center !important;
+    vertical-align: middle !important;
   }
 
   .switchLabel {
@@ -1210,7 +1327,24 @@
 
 @media (max-width: 640px) {
   .header {
-    margin-bottom: 16px;
+    margin-bottom: 20px;
+    padding: 0 16px;
+  }
+
+  .titleSection h1 {
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  .headerActions {
+    margin-top: 16px;
+  }
+
+  .headerActions button {
+    width: 100%;
+    padding: 16px;
+    font-size: 16px;
+    border-radius: 12px;
   }
 
   /* Hide table, show mobile cards */
@@ -1221,92 +1355,101 @@
   .mobileCardsContainer {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    padding: 0 4px;
+    gap: 16px;
+    padding: 0 16px;
   }
 
   .actionBar {
-    padding: 16px;
-    margin-bottom: 16px;
+    padding: 20px 16px;
+    margin: 0 16px 20px;
     border-radius: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #f0f0f0;
+  }
+
+  .leftSection {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .searchContainer {
+    width: 100%;
   }
 
   .searchInput {
     font-size: 16px; /* Prevent zoom on iOS */
-    padding: 16px 12px 16px 44px;
+    padding: 16px 12px 16px 48px;
     border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    background: #fafafa;
+    transition: all 0.2s ease;
+  }
+
+  .searchInput:focus {
+    border-color: #007AFF;
+    background: white;
+    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
+  }
+
+  .statusFilter {
+    width: 100%;
   }
 
   .filterSelect {
     font-size: 16px; /* Prevent zoom on iOS */
     padding: 16px;
     border-radius: 12px;
+    border: 2px solid #e5e7eb;
+    background: #fafafa;
   }
 
-  /* Mobile Cards - Event Detail Style */
+  /* Mobile Cards - Clean Design */
   .mobileCard {
     background: white;
-    border: 1px solid #f0f0f0;
-    border-radius: 0;
-    padding: 0;
-    box-shadow: none;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     transition: all 0.2s ease;
     position: relative;
-    cursor: pointer;
-    min-height: 60px;
   }
 
   .mobileCard:hover {
-    background-color: #f0f8ff;
-    border-left: 4px solid #007AFF;
-    padding-left: 0;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border-color: #d1d5db;
   }
 
   .mobileCardInactive {
     opacity: 0.6;
-    background: #fafafa;
-    color: #9CA3AF;
+    background: #f9fafb;
   }
 
   .mobileCardInactive:hover {
-    background-color: #f5f5f5;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
   }
 
   .mobileCardInactive .mobileSellerName,
   .mobileCardInactive .mobilePhone,
-  .mobileCardInactive .mobileLastActivity {
-    color: #9CA3AF;
+  .mobileCardInactive .mobileEventName {
+    color: #9ca3af;
   }
 
-  /* Grid Layout - 2 rows like event detail */
+  /* Card Layout */
   .mobileCardHeader {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    grid-template-rows: auto auto;
-    gap: 4px 12px;
-    padding: 12px 16px;
-    min-height: 60px;
+    display: flex;
     align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
   }
 
   .mobileCheckboxWrapper {
-    position: absolute;
-    left: 8px;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 24px;
-    height: 24px;
-    background: none;
-    border: none;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 2;
-  }
-
-  .mobileCheckboxWrapper:hover {
-    transform: translateY(-50%) scale(1.1);
+    width: 18px;
+    height: 18px;
+    flex-shrink: 0;
   }
 
   .mobileCheckbox {
@@ -1314,6 +1457,7 @@
     height: 18px;
     accent-color: #007AFF;
     cursor: pointer;
+    margin: 0;
   }
 
   .mobileCheckbox:disabled {
@@ -1322,51 +1466,71 @@
   }
 
   .mobileSellerInfo {
-    grid-column: 1;
-    grid-row: 1;
-    padding-left: 32px;
-    display: flex;
-    align-items: center;
+    flex: 1;
+    min-width: 0;
   }
 
   .mobileSellerName {
     font-weight: 600;
-    color: #000;
+    color: #111827;
     font-size: 15px;
     line-height: 1.3;
-    margin: 0;
+    margin: 0 0 2px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .mobilePhone {
-    grid-column: 1;
-    grid-row: 2;
     font-size: 13px;
-    color: #666;
+    color: #6b7280;
     font-weight: 400;
-    padding-left: 32px;
+    margin: 0 0 4px 0;
+  }
+
+  .mobileEventInfo {
     margin: 0;
+  }
+
+  .mobileEventName {
+    font-size: 12px;
+    color: #007AFF;
+    font-weight: 500;
+    background: rgba(0, 122, 255, 0.1);
+    padding: 2px 6px;
+    border-radius: 6px;
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  .mobileNoEvent {
+    font-size: 12px;
+    color: #9ca3af;
+    font-style: italic;
+  }
+
+  .mobileMenuContainer {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
 
   .mobileCardFooter {
-    grid-column: 2;
-    grid-row: 1;
     display: flex;
     justify-content: flex-end;
     align-items: center;
-    padding: 0;
+    padding-top: 12px;
+    border-top: 1px solid #f3f4f6;
   }
 
-  .mobileLastActivity {
-    grid-column: 2;
-    grid-row: 2;
-    color: #666;
-    font-size: 13px;
-    font-weight: 400;
+  .mobileStatusIndicator {
     display: flex;
-    justify-content: flex-end;
     align-items: center;
-    padding: 0;
-    margin: 0;
   }
 
   .mobileSwitchWrapper {
@@ -1476,17 +1640,17 @@
 
   .mobileCheckboxWrapper {
     left: 6px;
-    width: 20px;
-    height: 20px;
+    width: 32px;
+    height: 32px;
   }
 
   .mobileCheckbox {
-    width: 16px;
-    height: 16px;
+    width: 18px;
+    height: 18px;
   }
 
   .mobileSellerInfo {
-    padding-left: 28px;
+    padding-left: 40px;
   }
 
   .mobileSellerName {
@@ -1895,5 +2059,180 @@
   
   .eventButtons {
     max-height: calc(70vh - 100px);
+  }
+}
+
+/* Mobile Menu Styles */
+.mobileMenuButton {
+  background: none;
+  border: none;
+  padding: 4px;
+  border-radius: 6px;
+  cursor: pointer;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+
+.mobileMenuButton:hover {
+  background: #f3f4f6;
+  color: #374151;
+}
+
+.mobileMenuButton:active {
+  background: #e5e7eb;
+}
+
+.mobileMenuDropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 4px;
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border: 1px solid #e5e7eb;
+  min-width: 140px;
+  z-index: 100;
+  overflow: hidden;
+  animation: slideDown 0.2s ease-out;
+}
+
+.mobileMenuItem {
+  width: 100%;
+  background: none;
+  border: none;
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #374151;
+  font-size: 13px;
+  font-weight: 500;
+  transition: background-color 0.2s ease;
+  text-align: left;
+}
+
+.mobileMenuItem:hover {
+  background: #f9fafb;
+}
+
+.mobileMenuItem:active {
+  background: #f3f4f6;
+}
+
+.mobileMenuItem svg {
+  flex-shrink: 0;
+  color: #6b7280;
+  width: 14px;
+  height: 14px;
+}
+
+.mobileMenuItem:hover svg {
+  color: #374151;
+}
+
+.mobileStatusLabel {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mobileStatusActive {
+  background: #dcfce7;
+  color: #166534;
+}
+
+.mobileStatusInactive {
+  background: #fef2f2;
+  color: #dc2626;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Small Mobile Screens */
+@media (max-width: 480px) {
+  .mobileCardsContainer {
+    padding: 0 12px;
+    gap: 10px;
+  }
+
+  .mobileCard {
+    padding: 14px;
+    border-radius: 10px;
+  }
+
+  .mobileCardHeader {
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .mobileSellerName {
+    font-size: 14px;
+  }
+
+  .mobilePhone {
+    font-size: 12px;
+  }
+
+  .mobileEventName {
+    font-size: 11px;
+    padding: 2px 5px;
+  }
+
+  .mobileCardFooter {
+    padding-top: 10px;
+  }
+
+  .mobileStatusLabel {
+    font-size: 10px;
+    padding: 3px 6px;
+  }
+
+  .mobileCheckboxWrapper {
+    width: 18px;
+    height: 18px;
+  }
+
+  .mobileCheckbox {
+    width: 18px;
+    height: 18px;
+  }
+
+  .mobileMenuButton {
+    width: 24px;
+    height: 24px;
+    padding: 2px;
+  }
+
+  .mobileMenuDropdown {
+    min-width: 120px;
+  }
+
+  .mobileMenuItem {
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .mobileMenuItem svg {
+    width: 12px;
+    height: 12px;
   }
 }

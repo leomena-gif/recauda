@@ -14,6 +14,7 @@ export const MOCK_SELLERS: Seller[] = [
     email: 'maria.gonzalez@email.com',
     status: 'active',
     eventsAssigned: 3,
+    assignedEvents: ['1', '2', '3'],
     totalSold: 45,
     lastActivity: '2024-01-15'
   },
@@ -25,6 +26,7 @@ export const MOCK_SELLERS: Seller[] = [
     email: 'carlos.rodriguez@email.com',
     status: 'active',
     eventsAssigned: 2,
+    assignedEvents: ['1', '2'],
     totalSold: 32,
     lastActivity: '2024-01-14'
   },
@@ -36,6 +38,7 @@ export const MOCK_SELLERS: Seller[] = [
     email: 'ana.martinez@email.com',
     status: 'inactive',
     eventsAssigned: 1,
+    assignedEvents: ['3'],
     totalSold: 18,
     lastActivity: '2024-01-10'
   },
@@ -47,6 +50,7 @@ export const MOCK_SELLERS: Seller[] = [
     email: 'luis.fernandez@email.com',
     status: 'active',
     eventsAssigned: 4,
+    assignedEvents: ['1', '2', '3', '4'],
     totalSold: 67,
     lastActivity: '2024-01-16'
   },
@@ -58,6 +62,7 @@ export const MOCK_SELLERS: Seller[] = [
     email: 'sofia.lopez@email.com',
     status: 'active',
     eventsAssigned: 2,
+    assignedEvents: ['1', '4'],
     totalSold: 29,
     lastActivity: '2024-01-13'
   }

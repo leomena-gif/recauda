@@ -15,10 +15,10 @@ export const STATUS_OPTIONS = [
 ] as const;
 
 export const EVENT_FILTER_OPTIONS = [
-  { value: 'all', label: 'TODAS' },
-  { value: 'active', label: 'ACTIVO' },
-  { value: 'completed', label: 'FINALIZADO' },
-  { value: 'blocked', label: 'BLOQUEADO' },
+  { value: 'all', label: 'TODOS' },
+  { value: 'active', label: 'ACTIVOS' },
+  { value: 'completed', label: 'FINALIZADOS' },
+  { value: 'cancelled', label: 'CANCELADOS' },
 ] as const;
 
 export const VALIDATION_RULES = {

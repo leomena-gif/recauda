@@ -2,9 +2,9 @@
 
 import React from 'react';
 import { useRouter } from 'next/navigation';
-import styles from './ActiveEventCard.module.css';
+import styles from './CancelledEventCard.module.css';
 
-const ActiveEventCard: React.FC = () => {
+const CancelledEventCard: React.FC = () => {
   const router = useRouter();
   
   const handleCardClick = () => {
@@ -16,7 +16,7 @@ const ActiveEventCard: React.FC = () => {
       {/* Status Badge with Dot */}
       <div className={styles.statusContainer}>
         <span className={styles.statusDot}></span>
-        <span className={styles.statusText}>ACTIVO</span>
+        <span className={styles.statusText}>CANCELADO</span>
       </div>
 
       {/* Date Info */}
@@ -47,4 +47,4 @@ const ActiveEventCard: React.FC = () => {
   );
 };
 
-export default ActiveEventCard;
+export default CancelledEventCard;

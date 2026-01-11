@@ -7,61 +7,42 @@ import styles from './CompletedEventCard.module.css';
 const CompletedEventCard: React.FC = () => {
   const router = useRouter();
   
-  const handleGoToDetail = () => {
+  const handleCardClick = () => {
     router.push('/event-detail');
   };
 
   return (
-    <div className={styles.card}>
-      {/* Status Tag */}
+    <div className={styles.card} onClick={handleCardClick}>
+      {/* Status Badge with Dot */}
       <div className={styles.statusContainer}>
-        <span className={styles.tagGray}>FINALIZADO</span>
+        <span className={styles.statusDot}></span>
+        <span className={styles.statusText}>FINALIZADO</span>
+      </div>
+
+      {/* Date Info */}
+      <div className={styles.dateInfo}>
+        5 de octubre de 2025
       </div>
 
       {/* Event Title */}
-      <h2 className={styles.eventTitle}>Rifa día del niño del G.S. General Deheza</h2>
-
-      {/* First Row Details */}
-      <div className={styles.detailsRow}>
-        <div className={styles.detailItem}>
-          <span className={styles.label}>Finaliza</span>
-          <span className={styles.value}>12/08/25</span>
-        </div>
-        <div className={styles.detailItem}>
-          <span className={styles.label}>Total de números</span>
-          <span className={styles.value}>800</span>
-        </div>
-        <div className={styles.detailItem}>
-          <span className={styles.label}>Precio</span>
-          <span className={styles.value}>$100</span>
-        </div>
-      </div>
+      <h2 className={styles.eventTitle}>
+        Rifa día del niño del Grupo Scout General Deheza
+      </h2>
 
       {/* Progress Bar */}
       <div className={styles.progressContainer}>
         <div className={styles.progressBar}>
-          <div className={styles.progressIndicator}>
+          <div className={styles.progressFill} style={{ width: '100%' }}>
             <span className={styles.progressText}>100%</span>
           </div>
         </div>
       </div>
 
-      {/* Second Row Details */}
+      {/* Bottom Details Row */}
       <div className={styles.detailsRow}>
-        <div className={styles.detailItem}>
-          <span className={styles.value}>0</span>
-          <span className={styles.label}>Días restantes</span>
-        </div>
-        <div className={styles.detailItem}>
-          <span className={styles.value}>$80.000 de $80.000</span>
-          <span className={styles.label}>Total vendido</span>
-        </div>
+        <span className={styles.detailLeft}>Objetivo $300.000</span>
+        <span className={styles.detailRight}>300 números de $1.000</span>
       </div>
-
-      {/* Action Button */}
-      <button className="btn btn-tertiary btn-full" onClick={handleGoToDetail}>
-        Ir al detalle
-      </button>
     </div>
   );
 };

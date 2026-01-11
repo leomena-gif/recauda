@@ -226,6 +226,12 @@
   align-items: flex-start;
 }
 
+.prizeItemInput {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
 .prizeItem input {
   flex: 1;
 }

@@ -14,11 +14,13 @@ export default function SellersList() {
   const router = useRouter();
   
   // State
-  const [sellers, setSellers] = useState<Seller[]>([]);
-  const [events, setEvents] = useState<Event[]>([]);
+  const [sellers, setSellers] = useState<Seller[]>(MOCK_SELLERS);
+  const [events, setEvents] = useState<Event[]>(MOCK_EVENTS);
+  
   const [selectedSellers, setSelectedSellers] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
+  const [eventFilter, setEventFilter] = useState<string>('all');
   const [showEventSelector, setShowEventSelector] = useState(false);
   
   // Edit modal state
@@ -34,6 +36,9 @@ export default function SellersList() {
     lastName?: string;
     phone?: string;
   }>({});
+
+  // Mobile menu state
+  const [mobileMenuOpen, setMobileMenuOpen] = useState<string | null>(null);
   
   // Custom hooks
   const successSnackbar = useSnackbar();
@@ -47,9 +52,22 @@ export default function SellersList() {
 
   // Load mock data (TODO: Replace with API calls)
   useEffect(() => {
-    setSellers(MOCK_SELLERS);
-    setEvents(MOCK_EVENTS);
+    // Data is already loaded in state initialization
   }, []);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (mobileMenuOpen && !(event.target as Element).closest(`.${styles.mobileMenuContainer}`)) {
+        handleMobileMenuClose();
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [mobileMenuOpen]);
 
   // Filtered sellers with useMemo for performance
   const filteredSellers = useMemo(() => {
@@ -58,11 +76,23 @@ export default function SellersList() {
         seller.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         seller.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         seller.phone.includes(searchTerm) ||
-        seller.email.toLowerCase().includes(searchTerm.toLowerCase());
+        seller.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        // Buscar por nombre de evento asignado
+        (seller.assignedEvents.length > 0 && events.find(e => 
+          e.id === seller.assignedEvents[0] && 
+          e.name.toLowerCase().includes(searchTerm.toLowerCase())
+        ));
       const matchesStatus = statusFilter === 'all' || seller.status === statusFilter;
-      return matchesSearch && matchesStatus;
+      const matchesEvent =
+        eventFilter === 'all'
+          ? true
+          : seller.assignedEvents.some(eventId => {
+              const event = events.find(e => e.id === eventId);
+              return event?.status === 'active' && event.id === eventFilter;
+            });
+      return matchesSearch && matchesStatus && matchesEvent;
     });
-  }, [sellers, searchTerm, statusFilter]);
+  }, [sellers, searchTerm, statusFilter, events, eventFilter]);
 
   const handleSelectSeller = (sellerId: string) => {
     setSelectedSellers(prev => 
@@ -239,6 +269,25 @@ export default function SellersList() {
     router.push('/add-seller');
   };
 
+  // Mobile menu handlers
+  const handleMobileMenuToggle = (sellerId: string) => {
+    setMobileMenuOpen(mobileMenuOpen === sellerId ? null : sellerId);
+  };
+
+  const handleMobileMenuClose = () => {
+    setMobileMenuOpen(null);
+  };
+
+  const handleMobileEdit = (seller: Seller) => {
+    handleEditSeller(seller);
+    handleMobileMenuClose();
+  };
+
+  const handleMobileToggleStatus = (sellerId: string) => {
+    handleToggleSellerStatus(sellerId);
+    handleMobileMenuClose();
+  };
+
   return (
     <div className="pageContainer">
       <div className={styles.header}>
@@ -265,7 +314,7 @@ export default function SellersList() {
             </svg>
             <input
               type="text"
-              placeholder="Buscar por nombre o teléfono"
+              placeholder="Buscar por nombre, teléfono o evento"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className={styles.searchInput}
@@ -281,6 +330,20 @@ export default function SellersList() {
               value={statusFilter}
               onChange={(value) => setStatusFilter(value as StatusFilter)}
               placeholder="Filtrar por estado"
+            />
+          </div>
+          <div className={styles.eventFilter}>
+            <CustomDropdown
+              options={[
+                { value: 'all', label: 'Todos los eventos activos' },
+                ...activeEvents.map(event => ({
+                  value: event.id,
+                  label: event.name
+                }))
+              ]}
+              value={eventFilter}
+              onChange={(value) => setEventFilter(value as string)}
+              placeholder="Filtrar por evento"
             />
           </div>
         </div>
@@ -341,9 +404,8 @@ export default function SellersList() {
                 />
               </th>
               <th>Vendedor</th>
-              <th>Teléfono</th>
+              <th>Evento Asignado</th>
               <th>Estado</th>
-              <th>Última Actividad</th>
               <th className={styles.actionsColumn}></th>
             </tr>
           </thead>
@@ -378,10 +440,22 @@ export default function SellersList() {
                     <div className={styles.sellerName}>
                       {seller.firstName} {seller.lastName}
                     </div>
+                    <div className={styles.sellerPhone}>{seller.phone}</div>
                   </div>
                 </td>
                 <td>
-                  <div className={styles.phone}>{seller.phone}</div>
+                  <div className={styles.eventInfo}>
+                    {seller.assignedEvents.length > 0 ? (
+                      <div className={styles.eventName}>
+                        {(() => {
+                          const firstEvent = events.find(e => e.id === seller.assignedEvents[0]);
+                          return firstEvent ? firstEvent.name : 'Sin evento';
+                        })()}
+                      </div>
+                    ) : (
+                      <div className={styles.noEvent}>Sin evento asignado</div>
+                    )}
+                  </div>
                 </td>
                 <td>
                   <div className={styles.switchWrapper}>
@@ -400,11 +474,6 @@ export default function SellersList() {
                     <span className={`${styles.switchLabel} ${seller.status === 'active' ? styles.switchLabelActive : styles.switchLabelInactive}`}>
                       {seller.status === 'active' ? 'ACTIVO' : 'INACTIVO'}
                     </span>
-                  </div>
-                </td>
-                <td>
-                  <div className={styles.lastActivity}>
-                    {new Date(seller.lastActivity).toLocaleDateString('es-ES')}
                   </div>
                 </td>
                 <td className={styles.actionsColumn}>
@@ -434,11 +503,7 @@ export default function SellersList() {
             className={`${styles.mobileCard} ${seller.status === 'inactive' ? styles.mobileCardInactive : ''}`}
           >
             <div className={styles.mobileCardHeader}>
-              <div 
-                className={styles.mobileCheckboxWrapper}
-                onMouseEnter={(e) => handleTooltipMouseEnter(e, seller.id)}
-                onMouseLeave={handleTooltipMouseLeave}
-              >
+              <div className={styles.mobileCheckboxWrapper}>
                 <input
                   type="checkbox"
                   checked={selectedSellers.includes(seller.id)}
@@ -446,54 +511,71 @@ export default function SellersList() {
                   disabled={seller.status === 'inactive'}
                   className={styles.mobileCheckbox}
                 />
-                {seller.status === 'inactive' && (
-                  <div className={`${styles.checkboxTooltip} checkboxTooltip`}>
-                    Activa este vendedor para asignarlo a eventos
-                  </div>
-                )}
               </div>
               <div className={styles.mobileSellerInfo}>
                 <div className={styles.mobileSellerName}>
                   {seller.firstName} {seller.lastName}
                 </div>
                 <div className={styles.mobilePhone}>{seller.phone}</div>
+                <div className={styles.mobileEventInfo}>
+                  {seller.assignedEvents.length > 0 ? (
+                    <div className={styles.mobileEventName}>
+                      {(() => {
+                        const firstEvent = events.find(e => e.id === seller.assignedEvents[0]);
+                        return firstEvent ? firstEvent.name : 'Sin evento';
+                      })()}
+                    </div>
+                  ) : (
+                    <div className={styles.mobileNoEvent}>Sin evento asignado</div>
+                  )}
+                </div>
+              </div>
+              <div className={styles.mobileMenuContainer}>
+                <button
+                  className={styles.mobileMenuButton}
+                  onClick={() => handleMobileMenuToggle(seller.id)}
+                  title="Más opciones"
+                >
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="12" cy="12" r="1" fill="currentColor"/>
+                    <circle cx="12" cy="5" r="1" fill="currentColor"/>
+                    <circle cx="12" cy="19" r="1" fill="currentColor"/>
+                  </svg>
+                </button>
+                {mobileMenuOpen === seller.id && (
+                  <div className={styles.mobileMenuDropdown}>
+                    <button
+                      className={styles.mobileMenuItem}
+                      onClick={() => handleMobileEdit(seller)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      Editar
+                    </button>
+                    <button
+                      className={styles.mobileMenuItem}
+                      onClick={() => handleMobileToggleStatus(seller.id)}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                      {seller.status === 'active' ? 'Desactivar' : 'Activar'}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
             
             <div className={styles.mobileCardFooter}>
-              <div className={styles.mobileLastActivity}>
-                Última actividad: {new Date(seller.lastActivity).toLocaleDateString('es-ES')}
-              </div>
-              <div className={styles.mobileSwitchWrapper}>
-                <label 
-                  className={styles.switchContainer}
-                  title={seller.status === 'active' ? 'Deshabilitar vendedor' : 'Habilitar vendedor'}
-                >
-                  <input
-                    type="checkbox"
-                    checked={seller.status === 'active'}
-                    onChange={() => handleToggleSellerStatus(seller.id)}
-                    className={styles.switchInput}
-                  />
-                  <span className={styles.switchSlider}></span>
-                </label>
-                <span className={`${styles.switchLabel} ${seller.status === 'active' ? styles.switchLabelActive : styles.switchLabelInactive}`}>
+              <div className={styles.mobileStatusIndicator}>
+                <span className={`${styles.mobileStatusLabel} ${seller.status === 'active' ? styles.mobileStatusActive : styles.mobileStatusInactive}`}>
                   {seller.status === 'active' ? 'Activo' : 'Inactivo'}
                 </span>
               </div>
             </div>
-            
-            <button
-              className={styles.mobileEditButton}
-              onClick={() => handleEditSeller(seller)}
-              title="Editar vendedor"
-            >
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              </svg>
-              <span>Editar</span>
-            </button>
           </div>
         ))}
       </div>

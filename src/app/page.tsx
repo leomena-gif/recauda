@@ -4,7 +4,7 @@ import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { EventStatusFilter } from '@/types/models';
 import { EVENT_FILTER_OPTIONS } from '@/constants';
-import BlockedEventCard from '@/components/BlockedEventCard';
+import CancelledEventCard from '@/components/CancelledEventCard';
 import ActiveEventCard from '@/components/ActiveEventCard';
 import CompletedEventCard from '@/components/CompletedEventCard';
 import CardEmptyState from '@/components/CardEmptyState';
@@ -15,7 +15,7 @@ import styles from './page.module.css';
 const MOCK_EVENTS = [
   { id: '1', status: 'active', component: ActiveEventCard },
   { id: '2', status: 'active', component: ActiveEventCard },
-  { id: '3', status: 'blocked', component: BlockedEventCard },
+  { id: '3', status: 'cancelled', component: CancelledEventCard },
   { id: '4', status: 'completed', component: CompletedEventCard },
   { id: '5', status: 'completed', component: CompletedEventCard },
 ];
@@ -23,10 +23,6 @@ const MOCK_EVENTS = [
 export default function Home() {
   const router = useRouter();
   const [selectedFilter, setSelectedFilter] = useState<EventStatusFilter>('all');
-
-  const handleCreateEvent = () => {
-    router.push('/create-event');
-  };
 
   // Filter events based on selected pill
   const filteredEvents = useMemo(() => {
@@ -42,65 +38,66 @@ export default function Home() {
       all: MOCK_EVENTS.length,
       active: MOCK_EVENTS.filter(e => e.status === 'active').length,
       completed: MOCK_EVENTS.filter(e => e.status === 'completed').length,
-      blocked: MOCK_EVENTS.filter(e => e.status === 'blocked').length,
+      cancelled: MOCK_EVENTS.filter(e => e.status === 'cancelled').length,
     };
   }, []);
 
   const hasEvents = MOCK_EVENTS.length > 0;
   const hasFilteredEvents = filteredEvents.length > 0;
 
-  return (
-    <div className="pageContainer">
-      <div className={styles.headerContainer}>
-        <div className={styles.titleSection}>
-          <h1 className="pageTitle">Mis eventos</h1>
-        </div>
-        <div className={styles.headerActions}>
-          <button
-            className="btn btn-primary"
-            onClick={handleCreateEvent}
-          >
-            Crear evento
-          </button>
-        </div>
-      </div>
+  const handleRegisterSale = () => {
+    // TODO: Navigate to register sale page or open modal
+    console.log('Registrar venta');
+  };
 
-      {/* Filter Pills */}
-      {hasEvents && (
-        <div className={styles.filtersContainer}>
-          <div className={styles.pillsGroup}>
-            {EVENT_FILTER_OPTIONS.map((option) => {
-              const count = eventCounts[option.value as keyof typeof eventCounts];
-              return (
-                <button
-                  key={option.value}
-                  className={`${styles.pill} ${
-                    selectedFilter === option.value ? styles.pillActive : ''
-                  }`}
-                  onClick={() => setSelectedFilter(option.value as EventStatusFilter)}
-                >
-                  <span className={styles.pillText}>{option.label}</span>
-                  <span className={styles.pillBadge}>{count}</span>
-                </button>
-              );
+  return (
+    <>
+      <div className="pageContainer">
+        {/* Filter Pills */}
+        {hasEvents && (
+          <div className={styles.filtersContainer}>
+            <div className={styles.pillsGroup}>
+              {EVENT_FILTER_OPTIONS.map((option) => {
+                return (
+                  <button
+                    key={option.value}
+                    className={`${styles.pill} ${
+                      selectedFilter === option.value ? styles.pillActive : ''
+                    }`}
+                    onClick={() => setSelectedFilter(option.value as EventStatusFilter)}
+                  >
+                    <span className={styles.pillText}>{option.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* Events Grid */}
+        {!hasEvents ? (
+          <CardEmptyState />
+        ) : !hasFilteredEvents ? (
+          <EventsEmptyState filterType={selectedFilter} />
+        ) : (
+          <div className="cardsContainer">
+            {filteredEvents.map((event) => {
+              const EventComponent = event.component;
+              return <EventComponent key={event.id} />;
             })}
           </div>
-        </div>
-      )}
+        )}
+      </div>
 
-      {/* Events Grid */}
-      {!hasEvents ? (
-        <CardEmptyState />
-      ) : !hasFilteredEvents ? (
-        <EventsEmptyState filterType={selectedFilter} />
-      ) : (
-        <div className="cardsContainer">
-          {filteredEvents.map((event) => {
-            const EventComponent = event.component;
-            return <EventComponent key={event.id} />;
-          })}
-        </div>
-      )}
-    </div>
+      {/* Register Sale Button - Fixed at bottom */}
+      <div className={styles.bottomButtonContainer}>
+        <button
+          className={`${styles.registerSaleButton} btn btn-full`}
+          onClick={handleRegisterSale}
+        >
+          Registrar venta
+        </button>
+      </div>
+    </>
   );
 }

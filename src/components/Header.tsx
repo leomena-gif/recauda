@@ -39,11 +39,16 @@ const Header: React.FC = () => {
 
   const handleNavigation = (path: string) => {
     router.push(path);
-    setIsMenuOpen(false); // Close menu after navigation
+    setIsMenuOpen(false);
   };
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const handleCreateEvent = () => {
+    router.push('/create-event');
+    setIsMenuOpen(false);
   };
 
   const renderIcon = (iconName: string) => {
@@ -79,17 +84,7 @@ const Header: React.FC = () => {
     <>
       <header className={styles.header}>
         <div className={styles.headerContent}>
-          <div className={styles.logo}>
-            <h1>Recauda</h1>
-          </div>
-          
-          <div className={styles.userInfo}>
-            <div className={styles.userText}>
-              <div className={styles.userGreeting}>Hola, Usuario</div>
-              <div className={styles.userRole}>Admin</div>
-            </div>
-          </div>
-          
+          {/* Hamburger Menu */}
           <button 
             className={`${styles.hamburger} ${isMenuOpen ? styles.hamburgerOpen : ''}`}
             onClick={toggleMenu}
@@ -98,6 +93,20 @@ const Header: React.FC = () => {
             <span></span>
             <span></span>
             <span></span>
+          </button>
+          
+          {/* Title - Centered */}
+          <h1 className={styles.title}>Mis eventos</h1>
+          
+          {/* Plus Icon */}
+          <button
+            className={styles.plusButton}
+            onClick={handleCreateEvent}
+            aria-label="Crear evento"
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
           </button>
         </div>
       </header>

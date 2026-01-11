@@ -71,13 +71,27 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
 
         // Type-specific validation
         if (isFoodSale) {
-          // Validate food items
-          formData.foodItems.forEach((item, index) => {
-            if (!item.name.trim()) {
-              newErrors[`foodItem_${index}_name`] = 'El nombre del plato es requerido';
+          // Validate only the first food item (required)
+          if (formData.foodItems.length > 0) {
+            const firstItem = formData.foodItems[0];
+            if (!firstItem.name.trim()) {
+              newErrors[`foodItem_0_name`] = 'El nombre del plato es requerido';
             }
-            if (!item.price.trim()) {
-              newErrors[`foodItem_${index}_price`] = 'El precio es requerido';
+            if (!firstItem.price.trim()) {
+              newErrors[`foodItem_0_price`] = 'El precio es requerido';
+            }
+          }
+          // Validate additional food items only if they have any content
+          formData.foodItems.forEach((item, index) => {
+            if (index > 0) {
+              if ((item.name.trim() || item.price.trim()) && (!item.name.trim() || !item.price.trim())) {
+                if (!item.name.trim()) {
+                  newErrors[`foodItem_${index}_name`] = 'El nombre del plato es requerido';
+                }
+                if (!item.price.trim()) {
+                  newErrors[`foodItem_${index}_price`] = 'El precio es requerido';
+                }
+              }
             }
           });
         } else {
@@ -89,6 +103,18 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
           if (!formData.autoAdjust && !formData.totalNumbers.trim()) {
             newErrors.totalNumbers = 'La cantidad total de números es requerida';
           }
+
+          if (formData.prizes.length > 0) {
+            if (!formData.prizes[0].trim()) {
+              newErrors['prize_0'] = 'El primer premio es requerido';
+            }
+          }
+
+          formData.prizes.forEach((prize, index) => {
+            if (index > 0 && !prize.trim()) {
+              newErrors[`prize_${index}`] = 'Completá este premio o eliminá la fila';
+            }
+          });
         }
 
         if (Object.keys(newErrors).length === 0) {
@@ -155,13 +181,47 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
         ...prev,
         prizes: prev.prizes.map((prize, i) => i === index ? value : prize)
       }));
+      const errorKey = `prize_${index}`;
+      if (errors[errorKey]) {
+        setErrors(prev => ({ ...prev, [errorKey]: '' }));
+      }
     };
 
     const handleRemovePrize = (index: number) => {
+      if (index === 0) {
+        return;
+      }
       setFormData(prev => ({
         ...prev,
         prizes: prev.prizes.filter((_, i) => i !== index)
       }));
+      setErrors(prev => {
+        if (Object.keys(prev).length === 0) {
+          return prev;
+        }
+        const updated: Record<string, string> = {};
+        Object.entries(prev).forEach(([key, value]) => {
+          if (!key.startsWith('prize_')) {
+            updated[key] = value;
+            return;
+          }
+          const [, indexStr] = key.split('_');
+          const prizeIndex = Number(indexStr);
+          if (Number.isNaN(prizeIndex)) {
+            updated[key] = value;
+            return;
+          }
+          if (prizeIndex === index) {
+            return;
+          }
+          if (prizeIndex > index) {
+            updated[`prize_${prizeIndex - 1}`] = value;
+            return;
+          }
+          updated[key] = value;
+        });
+        return updated;
+      });
     };
 
     // Food items handlers
@@ -299,17 +359,21 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
                       {getPrizeLabel(index)}
                     </label>
                     <div className={styles.prizeItem}>
-                      <input
-                        type="text"
-                        value={prize}
-                        onChange={(e) => handlePrizeChange(index, e.target.value)}
-                        className={styles.input}
-                        placeholder={index === 0 ? "Ej: Bicicleta rodado 29" : index === 1 ? "Ej: Smart TV 50 pulgadas" : "Ej: Vale de compra $10.000"}
-                      />
+                      <div className={styles.prizeItemInput}>
+                        <input
+                          type="text"
+                          value={prize}
+                          onChange={(e) => handlePrizeChange(index, e.target.value)}
+                          className={`${styles.input} ${errors[`prize_${index}`] ? styles.inputError : ''}`}
+                          placeholder={index === 0 ? "Ej: Bicicleta rodado 29" : index === 1 ? "Ej: Smart TV 50 pulgadas" : "Ej: Vale de compra $10.000"}
+                        />
+                        {errors[`prize_${index}`] && <span className={styles.errorText}>{errors[`prize_${index}`]}</span>}
+                      </div>
                       <button
                         type="button"
                         onClick={() => handleRemovePrize(index)}
                         className={styles.removePrizeButton}
+                        disabled={index === 0}
                       >
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                           <path d="M3 6H5H21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>

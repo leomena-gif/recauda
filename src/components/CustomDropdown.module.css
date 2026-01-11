@@ -107,7 +107,7 @@
 
 /* Dropdown Option */
 .dropdownOption {
-  padding: 12px 16px;
+  padding: 12px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -157,12 +157,12 @@
 @media (max-width: 768px) {
   .dropdownButton {
     font-size: 16px; /* Prevent zoom on iOS */
-    padding: 14px 40px 14px 16px;
+    padding: 14px;
   }
 
   .dropdownOption {
     font-size: 16px;
-    padding: 14px 16px;
+    padding: 14px;
   }
 
   .dropdownMenu {
@@ -172,7 +172,7 @@
 
 @media (max-width: 480px) {
   .dropdownButton {
-    padding: 16px 40px 16px 16px;
+    padding: 16px;
   }
 
   .dropdownOption {

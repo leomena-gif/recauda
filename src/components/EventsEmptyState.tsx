@@ -25,9 +25,9 @@ const EMPTY_STATE_CONFIG = {
     message: 'No tienes eventos en estado FINALIZADO',
     showButton: false,
   },
-  blocked: {
+  cancelled: {
     emoji: '🚫',
-    message: 'No tienes eventos en estado BLOQUEADO',
+    message: 'No tienes eventos en estado CANCELADO',
     showButton: false,
   },
 };

@@ -1,32 +1,22 @@
-.headerContainer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-  flex-wrap: wrap;
-  gap: 16px;
-}
-
-.titleSection {
-  flex: 1;
-}
-
-.headerActions {
-  display: flex;
-  align-items: center;
-}
-
-/* Filter Pills */
+/* Filter Pills - Dark Mode Mobile First */
 .filtersContainer {
-  margin-bottom: var(--space-xl);
-  margin-top: calc(var(--space-xl) / 2);
+  margin-bottom: var(--space-md);
+  margin-top: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.filtersContainer::-webkit-scrollbar {
+  display: none;
 }
 
 .pillsGroup {
   display: flex;
-  gap: var(--space-sm);
-  flex-wrap: wrap;
+  gap: var(--space-xs);
   align-items: center;
+  min-width: fit-content;
 }
 
 .pill {
@@ -34,18 +24,18 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-xs);
-  padding: 10px 24px;
-  background: var(--color-white);
-  border: 2px solid var(--color-gray-200);
+  padding: 8px 16px;
+  background: transparent;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-full);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-gray-700);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
   cursor: pointer;
   transition: all var(--transition-base);
   white-space: nowrap;
   position: relative;
-  overflow: hidden;
+  flex-shrink: 0;
 }
 
 .pillText {
@@ -54,111 +44,76 @@
 }
 
 .pillBadge {
-  position: relative;
-  z-index: 1;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 20px;
-  height: 20px;
-  padding: 0 6px;
-  background: var(--color-gray-200);
-  color: var(--color-gray-700);
-  border-radius: var(--radius-full);
-  font-size: 12px;
-  font-weight: var(--font-weight-bold);
-  line-height: 1;
-  transition: all var(--transition-base);
-}
-
-.pill::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.1), transparent);
-  transition: left 0.5s;
+  display: none; /* Hide badges in mobile design */
 }
 
 .pill:hover {
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-sm);
-}
-
-.pill:hover::before {
-  left: 100%;
+  border-color: var(--color-text-primary);
+  opacity: 0.8;
 }
 
 .pill:active {
-  transform: translateY(0);
+  transform: scale(0.98);
 }
 
 .pillActive {
-  background: linear-gradient(135deg, #E6F3FF 0%, #D6ECFF 100%);
-  border-color: var(--color-primary);
-  color: var(--color-primary);
-  box-shadow: 0 2px 8px rgba(0, 122, 255, 0.12);
-}
-
-.pillActive .pillBadge {
-  background: var(--color-primary);
-  color: var(--color-white);
-  font-weight: var(--font-weight-bold);
+  background-color: var(--color-white);
+  border-color: var(--color-white);
+  color: var(--color-bg-primary);
+  font-weight: var(--font-weight-semibold);
 }
 
 .pillActive:hover {
-  background: linear-gradient(135deg, #D6ECFF 0%, #C7E4FF 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 122, 255, 0.18);
+  opacity: 0.95;
 }
 
-.pillActive:hover .pillBadge {
-  background: #0066CC;
+/* Bottom Button Container */
+.bottomButtonContainer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border-light);
+  padding: var(--space-md);
+  z-index: 100;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .headerContainer {
-    flex-direction: column;
-    align-items: stretch;
-    gap: 16px;
-  }
+.registerSaleButton {
+  background-color: #E5E5EA;
+  color: var(--color-bg-primary);
+  border: none;
+  border-radius: var(--radius-xl);
+  font-weight: var(--font-weight-semibold);
+  padding: var(--space-md) var(--space-lg);
+  font-size: var(--font-size-base);
+}
 
-  .headerActions {
-    justify-content: flex-start;
-    width: 100%;
-  }
+.registerSaleButton:hover {
+  background-color: #D1D1D6;
+}
 
-  .headerActions > button {
-    width: 100%;
-  }
+.registerSaleButton:active {
+  transform: scale(0.98);
+}
 
+/* Desktop */
+@media (min-width: 768px) {
   .filtersContainer {
     margin-bottom: var(--space-lg);
   }
-
-  .pillsGroup {
-    gap: var(--space-xs);
-  }
-
+  
   .pill {
-    padding: 8px 20px;
-    font-size: 13px;
-  }
-}
-
-@media (max-width: 480px) {
-  .pillsGroup {
-    justify-content: center;
+    padding: 10px 20px;
   }
 
-  .pill {
-    flex: 1;
-    min-width: 100px;
-    justify-content: center;
+  .bottomButtonContainer {
+    padding: var(--space-lg);
+  }
+
+  .registerSaleButton {
+    max-width: 600px;
+    margin: 0 auto;
+    display: block;
   }
 }

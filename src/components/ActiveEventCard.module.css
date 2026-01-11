@@ -1,131 +1,121 @@
+/* Event Card - Dark Mode Mobile First */
 .card {
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
-  padding: 20px;
-  flex: 0 0 calc(50% - 12px);
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
   display: flex;
   flex-direction: column;
+  gap: var(--space-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  border: 1px solid var(--color-border-light);
+}
+
+.card:hover {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border);
+}
+
+.card:active {
+  transform: scale(0.98);
 }
 
 /* Status Container */
 .statusContainer {
-  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin-bottom: var(--space-xs);
 }
 
-.tagGreen {
-  background-color: #2A9D47;
-  color: white;
-  padding: 6px 12px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 500;
-  height: 24px;
-  display: inline-flex;
-  align-items: center;
+.statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+  flex-shrink: 0;
+}
+
+.statusText {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-success);
+}
+
+/* Date Info */
+.dateInfo {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xs);
 }
 
 /* Event Title */
 .eventTitle {
-  font-size: 20px;
-  font-weight: bold;
-  color: #000;
-  margin-bottom: 20px;
-  line-height: 1.3;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: 1.4;
+  margin: 0;
+  margin-bottom: var(--space-sm);
 }
 
-/* Details Rows */
-.detailsRow {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  margin-bottom: 20px;
-}
-
-.detailsRow:last-of-type {
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-}
-
-.detailItem {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.label {
-  font-size: 14px;
-  color: #666;
-  font-weight: 400;
-}
-
-.value {
-  font-size: 16px;
-  color: #000;
-  font-weight: bold;
-}
-
-/* Progress Bar */
+/* Progress Container */
 .progressContainer {
-  margin: 20px 0;
+  margin: var(--space-sm) 0;
 }
 
 .progressBar {
-  background-color: #f0f0f0;
-  border-radius: 20px;
-  height: 30px;
+  background-color: var(--color-bg-tertiary);
+  border-radius: var(--radius-full);
+  height: 24px;
   position: relative;
   overflow: hidden;
 }
 
-.progressIndicator {
-  background-color: #007AFF;
-  border-radius: 20px;
+.progressFill {
+  background-color: var(--color-primary);
+  border-radius: var(--radius-full);
   height: 100%;
-  width: 80%;
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
+  transition: width var(--transition-slow);
 }
 
 .progressText {
-  color: white;
-  font-size: 12px;
-  font-weight: 600;
+  color: var(--color-bg-primary);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
   white-space: nowrap;
 }
 
-/* Button Container */
-.buttonContainer {
+/* Details Row */
+.detailsRow {
   display: flex;
-  gap: 12px;
-  margin-top: auto;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-xs);
+  gap: var(--space-md);
 }
 
-.buttonContainer > button {
+.detailLeft,
+.detailRight {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
   flex: 1;
 }
 
-/* Responsive Design */
-@media (max-width: 480px) {
-  .detailsRow {
-    flex-direction: column;
-    gap: 16px;
+.detailRight {
+  text-align: right;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+  .card {
+    padding: var(--space-lg);
   }
   
   .eventTitle {
-    font-size: 18px;
-  }
-  
-  .card {
-    padding: 16px;
-  }
-
-  .buttonContainer {
-    flex-direction: column;
-    gap: 12px;
+    font-size: var(--font-size-xl);
   }
 }

@@ -124,6 +124,10 @@ const CreateEventWizard: React.FC = () => {
     router.push('/');
   };
 
+  const handleBackFromStep1 = () => {
+    router.push('/');
+  };
+
   const renderCurrentStep = () => {
     switch (currentStep) {
       case 1:
@@ -187,6 +191,18 @@ const CreateEventWizard: React.FC = () => {
     <div className={styles.wizardContainer}>
       <main className={styles.mainContent}>
         <div className={styles.wizardContent}>
+          {/* Navigation - Only show on step 1 */}
+          {currentStep === 1 && (
+            <div className={styles.navigationContainer}>
+              <button className={styles.backButton} onClick={handleBackFromStep1}>
+                <svg className={styles.chevronIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                </svg>
+                Volver a Mis eventos
+              </button>
+            </div>
+          )}
+          
           {/* Page Title */}
           <h1 className={styles.pageTitle}>Crear evento</h1>
           
