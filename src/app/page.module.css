@@ -14,6 +14,7 @@
 .headerActions {
   display: flex;
   align-items: center;
+  gap: var(--space-sm);
 }
 
 /* Page Title - Hidden on mobile, visible on desktop */
@@ -140,12 +141,6 @@
   }
 
   .bottomButtonContainer {
-    padding: var(--space-lg);
-  }
-
-  .registerSaleButton {
-    max-width: 600px;
-    margin: 0 auto;
-    display: block;
+    display: none; /* Ocultar "Registrar venta" solo en desktop */
   }
 }
