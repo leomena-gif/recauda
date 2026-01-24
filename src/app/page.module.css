@@ -1,3 +1,26 @@
+/* Header Section - Hidden on mobile, visible on desktop */
+.header {
+  display: none;
+  margin-bottom: var(--space-2xl);
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: var(--space-lg);
+}
+
+.titleSection {
+  flex: 1;
+}
+
+.headerActions {
+  display: flex;
+  align-items: center;
+}
+
+/* Page Title - Hidden on mobile, visible on desktop */
+.pageTitle {
+  display: none;
+}
+
 /* Filter Pills - Dark Mode Mobile First */
 .filtersContainer {
   margin-bottom: var(--space-md);
@@ -99,6 +122,15 @@
 
 /* Desktop */
 @media (min-width: 768px) {
+  .header {
+    display: flex;
+  }
+  
+  .pageTitle {
+    display: block;
+    margin: 0;
+  }
+  
   .filtersContainer {
     margin-bottom: var(--space-lg);
   }

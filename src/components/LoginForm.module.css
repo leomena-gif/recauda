@@ -90,24 +90,26 @@
 }
 
 .submitButton {
-  background-color: #007AFF;
-  color: white;
+  background-color: var(--color-white);
+  color: var(--color-bg-primary);
   border: none;
-  padding: 16px;
-  border-radius: 8px;
-  font-size: 18px;
-  font-weight: 600;
+  padding: var(--space-md);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: background-color 0.3s ease;
-  margin-top: 8px;
+  transition: all var(--transition-base);
+  margin-top: var(--space-xs);
 }
 
 .submitButton:hover {
-  background-color: #0056CC;
+  background-color: var(--color-gray-900);
+  color: var(--color-bg-primary);
 }
 
 .submitButton:active {
-  background-color: #004499;
+  background-color: var(--color-gray-800);
+  color: var(--color-bg-primary);
   transform: translateY(1px);
 }
 

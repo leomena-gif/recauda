@@ -1,12 +1,12 @@
-/* Sidebar */
+/* Sidebar - Dark Mode */
 .sidebar {
   position: fixed;
   top: 0;
   left: 0;
   width: 280px;
   height: 100vh;
-  background: #FFFFFF;
-  border-right: 2px solid #E5E7EB;
+  background: var(--color-bg-secondary);
+  border-right: 1px solid var(--color-border-light);
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -16,14 +16,14 @@
 /* Sidebar Header */
 .sidebarHeader {
   padding: 32px 20px;
-  border-bottom: 2px solid #E5E7EB;
-  background: #FFFFFF;
+  border-bottom: 1px solid var(--color-border-light);
+  background: var(--color-bg-secondary);
 }
 
 .sidebarTitle {
   font-size: 24px;
   font-weight: 700;
-  color: #007AFF;
+  color: var(--color-primary);
   margin: 0;
   text-align: center;
   letter-spacing: 0.5px;
@@ -47,17 +47,17 @@
 
 .sidebarButton {
   width: 100%;
-  background: #FFFFFF;
-  border: 2px solid #E5E7EB;
-  border-radius: 8px;
+  background: transparent;
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
   padding: 10px 16px;
   display: flex;
   align-items: center;
   gap: 14px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-base);
   text-align: left;
-  color: #374151;
+  color: var(--color-text-primary);
   font-size: 15px;
   font-weight: 600;
   position: relative;
@@ -71,15 +71,15 @@
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg, transparent, rgba(0, 122, 255, 0.1), transparent);
+  background: linear-gradient(90deg, transparent, var(--color-primary-light), transparent);
   transition: left 0.5s;
   z-index: 0;
 }
 
 .sidebarButton:hover {
-  background: #FFFFFF;
-  border-color: #007AFF;
-  color: #007AFF;
+  background: var(--color-bg-tertiary);
+  border-color: var(--color-border);
+  color: var(--color-text-primary);
   transform: translateY(-2px);
 }
 
@@ -88,9 +88,9 @@
 }
 
 .sidebarButtonActive {
-  background: linear-gradient(135deg, #E6F3FF 0%, #D6ECFF 100%);
-  color: #007AFF;
-  border-color: #007AFF;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .sidebarButtonActive::before {
@@ -98,9 +98,9 @@
 }
 
 .sidebarButtonActive:hover {
-  background: linear-gradient(135deg, #D6ECFF 0%, #C7E4FF 100%);
-  color: #007AFF;
-  border-color: #007AFF;
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+  border-color: var(--color-primary);
   transform: translateY(-2px);
 }
 

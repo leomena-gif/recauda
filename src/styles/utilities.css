@@ -358,21 +358,23 @@
 
 /* Primary Button - Botón principal (azul sólido) */
 .btn-primary {
-  background-color: #007AFF;
-  color: white;
+  background-color: var(--color-white);
+  color: var(--color-bg-primary);
   border: none;
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: #0056CC;
+  background-color: var(--color-gray-900);
+  color: var(--color-bg-primary);
 }
 
 .btn-primary:active:not(:disabled) {
-  background-color: #004499;
+  background-color: var(--color-gray-800);
+  color: var(--color-bg-primary);
 }
 
 .btn-primary:focus-visible {
-  outline: 2px solid #007AFF;
+  outline: 2px solid var(--color-white);
   outline-offset: 2px;
 }
 
