@@ -1,9 +1,10 @@
 /* Create Account Page Wrapper */
 .pageWrapper {
   width: 100%;
-  max-width: 500px;
+  max-width: min(500px, 100%);
   margin: 0 auto;
   padding: var(--space-xl) var(--space-lg);
+  box-sizing: border-box;
 }
 
 /* Mobile */
@@ -16,6 +17,12 @@
 @media (max-width: 480px) {
   .pageWrapper {
     padding: var(--space-md) var(--space-sm);
+  }
+}
+
+@media (max-width: 400px) {
+  .pageWrapper {
+    padding: var(--space-md) var(--space-xs);
   }
 }
 

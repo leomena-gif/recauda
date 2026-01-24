@@ -32,10 +32,20 @@ const headerItems: HeaderItem[] = [
   }
 ];
 
+const getHeaderTitle = (pathname: string): string => {
+  const item = headerItems.find((i) => i.path === pathname);
+  if (item) return item.label;
+  if (pathname === '/add-seller') return 'Agregar vendedor';
+  if (pathname === '/create-event') return 'Crear evento';
+  if (pathname === '/event-detail') return 'Detalle del evento';
+  return 'Recauda';
+};
+
 const Header: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const headerTitle = getHeaderTitle(pathname);
 
   const handleNavigation = (path: string) => {
     router.push(path);
@@ -46,8 +56,12 @@ const Header: React.FC = () => {
     setIsMenuOpen(!isMenuOpen);
   };
 
-  const handleCreateEvent = () => {
-    router.push('/create-event');
+  const handlePlusAction = () => {
+    if (pathname === '/sellers-list') {
+      router.push('/add-seller');
+    } else {
+      router.push('/create-event');
+    }
     setIsMenuOpen(false);
   };
 
@@ -85,24 +99,25 @@ const Header: React.FC = () => {
       <header className={styles.header}>
         <div className={styles.headerContent}>
           {/* Hamburger Menu */}
-          <button 
+          <button
             className={`${styles.hamburger} ${isMenuOpen ? styles.hamburgerOpen : ''}`}
             onClick={toggleMenu}
-            aria-label="Toggle menu"
+            aria-label={isMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
+            aria-expanded={isMenuOpen}
           >
             <span></span>
             <span></span>
             <span></span>
           </button>
           
-          {/* Title - Centered */}
-          <h1 className={styles.title}>Mis eventos</h1>
+          {/* Title - Centered (por sección) */}
+          <h1 className={styles.title}>{headerTitle}</h1>
           
-          {/* Plus Icon */}
+          {/* Plus Icon: Agregar vendedor en Lista de vendedores, Crear evento en el resto */}
           <button
             className={styles.plusButton}
-            onClick={handleCreateEvent}
-            aria-label="Crear evento"
+            onClick={handlePlusAction}
+            aria-label={pathname === '/sellers-list' ? 'Agregar vendedor' : 'Crear evento'}
           >
             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M12 5V19M5 12H19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -116,10 +131,10 @@ const Header: React.FC = () => {
         <nav className={`${styles.mobileMenu} ${isMenuOpen ? styles.mobileMenuOpen : ''}`} onClick={(e) => e.stopPropagation()}>
           <div className={styles.menuHeader}>
             <h2 className={styles.menuTitle}>Recauda</h2>
-            <button 
+            <button
               className={styles.closeButton}
               onClick={toggleMenu}
-              aria-label="Close menu"
+              aria-label="Cerrar menú"
             >
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -128,21 +143,23 @@ const Header: React.FC = () => {
           </div>
           
           <ul className={styles.menuList}>
-            {headerItems.map((item) => (
-              <li key={item.id} className={styles.menuItem}>
-                <button
-                  className={`${styles.menuButton} ${
-                    pathname === item.path ? styles.menuButtonActive : ''
-                  }`}
-                  onClick={() => handleNavigation(item.path)}
-                >
-                  <span className={styles.menuIcon}>
-                    {renderIcon(item.icon)}
-                  </span>
-                  <span className={styles.menuLabel}>{item.label}</span>
-                </button>
-              </li>
-            ))}
+            {headerItems
+              .filter((item) => item.id !== 'create-event')
+              .map((item) => (
+                <li key={item.id} className={styles.menuItem}>
+                  <button
+                    className={`${styles.menuButton} ${
+                      pathname === item.path ? styles.menuButtonActive : ''
+                    }`}
+                    onClick={() => handleNavigation(item.path)}
+                  >
+                    <span className={styles.menuIcon}>
+                      {renderIcon(item.icon)}
+                    </span>
+                    <span className={styles.menuLabel}>{item.label}</span>
+                  </button>
+                </li>
+              ))}
           </ul>
         </nav>
       </div>

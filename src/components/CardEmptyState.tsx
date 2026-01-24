@@ -3,10 +3,13 @@
 import React from 'react';
 import styles from './CardEmptyState.module.css';
 
-const CardEmptyState: React.FC = () => {
+interface CardEmptyStateProps {
+  onCreateEvent?: () => void;
+}
+
+const CardEmptyState: React.FC<CardEmptyStateProps> = ({ onCreateEvent }) => {
   const handleCreateEvent = () => {
-    // Aquí se puede agregar la lógica para crear un evento
-    console.log('Crear evento clicked');
+    onCreateEvent?.();
   };
 
   return (
@@ -14,7 +17,7 @@ const CardEmptyState: React.FC = () => {
       <div className={styles.emptyState}>
         <div className={styles.flagIcon}>🏁</div>
         <p className={styles.message}>Comencemos creando tu primer evento</p>
-        <button className={styles.createButton} onClick={handleCreateEvent}>
+        <button className={styles.createButton} onClick={handleCreateEvent} type="button">
           Crear evento
         </button>
       </div>

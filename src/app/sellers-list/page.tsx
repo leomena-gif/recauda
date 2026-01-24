@@ -3,8 +3,8 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Seller, Event, StatusFilter } from '@/types/models';
-import { STATUS_OPTIONS } from '@/constants';
-import { validateName, validatePhone, formatPhone } from '@/utils/validation';
+import { STATUS_OPTIONS, SNACKBAR_DURATION } from '@/constants';
+import { validateName, validatePhone } from '@/utils/validation';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { MOCK_SELLERS, MOCK_EVENTS } from '@/mocks/data';
 import CustomDropdown from '@/components/CustomDropdown';
@@ -12,7 +12,6 @@ import styles from './SellersList.module.css';
 
 export default function SellersList() {
   const router = useRouter();
-  
   // State
   const [sellers, setSellers] = useState<Seller[]>(MOCK_SELLERS);
   const [events, setEvents] = useState<Event[]>(MOCK_EVENTS);
@@ -39,21 +38,19 @@ export default function SellersList() {
 
   // Mobile menu state
   const [mobileMenuOpen, setMobileMenuOpen] = useState<string | null>(null);
+  // Mobile-only: Filtros sheet, Assign sticky + sheet
+  const [filtersSheetOpen, setFiltersSheetOpen] = useState(false);
+  const [assignSheetOpen, setAssignSheetOpen] = useState(false);
   
   // Custom hooks
   const successSnackbar = useSnackbar();
-  const errorSnackbar = useSnackbar(5000);
+  const errorSnackbar = useSnackbar(SNACKBAR_DURATION.ERROR);
   
   // Computed values
   const activeEvents = useMemo(
     () => events.filter(event => event.status === 'active'),
     [events]
   );
-
-  // Load mock data (TODO: Replace with API calls)
-  useEffect(() => {
-    // Data is already loaded in state initialization
-  }, []);
 
   // Close mobile menu when clicking outside
   useEffect(() => {
@@ -178,18 +175,12 @@ export default function SellersList() {
 
   const handleAssignToEvent = useCallback((eventId: string) => {
     if (eventId && selectedSellers.length > 0) {
-      const event = events.find(e => e.id === eventId);
-      console.log('Asignar vendedores al evento:', {
-        eventId,
-        sellers: selectedSellers,
-        eventName: event?.name
-      });
-      
       setSelectedSellers([]);
       setShowEventSelector(false);
+      setAssignSheetOpen(false);
       successSnackbar.showSnackbar();
     }
-  }, [selectedSellers, events, successSnackbar]);
+  }, [selectedSellers, successSnackbar]);
 
   const handleEditSeller = (seller: Seller) => {
     setEditingSeller(seller);
@@ -265,10 +256,6 @@ export default function SellersList() {
     setEditFormErrors({});
   };
 
-  const handleAddSeller = () => {
-    router.push('/add-seller');
-  };
-
   // Mobile menu handlers
   const handleMobileMenuToggle = (sellerId: string) => {
     setMobileMenuOpen(mobileMenuOpen === sellerId ? null : sellerId);
@@ -276,6 +263,16 @@ export default function SellersList() {
 
   const handleMobileMenuClose = () => {
     setMobileMenuOpen(null);
+  };
+
+  const openFiltersSheet = () => setFiltersSheetOpen(true);
+  const closeFiltersSheet = () => setFiltersSheetOpen(false);
+  const openAssignSheet = () => setAssignSheetOpen(true);
+  const closeAssignSheet = () => setAssignSheetOpen(false);
+  const handleMobileAssignCancel = () => {
+    setSelectedSellers([]);
+    setAssignSheetOpen(false);
+    setShowEventSelector(false);
   };
 
   const handleMobileEdit = (seller: Seller) => {
@@ -288,6 +285,10 @@ export default function SellersList() {
     handleMobileMenuClose();
   };
 
+  const handleAddSeller = () => {
+    router.push('/add-seller');
+  };
+
   return (
     <div className="pageContainer">
       <div className={styles.header}>
@@ -295,10 +296,7 @@ export default function SellersList() {
           <h1 className="pageTitle">Lista de Vendedores</h1>
         </div>
         <div className={styles.headerActions}>
-          <button
-            className="btn btn-primary"
-            onClick={handleAddSeller}
-          >
+          <button className="btn btn-primary" onClick={handleAddSeller}>
             Agregar vendedor
           </button>
         </div>
@@ -320,44 +318,54 @@ export default function SellersList() {
               className={styles.searchInput}
             />
           </div>
-          
-          <div className={styles.statusFilter}>
-            <CustomDropdown
-              options={STATUS_OPTIONS.map(opt => ({
-                value: opt.value,
-                label: opt.label
-              }))}
-              value={statusFilter}
-              onChange={(value) => setStatusFilter(value as StatusFilter)}
-              placeholder="Filtrar por estado"
-            />
+
+          {/* Desktop: dos filtros en línea */}
+          <div className={styles.filtersGroupDesktop}>
+            <div className={styles.statusFilter}>
+              <CustomDropdown
+                options={STATUS_OPTIONS.map(opt => ({ value: opt.value, label: opt.label }))}
+                value={statusFilter}
+                onChange={(value) => setStatusFilter(value as StatusFilter)}
+                placeholder="Filtrar por estado"
+              />
+            </div>
+            <div className={styles.eventFilter}>
+              <CustomDropdown
+                options={[
+                  { value: 'all', label: 'Todos los eventos activos' },
+                  ...activeEvents.map(event => ({ value: event.id, label: event.name }))
+                ]}
+                value={eventFilter}
+                onChange={(value) => setEventFilter(value as string)}
+                placeholder="Filtrar por evento"
+              />
+            </div>
           </div>
-          <div className={styles.eventFilter}>
-            <CustomDropdown
-              options={[
-                { value: 'all', label: 'Todos los eventos activos' },
-                ...activeEvents.map(event => ({
-                  value: event.id,
-                  label: event.name
-                }))
-              ]}
-              value={eventFilter}
-              onChange={(value) => setEventFilter(value as string)}
-              placeholder="Filtrar por evento"
-            />
-          </div>
+
+          {/* Mobile: botón Filtros abre sheet */}
+          <button
+            type="button"
+            className={styles.filtersTriggerMobile}
+            onClick={openFiltersSheet}
+            aria-label="Abrir filtros"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M4 6h16M4 12h16M4 18h7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span>Filtros</span>
+          </button>
         </div>
 
+        {/* Desktop: Asignar + selector inline */}
         <div className={styles.rightSection}>
           {selectedSellers.length > 0 && (
             <div className={styles.assignmentContainer}>
-              <button 
+              <button
                 className={styles.assignButton}
                 onClick={toggleEventSelector}
               >
                 {showEventSelector ? 'Cancelar' : `Asignar ${selectedSellers.length} vendedor${selectedSellers.length > 1 ? 'es' : ''}`}
               </button>
-              
               {showEventSelector && activeEvents.length > 0 && (
                 <div className={styles.inlineEventSelector}>
                   <span className={styles.selectorLabel}>Selecciona un evento:</span>
@@ -374,16 +382,109 @@ export default function SellersList() {
                   </div>
                 </div>
               )}
-              
               {showEventSelector && activeEvents.length === 0 && (
-                <div className={styles.noEventsMessage}>
-                  No hay eventos en estado ACTIVO
-                </div>
+                <div className={styles.noEventsMessage}>No hay eventos en estado ACTIVO</div>
               )}
             </div>
           )}
         </div>
       </div>
+
+      {/* Mobile: sticky bottom bar Asignar (solo cuando hay selección) */}
+      {selectedSellers.length > 0 && (
+        <div className={styles.assignStickyBar}>
+          <button type="button" className={styles.assignStickyCancel} onClick={handleMobileAssignCancel}>
+            Cancelar
+          </button>
+          <button
+            type="button"
+            className={styles.assignStickyPrimary}
+            onClick={openAssignSheet}
+          >
+            Asignar {selectedSellers.length} vendedor{selectedSellers.length > 1 ? 'es' : ''}
+          </button>
+        </div>
+      )}
+
+      {/* Mobile: bottom sheet Filtros */}
+      {filtersSheetOpen && (
+        <div className={styles.sheetOverlay} onClick={closeFiltersSheet} aria-hidden="true" />
+      )}
+      {filtersSheetOpen && (
+        <div className={styles.sheetPanel} role="dialog" aria-label="Filtros" onClick={(e) => e.stopPropagation()}>
+          <div className={styles.sheetHandle} aria-hidden="true" />
+          <h2 className={styles.sheetTitle}>Filtros</h2>
+          <div className={styles.sheetFilters}>
+            <div className={styles.sheetFilterGroup}>
+              <span className={styles.sheetFilterLabel}>Estado</span>
+              <div className={styles.sheetFilterOptions}>
+                {STATUS_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    type="button"
+                    className={statusFilter === opt.value ? styles.sheetFilterOptionActive : styles.sheetFilterOption}
+                    onClick={() => setStatusFilter(opt.value as StatusFilter)}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className={styles.sheetFilterGroup}>
+              <span className={styles.sheetFilterLabel}>Evento</span>
+              <div className={styles.sheetFilterOptions}>
+                <button
+                  type="button"
+                  className={eventFilter === 'all' ? styles.sheetFilterOptionActive : styles.sheetFilterOption}
+                  onClick={() => setEventFilter('all')}
+                >
+                  Todos los eventos activos
+                </button>
+                {activeEvents.map((event) => (
+                  <button
+                    key={event.id}
+                    type="button"
+                    className={eventFilter === event.id ? styles.sheetFilterOptionActive : styles.sheetFilterOption}
+                    onClick={() => setEventFilter(event.id)}
+                  >
+                    {event.name}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+          <button type="button" className={styles.sheetApply} onClick={closeFiltersSheet}>
+            Aplicar
+          </button>
+        </div>
+      )}
+
+      {/* Mobile: bottom sheet Asignar evento */}
+      {assignSheetOpen && (
+        <div className={styles.sheetOverlay} onClick={closeAssignSheet} aria-hidden="true" />
+      )}
+      {assignSheetOpen && (
+        <div className={styles.sheetPanel} role="dialog" aria-label="Seleccionar evento" onClick={(e) => e.stopPropagation()}>
+          <div className={styles.sheetHandle} aria-hidden="true" />
+          <h2 className={styles.sheetTitle}>Asignar a evento</h2>
+          {activeEvents.length > 0 ? (
+            <div className={styles.sheetEventList}>
+              {activeEvents.map((event) => (
+                <button
+                  key={event.id}
+                  type="button"
+                  className={styles.sheetEventButton}
+                  onClick={() => handleAssignToEvent(event.id)}
+                >
+                  {event.name}
+                </button>
+              ))}
+            </div>
+          ) : (
+            <p className={styles.sheetNoEvents}>No hay eventos en estado ACTIVO</p>
+          )}
+        </div>
+      )}
 
       {/* Desktop Table View */}
       <div className={styles.tableContainer}>
@@ -495,56 +596,54 @@ export default function SellersList() {
         </table>
       </div>
 
-      {/* Mobile Card View */}
-      <div className={styles.mobileCardsContainer}>
+      {/* Mobile List View — lista de filas, sin tabla; UX optimizada */}
+      <div
+        className={`${styles.mobileListContainer} ${selectedSellers.length > 0 ? styles.hasStickyBar : ''}`}
+        role="list"
+      >
         {filteredSellers.map((seller) => (
-          <div 
-            key={seller.id} 
-            className={`${styles.mobileCard} ${seller.status === 'inactive' ? styles.mobileCardInactive : ''}`}
+          <article
+            key={seller.id}
+            role="listitem"
+            className={`${styles.mobileListRow} ${seller.status === 'inactive' ? styles.mobileRowInactive : ''} ${selectedSellers.includes(seller.id) ? styles.mobileRowSelected : ''}`}
           >
-            <div className={styles.mobileCardHeader}>
-              <div className={styles.mobileCheckboxWrapper}>
-                <input
-                  type="checkbox"
-                  checked={selectedSellers.includes(seller.id)}
-                  onChange={() => handleSelectSeller(seller.id)}
-                  disabled={seller.status === 'inactive'}
-                  className={styles.mobileCheckbox}
-                />
-              </div>
-              <div className={styles.mobileSellerInfo}>
-                <div className={styles.mobileSellerName}>
+            <div className={styles.mobileRowCheckbox}>
+              <input
+                type="checkbox"
+                id={`seller-${seller.id}`}
+                checked={selectedSellers.includes(seller.id)}
+                onChange={() => handleSelectSeller(seller.id)}
+                disabled={seller.status === 'inactive'}
+                className={styles.mobileCheckbox}
+                aria-label={`Seleccionar ${seller.firstName} ${seller.lastName}`}
+              />
+            </div>
+            <div className={styles.mobileRowMain}>
+              <div className={styles.mobileRowTop}>
+                <h3 className={styles.mobileRowName}>
                   {seller.firstName} {seller.lastName}
-                </div>
-                <div className={styles.mobilePhone}>{seller.phone}</div>
-                <div className={styles.mobileEventInfo}>
-                  {seller.assignedEvents.length > 0 ? (
-                    <div className={styles.mobileEventName}>
-                      {(() => {
-                        const firstEvent = events.find(e => e.id === seller.assignedEvents[0]);
-                        return firstEvent ? firstEvent.name : 'Sin evento';
-                      })()}
-                    </div>
-                  ) : (
-                    <div className={styles.mobileNoEvent}>Sin evento asignado</div>
-                  )}
-                </div>
-              </div>
-              <div className={styles.mobileMenuContainer}>
-                <button
+                </h3>
+                <div className={styles.mobileMenuContainer}>
+                  <button
+                  type="button"
                   className={styles.mobileMenuButton}
                   onClick={() => handleMobileMenuToggle(seller.id)}
                   title="Más opciones"
+                  aria-label="Menú de opciones"
+                  aria-expanded={mobileMenuOpen === seller.id}
+                  aria-haspopup="true"
                 >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <circle cx="12" cy="12" r="1" fill="currentColor"/>
-                    <circle cx="12" cy="5" r="1" fill="currentColor"/>
-                    <circle cx="12" cy="19" r="1" fill="currentColor"/>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
+                    <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                    <circle cx="12" cy="18" r="1.5" fill="currentColor"/>
                   </svg>
-                </button>
-                {mobileMenuOpen === seller.id && (
-                  <div className={styles.mobileMenuDropdown}>
+                  </button>
+                  {mobileMenuOpen === seller.id && (
+                  <div className={styles.mobileMenuDropdown} role="menu">
                     <button
+                      type="button"
+                      role="menuitem"
                       className={styles.mobileMenuItem}
                       onClick={() => handleMobileEdit(seller)}
                     >
@@ -552,31 +651,46 @@ export default function SellersList() {
                         <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                         <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                       </svg>
-                      Editar
+                      Editar datos
                     </button>
                     <button
+                      type="button"
+                      role="menuitem"
                       className={styles.mobileMenuItem}
                       onClick={() => handleMobileToggleStatus(seller.id)}
                     >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                      {seller.status === 'active' ? 'Desactivar' : 'Activar'}
+                      {seller.status === 'active' ? (
+                        <>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                          Desactivar
+                        </>
+                      ) : (
+                        <>
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                          Activar
+                        </>
+                      )}
                     </button>
                   </div>
-                )}
+                  )}
+                </div>
               </div>
+              <p className={styles.mobileRowPhone}>{seller.phone}</p>
+              <p className={styles.mobileRowEventLine}>
+                {seller.assignedEvents.length > 0
+                  ? (() => {
+                      const firstEvent = events.find(e => e.id === seller.assignedEvents[0]);
+                      return firstEvent ? firstEvent.name : 'Sin evento';
+                    })()
+                  : 'Sin evento asignado'}
+              </p>
             </div>
-            
-            <div className={styles.mobileCardFooter}>
-              <div className={styles.mobileStatusIndicator}>
-                <span className={`${styles.mobileStatusLabel} ${seller.status === 'active' ? styles.mobileStatusActive : styles.mobileStatusInactive}`}>
-                  {seller.status === 'active' ? 'Activo' : 'Inactivo'}
-                </span>
-              </div>
-            </div>
-          </div>
+          </article>
         ))}
       </div>
         

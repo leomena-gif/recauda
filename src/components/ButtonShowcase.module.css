@@ -2,6 +2,9 @@
   padding: 40px;
   max-width: 1200px;
   margin: 0 auto;
+  width: 100%;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .title {
@@ -136,6 +139,12 @@
 
   .card {
     padding: 24px;
+  }
+}
+
+@media (max-width: 400px) {
+  .showcase {
+    padding: var(--space-md);
   }
 }
 

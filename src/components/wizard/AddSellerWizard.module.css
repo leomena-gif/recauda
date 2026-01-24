@@ -71,10 +71,12 @@
   margin: 0 auto;
   width: 100%;
   background-color: var(--color-bg-primary);
+  overflow-x: hidden;
 }
 
 .wizardContent {
   width: 100%;
+  max-width: 100%;
   margin: 0 auto;
   padding-bottom: 120px;
 }
@@ -89,5 +91,11 @@
 @media (max-width: 480px) {
   .mainContent {
     padding: var(--space-md) var(--space-sm);
+  }
+}
+
+@media (max-width: 400px) {
+  .mainContent {
+    padding: var(--space-md) var(--space-xs);
   }
 }

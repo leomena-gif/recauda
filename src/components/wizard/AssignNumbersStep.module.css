@@ -228,11 +228,17 @@
   }
   
   .quantitySelector {
-    max-width: 300px;
+    max-width: min(300px, calc(100% - 16px));
   }
   
   .rangeFields {
     flex-direction: column;
     gap: 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .formCard {
+    padding: var(--space-md);
   }
 }

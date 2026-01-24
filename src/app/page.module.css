@@ -27,9 +27,11 @@
   margin-bottom: var(--space-md);
   margin-top: 0;
   overflow-x: auto;
+  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
+  max-width: 100%;
 }
 
 .filtersContainer::-webkit-scrollbar {
@@ -97,10 +99,13 @@
   bottom: 0;
   left: 0;
   right: 0;
+  width: 100%;
+  max-width: 100vw;
   background-color: var(--color-bg-primary);
   border-top: 1px solid var(--color-border-light);
   padding: var(--space-md);
   z-index: 100;
+  box-sizing: border-box;
 }
 
 .registerSaleButton {
@@ -119,6 +124,376 @@
 
 .registerSaleButton:active {
   transform: scale(0.98);
+}
+
+/* Mínimo 360px: evitar scroll horizontal */
+@media (max-width: 400px) {
+  .bottomButtonContainer {
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+  }
+}
+
+/* Sheet: Registrar venta — SOLO MOBILE */
+.registerSaleSheetOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(0, 0, 0, 0.5);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.registerSaleSheetPanel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 100vw;
+  z-index: 301;
+  max-height: 85vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
+  padding: var(--space-lg);
+  padding-bottom: max(var(--space-xl), env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling: touch;
+  animation: registerSaleSheetSlideUp 0.3s ease-out;
+  box-sizing: border-box;
+}
+
+@keyframes registerSaleSheetSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.registerSaleSheetHandle {
+  width: 40px;
+  height: 4px;
+  margin: 0 auto var(--space-md);
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+.registerSaleSheetHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-md);
+  margin-bottom: var(--space-xl);
+}
+
+.registerSaleSheetTitle {
+  flex: 1;
+  margin: 0;
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: 1.3;
+}
+
+.registerSaleSheetClose {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  transition: color var(--transition-base), background-color var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.registerSaleSheetClose:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.registerSaleForm {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.registerSaleField {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.registerSaleFieldError .registerSaleInput {
+  border-color: var(--color-error);
+}
+
+.registerSaleLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.registerSaleInput {
+  width: 100%;
+  min-height: 48px;
+  padding: var(--space-md);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-base);
+  box-sizing: border-box;
+}
+
+.registerSaleInput::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.registerSaleInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.registerSaleHelper {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.registerSaleError {
+  font-size: var(--font-size-xs);
+  color: var(--color-error);
+}
+
+.registerSaleSubmit {
+  width: 100%;
+  min-height: 48px;
+  margin-top: var(--space-sm);
+  background: #E5E5EA;
+  color: var(--color-bg-primary);
+  border: none;
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: background-color var(--transition-base), transform var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.registerSaleSubmit:hover {
+  background: #D1D1D6;
+}
+
+.registerSaleSubmit:active {
+  transform: scale(0.98);
+}
+
+/* Ocultar sheet en desktop */
+@media (min-width: 768px) {
+  .registerSaleSheetOverlay,
+  .registerSaleSheetPanel {
+    display: none !important;
+  }
+}
+
+/* Modal: Registrar venta — SOLO DESKTOP (como edición vendedor) */
+.registerSaleModalOverlay {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.7);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: var(--space-lg);
+}
+
+.registerSaleModal {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  border: 1px solid var(--color-border-light);
+}
+
+.registerSaleModalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 24px 0 24px;
+}
+
+.registerSaleModalTitle {
+  margin: 0;
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+}
+
+.registerSaleModalClose {
+  background: none;
+  border: none;
+  padding: var(--space-xs);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text-secondary);
+  transition: all var(--transition-base);
+}
+
+.registerSaleModalClose:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.registerSaleModalContent {
+  padding: 24px;
+}
+
+.registerSaleModalForm {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.registerSaleFormCard {
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+  padding: var(--space-xl);
+  width: 100%;
+  margin-bottom: var(--space-xl);
+}
+
+.registerSaleFieldGroup {
+  margin-bottom: 24px;
+}
+
+.registerSaleFieldGroup:last-of-type {
+  margin-bottom: 0;
+}
+
+.registerSaleModalLabel {
+  display: block;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-xs);
+  text-align: left;
+}
+
+.registerSaleModalInput {
+  width: 100%;
+  padding: var(--space-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  transition: all var(--transition-base);
+  box-sizing: border-box;
+}
+
+.registerSaleModalInput:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.registerSaleModalInput::placeholder {
+  color: var(--color-text-tertiary);
+}
+
+.registerSaleModalInstruction {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.registerSaleModalFieldError .registerSaleModalLabel {
+  color: var(--color-error);
+}
+
+.registerSaleModalFieldError .registerSaleModalInput {
+  border-color: var(--color-error);
+}
+
+.registerSaleModalError {
+  font-size: var(--font-size-sm);
+  color: var(--color-error);
+  margin-top: 4px;
+  margin-bottom: 0;
+}
+
+.registerSaleModalActions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.registerSaleModalCancel {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  padding: 14px var(--space-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.registerSaleModalCancel:hover {
+  background: var(--color-border-light);
+}
+
+.registerSaleModalSubmit {
+  background: #E5E5EA;
+  color: var(--color-bg-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  padding: 14px var(--space-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.registerSaleModalSubmit:hover {
+  background: #D1D1D6;
+}
+
+.registerSaleModalSubmit:active {
+  transform: scale(0.98);
+}
+
+/* Mostrar modal solo en desktop */
+@media (min-width: 768px) {
+  .registerSaleModalOverlay {
+    display: flex;
+  }
+}
+
+@media (max-width: 767px) {
+  .registerSaleModalOverlay {
+    display: none !important;
+  }
 }
 
 /* Desktop */

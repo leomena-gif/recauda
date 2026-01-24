@@ -4,7 +4,8 @@
   "description": "Recauda - Crear Cuenta App",
   "private": true,
   "scripts": {
-    "dev": "next dev -p 3001",
+    "dev": "next dev -H 127.0.0.1 -p 3000",
+    "dev:fresh": "lsof -ti:3000 | xargs kill -9 2>/dev/null; rm -rf .next; sleep 1; next dev -H 127.0.0.1 -p 3000",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"

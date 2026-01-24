@@ -86,6 +86,24 @@ npm run start     # Servidor de producción
 npm run lint      # Ejecutar linter
 ```
 
+### Ver desarrollo en localhost
+
+1. **Recomendado** (libera puerto 3000, borra caché y arranca limpio):
+   ```bash
+   npm run dev:fresh
+   ```
+2. **O solo arrancar** (si el puerto está libre):
+   ```bash
+   npm run dev
+   ```
+3. Abre **http://localhost:3000** en el navegador.
+
+### Localhost no funciona
+
+- **`EADDRINUSE`** o **puerto 3000 ocupado**: ejecuta `npm run dev:fresh`. Mata el proceso en 3000, borra `.next` y vuelve a iniciar.
+- **`Cannot find module './51.js'`** u otros errores raros de módulos: caché corrupta. Ejecuta `rm -rf .next` y luego `npm run dev`.
+- **`EPERM: operation not permitted`** en el puerto: abre **Terminal.app** o **iTerm** (fuera de Cursor), ve a la carpeta del proyecto y ejecuta `npm run dev:fresh` o `./start-dev.sh` ahí.
+
 ## 📚 Documentación
 
 - **[ARCHITECTURE.md](./ARCHITECTURE.md)** - Arquitectura y patrones de diseño

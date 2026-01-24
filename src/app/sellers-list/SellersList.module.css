@@ -14,6 +14,7 @@
 .headerActions {
   display: flex;
   align-items: center;
+  gap: var(--space-sm);
 }
 
 .subtitle {
@@ -23,15 +24,11 @@
   font-weight: var(--font-weight-normal);
 }
 
-/* Action Bar - Dark Mode */
+/* Action Bar - sin card: busqueda y filtros sobre el background */
 .actionBar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md) var(--space-xl);
   margin-bottom: var(--space-xl);
   gap: var(--space-lg);
 }
@@ -124,6 +121,280 @@
 .eventFilter {
   min-width: 220px;
   width: auto;
+}
+
+.filtersGroupDesktop {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+/* Botón sin borde, solo icono (categoría ghost icon) */
+.filtersTriggerMobile {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-xs);
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0 var(--space-sm);
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-md);
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: color var(--transition-base), background-color var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+  flex-shrink: 0;
+}
+
+.filtersTriggerMobile:hover {
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+}
+
+.filtersTriggerMobile:active {
+  background: var(--color-border-light);
+  color: var(--color-text-primary);
+}
+
+/* Misma barra fija que Mis eventos: contenedor + botón principal */
+.assignStickyBar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 100vw;
+  z-index: 200;
+  padding: var(--space-md);
+  padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
+  background-color: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border-light);
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  box-sizing: border-box;
+}
+
+.assignStickyCancel {
+  min-height: 44px;
+  padding: var(--space-md) var(--space-lg);
+  background: transparent;
+  border: 1px solid #E5E5EA;
+  border-radius: var(--radius-xl);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.assignStickyCancel:hover {
+  background-color: rgba(229, 229, 234, 0.15);
+}
+
+.assignStickyCancel:active {
+  background-color: rgba(229, 229, 234, 0.25);
+  transform: scale(0.98);
+}
+
+.assignStickyPrimary {
+  flex: 1;
+  min-height: 44px;
+  padding: var(--space-md) var(--space-lg);
+  background-color: #E5E5EA;
+  color: var(--color-bg-primary);
+  border: none;
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.assignStickyPrimary:hover {
+  background-color: #D1D1D6;
+}
+
+.assignStickyPrimary:active {
+  transform: scale(0.98);
+}
+
+.sheetOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: rgba(0, 0, 0, 0.5);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sheetPanel {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 100vw;
+  z-index: 301;
+  max-height: 70vh;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+  box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.2);
+  padding: var(--space-lg);
+  padding-bottom: max(var(--space-xl), env(safe-area-inset-bottom));
+  -webkit-overflow-scrolling: touch;
+  animation: sheetSlideUp 0.3s ease-out;
+  box-sizing: border-box;
+}
+
+@keyframes sheetSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(100%);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sheetHandle {
+  width: 40px;
+  height: 4px;
+  margin: 0 auto var(--space-md);
+  background: var(--color-border);
+  border-radius: 2px;
+}
+
+.sheetTitle {
+  margin: 0 0 var(--space-lg);
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+}
+
+.sheetFilters {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+  margin-bottom: var(--space-xl);
+}
+
+.sheetFilterGroup {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.sheetFilterLabel {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-secondary);
+}
+
+.sheetFilterOptions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-sm);
+}
+
+.sheetFilterOption,
+.sheetFilterOptionActive {
+  min-height: 44px;
+  padding: 0 var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sheetFilterOption:hover,
+.sheetFilterOptionActive:hover {
+  border-color: var(--color-border);
+  background: var(--color-bg-secondary);
+}
+
+.sheetFilterOptionActive {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.sheetApply {
+  width: 100%;
+  min-height: 48px;
+  background: var(--color-white);
+  color: var(--color-bg-primary);
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sheetApply:hover {
+  background: var(--color-gray-900);
+  color: var(--color-bg-primary);
+}
+
+.sheetApply:active {
+  transform: scale(0.98);
+}
+
+.sheetEventList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  max-height: 50vh;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.sheetEventButton {
+  min-height: 44px;
+  padding: 0 var(--space-md);
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border-light);
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  text-align: left;
+  cursor: pointer;
+  transition: all var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.sheetEventButton:hover {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.sheetEventButton:active {
+  transform: scale(0.98);
+}
+
+.sheetNoEvents {
+  margin: 0;
+  color: var(--color-text-secondary);
+  font-size: var(--font-size-base);
 }
 
 .filterSelect {
@@ -422,176 +693,124 @@
 
 /* Status Badge - Removed, using switch instead */
 
-/* Mobile Cards View */
-.mobileCardsContainer {
+/* Mobile List View — lista de filas, UX optimizada */
+.mobileListContainer {
   display: none;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
+  padding: 0 var(--space-md);
+  -webkit-overflow-scrolling: touch;
 }
 
-.mobileCard {
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
-  transition: all var(--transition-base);
-  position: relative;
-}
-
-.mobileCard:hover {
-  border-color: var(--color-border);
-  background-color: var(--color-bg-tertiary);
-}
-
-.mobileEditButton {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  background-color: rgba(0, 122, 255, 0.12);
-  border: none;
-  padding: 6px 10px;
-  border-radius: 6px;
-  cursor: pointer;
-  color: #007AFF;
-  transition: all 0.2s ease;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  z-index: 1;
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-.mobileEditButton:hover {
-  background-color: rgba(0, 122, 255, 0.18);
-  color: #007AFF;
-  transform: translateY(-1px);
-}
-
-.mobileEditButton:active {
-  background-color: rgba(0, 122, 255, 0.22);
-  transform: translateY(0);
-}
-
-.mobileEditButton svg {
-  width: 14px;
-  height: 14px;
-}
-
-.mobileCardInactive {
-  opacity: 0.6;
-}
-
-.mobileCardHeader {
+.mobileListRow {
   display: flex;
   align-items: flex-start;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+  min-height: 72px;
+  border-bottom: 1px solid var(--color-border-light);
+  transition: background-color var(--transition-base);
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
-.mobileCheckboxWrapper {
-  position: relative;
+.mobileListRow:hover {
+  background: var(--color-bg-tertiary);
+}
+
+.mobileListRow:last-child {
+  border-bottom: none;
+}
+
+.mobileRowSelected {
+  background: var(--color-bg-tertiary);
+}
+
+.mobileRowSelected:hover {
+  background: var(--color-bg-tertiary);
+}
+
+.mobileRowInactive {
+  opacity: 0.65;
+}
+
+.mobileRowInactive .mobileRowName,
+.mobileRowInactive .mobileRowPhone,
+.mobileRowInactive .mobileRowEventLine {
+  color: var(--color-text-tertiary);
+}
+
+/* Checkbox — touch target ≥ 44px */
+.mobileRowCheckbox {
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 2px;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: #f8fafc;
-  border: 2px solid #e2e8f0;
-  transition: all 0.2s ease;
-}
-
-.mobileCheckboxWrapper:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e1;
-  transform: scale(1.05);
-}
-
-.mobileCheckboxWrapper:active {
-  transform: scale(0.95);
+  min-width: 44px;
+  min-height: 44px;
+  margin: -4px 0 0 -4px;
+  padding: 4px;
 }
 
 .mobileCheckbox {
-  width: 18px;
-  height: 18px;
-  accent-color: #007AFF;
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-primary);
   cursor: pointer;
   margin: 0;
 }
 
 .mobileCheckbox:disabled {
   cursor: not-allowed;
-  opacity: 0.3;
+  opacity: 0.4;
 }
 
-.mobileCheckboxWrapper:has(.mobileCheckbox:checked) {
-  background: #f0f8ff;
-  border-color: #007AFF;
-  box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
-}
-
-.mobileCheckboxWrapper:has(.mobileCheckbox:checked):hover {
-  background: #e6f3ff;
-  border-color: #0056b3;
-}
-
-.mobileSellerInfo {
+/* Contenido — nombre y menú en misma línea (menú arriba derecha) */
+.mobileRowMain {
   flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  overflow: visible;
 }
 
-.mobileSellerName {
+.mobileRowTop {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  min-height: 0;
+  overflow: visible;
+}
+
+.mobileRowTop .mobileMenuContainer {
+  flex-shrink: 0;
+}
+
+.mobileRowName {
+  flex: 1;
+  min-width: 0;
+  font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
-  font-size: var(--font-size-base);
-  margin-bottom: 4px;
-}
-
-.mobilePhone {
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  font-size: var(--font-size-sm);
-}
-
-.mobileEventInfo {
-  margin-top: 6px;
-}
-
-.mobileEventName {
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
-  font-size: 13px;
   line-height: 1.3;
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.mobileNoEvent {
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-tertiary);
-  font-size: 13px;
-  font-style: italic;
-}
-
-.mobileCardFooter {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 12px;
-  border-top: 1px solid #F3F4F6;
-}
-
-.mobileLastActivity {
-  color: var(--color-text-secondary);
+.mobileRowPhone {
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  color: var(--color-text-secondary);
+  margin: 0 0 2px 0;
+  font-weight: var(--font-weight-normal);
 }
 
-.mobileSwitchWrapper {
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.mobileRowEventLine {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  margin: 0;
+  font-weight: var(--font-weight-normal);
 }
 
 /* Last Activity */
@@ -1101,7 +1320,7 @@
   }
 
   .headerActions {
-    justify-content: flex-start;
+    display: none !important; /* Agregar vendedor: solo desktop */
   }
 
   .subtitle {
@@ -1112,9 +1331,7 @@
   .actionBar {
     flex-direction: column;
     gap: 12px;
-    padding: 16px;
     margin-bottom: 20px;
-    border-radius: 16px;
   }
 
   .leftSection {
@@ -1356,268 +1573,95 @@
     border-radius: 12px;
   }
 
-  /* Hide table, show mobile cards */
+  /* Hide desktop table, show mobile table */
   .tableContainer {
     display: none;
   }
 
-  .mobileCardsContainer {
+  .mobileListContainer {
     display: flex;
     flex-direction: column;
-    gap: 16px;
-    padding: 0 16px;
+    padding: 0 var(--space-md);
+    margin-bottom: var(--space-xl);
+    max-width: 100%;
+    overflow: visible;
   }
 
   .actionBar {
-    padding: 20px 16px;
-    margin: 0 16px 20px;
-    border-radius: 16px;
-    background: white;
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
-    border: 1px solid #f0f0f0;
+    margin: 0 var(--space-md) var(--space-lg);
+    max-width: 100%;
+    overflow: hidden;
   }
 
   .leftSection {
-    flex-direction: column;
-    gap: 16px;
+    flex-direction: row;
+    gap: var(--space-sm);
+    align-items: center;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .filtersGroupDesktop {
+    display: none;
+  }
+
+  .filtersTriggerMobile {
+    display: flex;
   }
 
   .searchContainer {
-    width: 100%;
-  }
-
-  .searchInput {
-    font-size: 16px; /* Prevent zoom on iOS */
-    padding: 16px 12px 16px 48px;
-    border-radius: 12px;
-    border: 2px solid #e5e7eb;
-    background: #fafafa;
-    transition: all 0.2s ease;
-  }
-
-  .searchInput:focus {
-    border-color: #007AFF;
-    background: white;
-    box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
-  }
-
-  .statusFilter {
-    width: 100%;
-  }
-
-  .filterSelect {
-    font-size: 16px; /* Prevent zoom on iOS */
-    padding: 16px;
-    border-radius: 12px;
-    border: 2px solid #e5e7eb;
-    background: #fafafa;
-  }
-
-  /* Mobile Cards - Clean Design */
-  .mobileCard {
-    background: white;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    padding: 16px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    transition: all 0.2s ease;
-    position: relative;
-  }
-
-  .mobileCard:hover {
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    border-color: #d1d5db;
-  }
-
-  .mobileCardInactive {
-    opacity: 0.6;
-    background: #f9fafb;
-  }
-
-  .mobileCardInactive:hover {
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  }
-
-.mobileCardInactive .mobileSellerName,
-.mobileCardInactive .mobilePhone,
-.mobileCardInactive .mobileEventName {
-  color: var(--color-text-tertiary);
-}
-
-  /* Card Layout */
-  .mobileCardHeader {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 12px;
-  }
-
-  .mobileCheckboxWrapper {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 18px;
-    height: 18px;
-    flex-shrink: 0;
-  }
-
-  .mobileCheckbox {
-    width: 18px;
-    height: 18px;
-    accent-color: #007AFF;
-    cursor: pointer;
-    margin: 0;
-  }
-
-  .mobileCheckbox:disabled {
-    cursor: not-allowed;
-    opacity: 0.4;
-  }
-
-  .mobileSellerInfo {
     flex: 1;
     min-width: 0;
   }
 
-  .mobileSellerName {
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-text-primary);
-    font-size: 15px;
-    line-height: 1.3;
-    margin: 0 0 2px 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+  .searchInput {
+    font-size: 16px; /* Prevent zoom on iOS */
+    padding: var(--space-md) var(--space-sm) var(--space-md) 48px;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-light);
+    background: var(--color-bg-tertiary);
+    transition: border-color var(--transition-base), box-shadow var(--transition-base);
   }
 
-  .mobilePhone {
-    font-size: var(--font-size-sm);
-    color: var(--color-text-secondary);
-    font-weight: var(--font-weight-normal);
-    margin: 0 0 4px 0;
+  .searchInput:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
   }
 
-  .mobileEventInfo {
-    margin: 0;
+  .rightSection {
+    display: none;
   }
 
-  .mobileEventName {
-    font-size: 12px;
-    color: var(--color-primary);
-    font-weight: var(--font-weight-medium);
-    background: var(--color-primary-light);
-    padding: 2px 6px;
-    border-radius: var(--radius-sm);
-    display: inline-block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    max-width: 100%;
+  .assignStickyBar {
+    display: flex;
   }
 
-  .mobileNoEvent {
-    font-size: 12px;
-    color: var(--color-text-tertiary);
-    font-style: italic;
+  .mobileListContainer.hasStickyBar {
+    padding-bottom: 100px; /* Solo con selección: espacio para sticky Asignar */
+  }
+
+  /* Mobile list - ajustes */
+  .mobileListRow {
+    padding: var(--space-md) 0;
+    overflow: visible;
   }
 
   .mobileMenuContainer {
     position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
+    overflow: visible;
   }
+}
 
-  .mobileCardFooter {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    padding-top: 12px;
-    border-top: 1px solid #f3f4f6;
-  }
-
-  .mobileStatusIndicator {
-    display: flex;
-    align-items: center;
-  }
-
-  .mobileSwitchWrapper {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-left: 12px;
-  }
-
-  /* Clean Switch - Event Detail Style */
-  .switchContainer {
-    width: 44px;
-    height: 24px;
-    position: relative;
-  }
-
-  .switchSlider {
-    border-radius: 24px;
-    background-color: #f0f0f0;
-    border: none;
-    box-shadow: none;
-  }
-
-  .switchSlider::before {
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    border-radius: 50%;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-    border: none;
-  }
-
-  .switchInput:checked + .switchSlider {
-    background-color: #10B981;
-  }
-
-  .switchInput:not(:checked) + .switchSlider {
-    background-color: #EF4444;
-  }
-
-  .switchInput:checked + .switchSlider::before {
-    transform: translateX(20px);
-    background-color: white;
-  }
-
-  .switchInput:not(:checked) + .switchSlider::before {
-    background-color: white;
-  }
-
-  .switchLabel {
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-    color: var(--color-primary);
-    background-color: var(--color-primary-light);
-    padding: 4px var(--space-xs);
-    border-radius: var(--radius-lg);
-    min-width: 45px;
-    text-align: center;
-  }
-
-  .switchLabelActive {
-    color: var(--color-success);
-    background-color: rgba(52, 199, 89, 0.15);
-  }
-
-  .switchLabelInactive {
-    color: var(--color-text-tertiary);
-    background-color: rgba(255, 255, 255, 0.05);
+@media (min-width: 641px) {
+  .sheetOverlay,
+  .sheetPanel {
+    display: none !important;
   }
 }
 
 @media (max-width: 480px) {
   .actionBar {
-    padding: 16px;
     margin-bottom: 16px;
-    border-radius: 16px;
   }
 
   .assignButton {
@@ -1636,77 +1680,34 @@
     font-size: 16px;
   }
 
-  /* Mobile Cards for Small Screens - Event Detail Style */
-  .mobileCard {
-    min-height: 56px;
+  /* Mobile list - pantallas pequeñas */
+  .mobileListRow {
+    min-height: 64px;
+    padding: var(--space-sm) 0;
   }
 
-  .mobileCardHeader {
-    padding: 10px 12px;
-    gap: 4px 10px;
-    min-height: 56px;
+  .mobileRowName {
+    font-size: var(--font-size-sm);
   }
 
-  .mobileCheckboxWrapper {
-    left: 6px;
-    width: 32px;
-    height: 32px;
+  .mobileRowPhone,
+  .mobileRowEventLine {
+    font-size: var(--font-size-xs);
   }
 
-  .mobileCheckbox {
-    width: 18px;
-    height: 18px;
+  .mobileMenuDropdown {
+    min-width: 180px;
   }
 
-  .mobileSellerInfo {
-    padding-left: 40px;
+  .mobileMenuItem {
+    min-height: 44px;
+    padding: 14px var(--space-md);
+    font-size: var(--font-size-sm);
   }
 
-  .mobileSellerName {
-    font-size: 14px;
-    font-weight: 600;
-  }
-
-  .mobilePhone {
-    font-size: 12px;
-    padding-left: 28px;
-  }
-
-  .mobileLastActivity {
-    font-size: 12px;
-  }
-
-  .mobileSwitchWrapper {
-    gap: 6px;
-    margin-left: 8px;
-  }
-
-  /* Clean Switch for Small Screens */
-  .switchContainer {
-    width: 40px;
-    height: 22px;
-  }
-
-  .switchSlider {
-    border-radius: 22px;
-  }
-
-  .switchSlider::before {
-    height: 16px;
+  .mobileMenuItem svg {
     width: 16px;
-    left: 3px;
-    bottom: 3px;
-  }
-
-  .switchInput:checked + .switchSlider::before {
-    transform: translateX(18px);
-  }
-
-  .switchLabel {
-    font-size: 12px;
-    padding: 3px 6px;
-    border-radius: 10px;
-    min-width: 40px;
+    height: 16px;
   }
 
   /* Tooltip adjustments */
@@ -1816,33 +1817,8 @@
   }
 }
 
-/* Enhanced Touch Interactions */
+/* Enhanced Touch Interactions - Mobile */
 @media (max-width: 768px) {
-  /* Improve touch targets */
-  .checkbox {
-    width: 24px;
-    height: 24px;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 10px;
-  }
-
-  .mobileCheckbox {
-    width: 24px;
-    height: 24px;
-    min-width: 44px;
-    min-height: 44px;
-    padding: 10px;
-  }
-
-  .switchContainer {
-    min-width: 44px;
-    min-height: 44px;
-    padding: 8px;
-    margin: -8px;
-  }
-
-  /* Enhanced button interactions */
   .assignButton {
     min-height: 48px;
     touch-action: manipulation;
@@ -1854,52 +1830,16 @@
     transition: transform 0.1s ease;
   }
 
-  /* Improved card interactions */
-  .mobileCard {
-    touch-action: manipulation;
-    -webkit-tap-highlight-color: transparent;
-  }
-
-  .mobileCard:active {
-    transform: scale(0.99);
-    transition: transform 0.1s ease;
-  }
-
-  /* Better input focus states */
-  .searchInput:focus,
-  .filterSelect:focus {
-    border-color: #007AFF;
-    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
-    outline: none;
-  }
-
-  /* Improved switch interactions */
-  .switchContainer:active .switchSlider {
-    transform: scale(0.95);
-  }
-
-  .switchInput:focus + .switchSlider {
-    box-shadow: 0 0 0 4px rgba(0, 122, 255, 0.15);
-  }
-
-  /* Smooth scrolling */
-  .mobileCardsContainer {
+  .mobileListContainer {
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
   }
 
-  /* Clean selection states - Event Detail Style */
-  .mobileCard:has(.mobileCheckbox:checked) {
-    background-color: #f0f8ff;
-    border-left: 4px solid #007AFF;
-  }
-
-  .mobileCard:has(.mobileCheckbox:checked):hover {
-    background-color: #e6f3ff;
-  }
-
-  .mobileCard:last-child {
-    border-bottom: none;
+  .searchInput:focus,
+  .filterSelect:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px var(--color-primary-light);
+    outline: none;
   }
 }
 
@@ -2071,60 +2011,67 @@
   }
 }
 
-/* Mobile Menu Styles */
+/* Mobile Menu Styles - Project vars */
 .mobileMenuButton {
   background: none;
   border: none;
-  padding: 4px;
-  border-radius: 6px;
+  padding: var(--space-xs);
+  border-radius: var(--radius-md);
   cursor: pointer;
-  color: #6b7280;
-  transition: all 0.2s ease;
+  color: var(--color-text-tertiary);
+  transition: color var(--transition-base), background-color var(--transition-base);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 28px;
-  height: 28px;
+  min-width: 44px;
+  min-height: 44px;
+  width: 44px;
+  height: 44px;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .mobileMenuButton:hover {
-  background: #f3f4f6;
-  color: #374151;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
 }
 
 .mobileMenuButton:active {
-  background: #e5e7eb;
+  background: var(--color-border-light);
 }
 
 .mobileMenuDropdown {
   position: absolute;
   top: 100%;
   right: 0;
-  margin-top: 4px;
+  margin-top: var(--space-xs);
   background: var(--color-bg-secondary);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: var(--shadow-lg);
   border: 1px solid var(--color-border-light);
-  min-width: 140px;
+  min-width: 180px;
   z-index: 100;
   overflow: hidden;
-  animation: slideDown 0.2s ease-out;
+  animation: menuSlideDown 0.2s ease-out;
 }
 
+/* Touch-friendly: min 44px height per item (Apple HIG / Material) */
 .mobileMenuItem {
   width: 100%;
+  min-height: 44px;
   background: none;
   border: none;
-  padding: 10px var(--space-sm);
+  padding: 14px var(--space-md);
   cursor: pointer;
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: var(--space-sm);
   color: var(--color-text-primary);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   transition: background-color var(--transition-base);
   text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
 .mobileMenuItem:hover {
@@ -2132,37 +2079,70 @@
 }
 
 .mobileMenuItem:active {
-  background: #f3f4f6;
+  background: var(--color-border-light);
+}
+
+.mobileMenuItem + .mobileMenuItem {
+  border-top: 1px solid var(--color-border-light);
 }
 
 .mobileMenuItem svg {
   flex-shrink: 0;
   color: var(--color-text-secondary);
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
 }
 
 .mobileMenuItem:hover svg {
   color: var(--color-text-primary);
 }
 
-.mobileStatusLabel {
-  font-size: 11px;
-  font-weight: 600;
-  padding: 4px 8px;
-  border-radius: 8px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+/* Estado mobile: mismo estilo que cards de eventos (punto + texto) */
+.mobileStatusContainer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  margin: 0;
 }
 
-.mobileStatusActive {
-  background: rgba(52, 199, 89, 0.15);
+.mobileStatusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.mobileStatusText {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.mobileStatusActive .mobileStatusDot {
+  background-color: var(--color-success);
+}
+
+.mobileStatusActive .mobileStatusText {
   color: var(--color-success);
 }
 
-.mobileStatusInactive {
-  background: rgba(255, 59, 48, 0.15);
+.mobileStatusInactive .mobileStatusDot {
+  background-color: var(--color-error);
+}
+
+.mobileStatusInactive .mobileStatusText {
   color: var(--color-error);
+}
+
+@keyframes menuSlideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slideDown {
@@ -2178,70 +2158,71 @@
 
 /* Small Mobile Screens */
 @media (max-width: 480px) {
-  .mobileCardsContainer {
-    padding: 0 12px;
-    gap: 10px;
+  .mobileListContainer {
+    padding: 0 var(--space-sm);
   }
 
-  .mobileCard {
-    padding: 14px;
-    border-radius: 10px;
-  }
-
-  .mobileCardHeader {
-    gap: 10px;
-    margin-bottom: 10px;
-  }
-
-  .mobileSellerName {
-    font-size: 14px;
-  }
-
-  .mobilePhone {
-    font-size: 12px;
-  }
-
-  .mobileEventName {
-    font-size: 11px;
-    padding: 2px 5px;
-  }
-
-  .mobileCardFooter {
-    padding-top: 10px;
-  }
-
-  .mobileStatusLabel {
-    font-size: 10px;
-    padding: 3px 6px;
-  }
-
-  .mobileCheckboxWrapper {
-    width: 18px;
-    height: 18px;
-  }
-
-  .mobileCheckbox {
-    width: 18px;
-    height: 18px;
-  }
-
-  .mobileMenuButton {
-    width: 24px;
-    height: 24px;
-    padding: 2px;
+  .mobileListRow {
+    padding: var(--space-sm) 0;
+    gap: var(--space-sm);
   }
 
   .mobileMenuDropdown {
-    min-width: 120px;
+    min-width: 180px;
   }
 
   .mobileMenuItem {
-    padding: 8px 10px;
-    font-size: 12px;
+    min-height: 44px;
+    padding: 14px var(--space-md);
+    font-size: var(--font-size-sm);
   }
 
   .mobileMenuItem svg {
-    width: 12px;
-    height: 12px;
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* Mínimo 360px: evitar scroll horizontal */
+@media (max-width: 400px) {
+  .header {
+    padding: 0;
+  }
+
+  .actionBar {
+    margin-left: 0;
+    margin-right: 0;
+  }
+
+  .mobileListContainer {
+    padding-left: var(--space-xs);
+    padding-right: var(--space-xs);
+  }
+
+  .assignStickyBar {
+    padding-left: var(--space-sm);
+    padding-right: var(--space-sm);
+  }
+
+  .sheetPanel {
+    padding-left: var(--space-md);
+    padding-right: var(--space-md);
+  }
+
+  .sheetFilterOptions {
+    flex-direction: column;
+  }
+
+  .sheetFilterOption,
+  .sheetFilterOptionActive {
+    width: 100%;
+  }
+
+  .mobileMenuDropdown {
+    min-width: min(180px, calc(100vw - 80px));
+  }
+
+  .checkboxTooltip {
+    max-width: min(240px, calc(100vw - 48px));
   }
 }

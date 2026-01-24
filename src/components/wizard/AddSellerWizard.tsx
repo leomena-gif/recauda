@@ -79,9 +79,10 @@ const AddSellerWizard: React.FC = () => {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Here you would typically save the seller data to your backend
-      console.log('Seller created:', { sellerData, numberAssignment });
-      
+      // TODO: Replace with API call to save seller data
+      void sellerData;
+      void numberAssignment;
+
       // Show success screen
       setIsConfirming(false);
       setShowSuccess(true);
