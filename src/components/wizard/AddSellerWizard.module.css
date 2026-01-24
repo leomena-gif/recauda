@@ -1,6 +1,7 @@
 .wizardContainer {
   min-height: 100vh;
   display: flex;
+  background-color: var(--color-bg-primary);
 }
 
 /* Navigation */
@@ -12,7 +13,7 @@
 .pageTitle {
   font-size: var(--font-size-3xl);
   font-weight: var(--font-weight-bold);
-  color: var(--color-gray-900);
+  color: var(--color-text-primary);
   margin-bottom: var(--space-xl);
   text-align: left;
   margin-top: 0;
@@ -28,7 +29,7 @@
 .backButton {
   background: none;
   border: none;
-  color: #007AFF;
+  color: var(--color-primary);
   font-size: 18px;
   font-weight: 700;
   cursor: pointer;
@@ -39,19 +40,19 @@
   align-items: center;
   gap: 12px;
   text-decoration: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   width: fit-content;
 }
 
 .backButton:hover {
-  color: #0056CC;
-  background-color: rgba(0, 122, 255, 0.08);
+  color: var(--color-primary-hover);
+  background-color: var(--color-primary-light);
   transform: translateX(-2px);
 }
 
 .backButton:active {
   transform: translateY(1px) translateX(-2px);
-  background-color: rgba(0, 122, 255, 0.12);
+  background-color: rgba(90, 200, 250, 0.18);
 }
 
 .chevronIcon {
@@ -69,6 +70,7 @@
   max-width: 1400px;
   margin: 0 auto;
   width: 100%;
+  background-color: var(--color-bg-primary);
 }
 
 .wizardContent {

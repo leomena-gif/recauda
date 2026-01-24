@@ -83,7 +83,7 @@
 .title {
   font-size: 28px;
   font-weight: bold;
-  color: #000;
+  color: var(--color-text-primary);
   margin-bottom: 16px;
   line-height: 1.3;
   text-align: center;
@@ -91,7 +91,7 @@
 
 .description {
   font-size: 18px;
-  color: #3C3C43;
+  color: var(--color-text-secondary);
   line-height: 1.5;
   margin-bottom: 32px;
   font-weight: 500;

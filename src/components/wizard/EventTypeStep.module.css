@@ -7,7 +7,7 @@
 .title {
   font-size: 24px;
   font-weight: bold;
-  color: #000;
+  color: var(--color-text-primary);
   margin-bottom: 24px;
   text-align: left;
 }
@@ -20,9 +20,9 @@
 }
 
 .optionBox {
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 16px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
   padding: 24px;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -36,17 +36,17 @@
 }
 
 .optionBox:hover {
-  border-color: #007AFF;
+  border-color: var(--color-primary);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 122, 255, 0.15);
+  box-shadow: 0 8px 25px rgba(90, 200, 250, 0.2);
 }
 
 .optionBox.selected {
-  border-color: #007AFF;
-  background: linear-gradient(135deg, #007AFF 0%, #0056CC 100%);
-  color: white;
+  border-color: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary) 0%, #007AFF 100%);
+  color: var(--color-white);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(0, 122, 255, 0.3);
+  box-shadow: 0 8px 25px rgba(90, 200, 250, 0.35);
 }
 
 .iconContainer {
@@ -72,18 +72,18 @@
 
 .optionBox.selected .emojiIcon {
   transform: scale(1.15);
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
 }
 
 .optionText {
   font-size: 16px;
   font-weight: 600;
-  color: #000;
+  color: var(--color-text-primary);
   transition: color 0.3s ease;
 }
 
 .optionBox.selected .optionText {
-  color: white;
+  color: var(--color-white);
 }
 
 /* Responsive */

@@ -39,40 +39,12 @@ const EventSuccessScreen: React.FC<EventSuccessScreenProps> = ({
 
 
   return (
-    <div style={{ 
-      width: '100%', 
-      margin: '0 auto', 
-      padding: '40px 20px', 
-      textAlign: 'center',
-      position: 'relative',
-      overflow: 'visible',
-      minHeight: '100vh'
-    }}>
+    <div className={styles.screenWrapper}>
       {/* Botón de volver en la esquina superior izquierda */}
       <button
         onClick={onBackToEvents}
-        style={{
-          position: 'absolute',
-          top: '20px',
-          left: '20px',
-          background: 'rgba(0, 122, 255, 0.12)',
-          color: '#007AFF',
-          border: 'none',
-          borderRadius: '8px',
-          padding: '12px',
-          cursor: 'pointer',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          transition: 'all 0.2s ease',
-          zIndex: 10
-        }}
-        onMouseEnter={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(0, 122, 255, 0.18)';
-        }}
-        onMouseLeave={(e) => {
-          e.currentTarget.style.backgroundColor = 'rgba(0, 122, 255, 0.12)';
-        }}
+        className={styles.backButtonStyle}
+        aria-label="Volver a Mis eventos"
       >
         <svg 
           width="20" 
@@ -105,18 +77,10 @@ const EventSuccessScreen: React.FC<EventSuccessScreenProps> = ({
         Ahora podés agregar vendedores y comenzar a recaudar.
       </p>
       
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'row', 
-        gap: '16px', 
-        alignItems: 'center',
-        justifyContent: 'center',
-        marginTop: '32px'
-      }}>
+      <div className={styles.actions}>
         <button
           className="btn btn-secondary"
           onClick={handleManualAdd}
-          style={{ minWidth: '220px' }}
         >
           Agregar manualmente
         </button>
@@ -125,15 +89,10 @@ const EventSuccessScreen: React.FC<EventSuccessScreenProps> = ({
           className={`btn btn-secondary ${!hasExistingLists ? 'disabled' : ''}`}
           onClick={hasExistingLists ? handleUseExistingList : undefined}
           disabled={!hasExistingLists}
-          style={{ 
-            minWidth: '220px',
-            opacity: hasExistingLists ? 1 : 0.6,
-            cursor: hasExistingLists ? 'pointer' : 'not-allowed'
-          }}
         >
           Usar lista existente
           {!hasExistingLists && (
-            <span style={{ fontSize: '12px', color: '#ef4444', marginLeft: 'auto' }}>
+            <span className={styles.disabledText}>
               No tenés listas creadas
             </span>
           )}

@@ -333,12 +333,17 @@
     font-size: var(--font-size-xl);
   }
 
+  /* Mismo ancho que la tabla: mismo max-width, padding y centrado que pageContainer */
   .footerContainer {
-    padding: var(--space-lg);
+    padding: var(--space-lg) var(--space-xl);
+    width: 100%;
     max-width: 1200px;
-    margin: 0 auto;
+    margin-left: auto;
+    margin-right: auto;
     left: 50%;
+    right: auto;
     transform: translateX(-50%);
+    box-sizing: border-box;
   }
 
   .salesList {

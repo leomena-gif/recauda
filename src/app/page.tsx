@@ -64,6 +64,12 @@ export default function Home() {
           </div>
           <div className={styles.headerActions}>
             <button
+              className="btn btn-secondary"
+              onClick={handleRegisterSale}
+            >
+              Registrar venta
+            </button>
+            <button
               className="btn btn-primary"
               onClick={handleCreateEvent}
             >

@@ -11,10 +11,11 @@
   width: 100%;
   padding: 16px;
   padding-right: 48px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   font-size: 16px;
-  background-color: #fff;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
   transition: border-color 0.3s ease;
   box-sizing: border-box;
   font-family: inherit;
@@ -23,27 +24,27 @@
 
 .input:focus {
   outline: none;
-  border: 2px solid #007AFF;
+  border: 1px solid var(--color-primary);
   box-shadow: none;
 }
 
 .input::placeholder {
-  color: #999;
+  color: var(--color-text-tertiary);
   font-size: 16px;
 }
 
 .input:disabled {
-  background-color: #f9fafb;
-  color: #9ca3af;
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-tertiary);
   cursor: not-allowed;
 }
 
 .inputError {
-  border-color: #FF3B30;
+  border-color: var(--color-error);
 }
 
 .inputError:focus {
-  border-color: #FF3B30;
+  border-color: var(--color-error);
   box-shadow: none;
 }
 
@@ -52,7 +53,7 @@
   right: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: #9ca3af;
+  color: var(--color-text-tertiary);
   pointer-events: none;
 }
 

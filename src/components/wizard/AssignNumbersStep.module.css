@@ -7,15 +7,15 @@
 .title {
   font-size: 24px;
   font-weight: bold;
-  color: #000;
+  color: var(--color-text-primary);
   margin-bottom: 24px;
   text-align: left;
 }
 
 .formCard {
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #e0e0e0;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
   padding: 24px;
   width: 100%;
   max-width: 100%;
@@ -33,29 +33,29 @@
   display: block;
   font-size: 16px;
   font-weight: 600;
-  color: #000;
+  color: var(--color-text-primary);
   margin-bottom: 12px;
 }
 
 .input {
   width: 100%;
   padding: 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
   font-size: 16px;
-  color: #000;
-  background: white;
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
   transition: border-color 0.2s ease;
 }
 
 .input::placeholder {
-  color: #999;
+  color: var(--color-text-tertiary);
   font-size: 16px;
 }
 
 .input:focus {
   outline: none;
-  border-color: #007AFF;
+  border-color: var(--color-primary);
 }
 
 /* Quantity Selector */
@@ -69,9 +69,9 @@
 .quantityButton {
   width: 48px;
   height: 48px;
-  border: 2px solid #e0e0e0;
-  background: white;
-  color: #007AFF;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-tertiary);
+  color: var(--color-primary);
   font-size: 20px;
   font-weight: 500;
   cursor: pointer;
@@ -82,41 +82,41 @@
 }
 
 .quantityButton:first-child {
-  border-radius: 8px 0 0 8px;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
   border-right: none;
 }
 
 .quantityButton:last-child {
-  border-radius: 0 8px 8px 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
   border-left: none;
 }
 
 .quantityButton:hover:not(:disabled) {
-  background: #f0f8ff;
+  background: var(--color-primary-light);
 }
 
 .quantityButton:disabled {
-  color: #ccc;
+  color: var(--color-text-tertiary);
   cursor: not-allowed;
 }
 
 .quantityInput {
   flex: 1;
   height: 48px;
-  border: 2px solid #e0e0e0;
+  border: 1px solid var(--color-border);
   border-left: none;
   border-right: none;
-  background: white;
+  background: var(--color-bg-tertiary);
   text-align: center;
   font-size: 16px;
   font-weight: 500;
-  color: #000;
+  color: var(--color-text-primary);
   outline: none;
   transition: background-color 0.2s ease;
 }
 
 .quantityInput:focus {
-  background: #f8f9fa;
+  background: var(--color-bg-secondary);
 }
 
 .quantityInput::-webkit-outer-spin-button,
@@ -156,7 +156,7 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
+  background-color: var(--color-bg-tertiary);
   transition: 0.3s;
   border-radius: 34px;
 }
@@ -168,13 +168,13 @@
   width: 26px;
   left: 4px;
   bottom: 4px;
-  background-color: white;
+  background-color: var(--color-white);
   transition: 0.3s;
   border-radius: 50%;
 }
 
 .toggleInput:checked + .toggleSlider {
-  background-color: #007AFF;
+  background-color: var(--color-primary);
 }
 
 .toggleInput:checked + .toggleSlider:before {
@@ -184,7 +184,7 @@
 .toggleLabel {
   font-size: 16px;
   font-weight: 500;
-  color: #000;
+  color: var(--color-text-primary);
 }
 
 /* Range Fields Layout */
@@ -199,11 +199,11 @@
 
 /* Error States */
 .error .input {
-  border-color: #FF3B30;
+  border-color: var(--color-error);
 }
 
 .error .label {
-  color: #FF3B30;
+  color: var(--color-error);
 }
 
 /* Responsive */
