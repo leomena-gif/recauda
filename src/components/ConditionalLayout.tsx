@@ -17,17 +17,11 @@ const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({ children }) => {
   
   const shouldShowHeader = !noHeaderPages.includes(pathname);
   const shouldShowSidebar = !noHeaderPages.includes(pathname);
-  
-  // Debug log
-  console.log('ConditionalLayout - pathname:', pathname, 'shouldShowHeader:', shouldShowHeader, 'shouldShowSidebar:', shouldShowSidebar);
-  
-  // If this is a page that doesn't need header/sidebar, just render children
+
   if (!shouldShowHeader && !shouldShowSidebar) {
-    console.log('Rendering without header/sidebar for pathname:', pathname);
     return <>{children}</>;
   }
-  
-  // For other pages, show the normal layout with header and sidebar
+
   return (
     <>
       {shouldShowHeader && <Header />}

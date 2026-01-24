@@ -107,9 +107,9 @@ const CreateEventWizard: React.FC = () => {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
       
-      // Here you would typically save the event data to your backend
-      console.log('Event created:', eventData);
-      
+      // TODO: Replace with API call to save event data
+      void eventData;
+
       // Show success screen
       setIsCreating(false);
       setShowSuccess(true);
