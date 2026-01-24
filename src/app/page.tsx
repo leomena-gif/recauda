@@ -50,9 +50,28 @@ export default function Home() {
     console.log('Registrar venta');
   };
 
+  const handleCreateEvent = () => {
+    router.push('/create-event');
+  };
+
   return (
     <>
       <div className="pageContainer">
+        {/* Header - Desktop Only */}
+        <div className={styles.header}>
+          <div className={styles.titleSection}>
+            <h1 className={`pageTitle ${styles.pageTitle}`}>Mis Eventos</h1>
+          </div>
+          <div className={styles.headerActions}>
+            <button
+              className="btn btn-primary"
+              onClick={handleCreateEvent}
+            >
+              Crear evento
+            </button>
+          </div>
+        </div>
+        
         {/* Filter Pills */}
         {hasEvents && (
           <div className={styles.filtersContainer}>

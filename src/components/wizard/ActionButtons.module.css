@@ -50,24 +50,25 @@
 }
 
 .continueButton {
-  background-color: #007AFF;
-  color: white;
+  background-color: var(--color-white);
+  color: var(--color-bg-primary);
   border: none;
-  border-radius: 8px;
+  border-radius: var(--radius-md);
   padding: 14px 24px 14px 32px;
-  font-size: 16px;
-  font-weight: 600;
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-base);
   white-space: nowrap;
   width: auto;
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: var(--space-xs);
 }
 
 .continueButton:hover {
-  background-color: #0056CC;
+  background-color: var(--color-gray-900);
+  color: var(--color-bg-primary);
   transform: translateX(2px);
 }
 
@@ -84,12 +85,14 @@
 }
 
 .continueButton:disabled {
-  background: #CCCCCC;
+  background: var(--color-gray-400);
+  color: var(--color-gray-600);
   cursor: not-allowed;
 }
 
 .continueButton.loading {
-  background: #007AFF;
+  background: var(--color-white);
+  color: var(--color-bg-primary);
   cursor: wait;
 }
 
@@ -103,7 +106,7 @@
   width: 16px;
   height: 16px;
   border: 2px solid transparent;
-  border-top: 2px solid white;
+  border-top: 2px solid var(--color-bg-primary);
   border-radius: 50%;
   animation: spin 1s linear infinite;
 }

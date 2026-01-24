@@ -4,38 +4,40 @@
   width: 100%;
 }
 
-/* Button (Select) */
+/* Button (Select) - Dark Mode */
 .dropdownButton {
   width: 100%;
-  padding: 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 400;
-  color: #000;
-  background-color: #fff;
+  padding: var(--space-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-tertiary);
   cursor: pointer;
-  transition: border-color 0.3s ease;
+  transition: all var(--transition-base);
   text-align: left;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-sm);
   box-sizing: border-box;
 }
 
 .dropdownButton:hover {
-  border-color: #007AFF;
+  border-color: var(--color-border);
+  background-color: var(--color-bg-tertiary);
 }
 
 .dropdownButton:focus {
   outline: none;
-  border-color: #007AFF;
-  box-shadow: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+  background-color: var(--color-bg-tertiary);
 }
 
 .dropdownButtonActive {
-  border-color: #007AFF;
+  border-color: var(--color-primary);
 }
 
 .dropdownValue {
@@ -43,19 +45,19 @@
   white-space: nowrap;
 }
 
-/* Arrow Icon */
+/* Arrow Icon - Dark Mode */
 .dropdownArrow {
-  color: #999;
-  transition: transform 0.2s ease;
+  color: var(--color-text-tertiary);
+  transition: transform var(--transition-base);
   flex-shrink: 0;
 }
 
 .dropdownArrowOpen {
   transform: rotate(180deg);
-  color: #007AFF;
+  color: var(--color-primary);
 }
 
-/* Dropdown Menu */
+/* Dropdown Menu - Dark Mode */
 .dropdownMenu {
   position: absolute;
   top: calc(100% + 4px);
@@ -66,10 +68,10 @@
   margin: 0;
   padding: 4px;
   list-style: none;
-  background: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-md);
   z-index: 1000;
   max-height: 300px;
   overflow-y: auto;
@@ -97,27 +99,27 @@
 }
 
 .dropdownMenu::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: var(--color-gray-400);
   border-radius: 3px;
 }
 
 .dropdownMenu::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: var(--color-gray-500);
 }
 
-/* Dropdown Option */
+/* Dropdown Option - Dark Mode */
 .dropdownOption {
-  padding: 12px;
-  border-radius: 6px;
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 16px;
-  font-weight: 400;
-  color: #000;
+  transition: all var(--transition-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-primary);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: var(--space-sm);
   margin-bottom: 2px;
   white-space: nowrap;
 }
@@ -127,29 +129,29 @@
 }
 
 .dropdownOption:hover {
-  background-color: rgba(0, 122, 255, 0.08);
-  color: #007AFF;
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
 }
 
 .dropdownOption:active {
-  background-color: rgba(0, 122, 255, 0.12);
+  background-color: var(--color-primary-light);
 }
 
-/* Selected Option */
+/* Selected Option - Dark Mode */
 .dropdownOptionSelected {
-  background-color: #007AFF;
-  color: white;
-  font-weight: 600;
+  background-color: var(--color-primary);
+  color: var(--color-bg-primary);
+  font-weight: var(--font-weight-semibold);
 }
 
 .dropdownOptionSelected:hover {
-  background-color: #0056CC;
-  color: white;
+  background-color: var(--color-primary-hover);
+  color: var(--color-bg-primary);
 }
 
-/* Check Icon */
+/* Check Icon - Dark Mode */
 .checkIcon {
-  color: white;
+  color: var(--color-bg-primary);
   flex-shrink: 0;
 }
 
