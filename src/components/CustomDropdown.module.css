@@ -68,14 +68,17 @@
   margin: 0;
   padding: 4px;
   list-style: none;
-  background: var(--color-bg-secondary);
+  background-color: #1C1C1E !important;
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-md);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
   z-index: 1000;
   max-height: 300px;
   overflow-y: auto;
   animation: slideDown 0.2s ease;
+  isolation: isolate;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 @keyframes slideDown {

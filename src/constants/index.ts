@@ -10,8 +10,8 @@ export const SNACKBAR_DURATION = {
 
 export const STATUS_OPTIONS = [
   { value: 'all', label: 'Todos los estados' },
-  { value: 'active', label: 'ACTIVO' },
-  { value: 'inactive', label: 'INACTIVO' },
+  { value: 'active', label: 'HABILITADO' },
+  { value: 'inactive', label: 'DESHABILITADO' },
 ] as const;
 
 export const EVENT_FILTER_OPTIONS = [

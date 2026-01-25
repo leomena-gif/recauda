@@ -5,6 +5,8 @@
   justify-content: space-between;
   align-items: flex-start;
   gap: 20px;
+  padding: 0;
+  width: 100%;
 }
 
 .titleSection {
@@ -31,6 +33,8 @@
   align-items: center;
   margin-bottom: var(--space-xl);
   gap: var(--space-lg);
+  padding: 0;
+  width: 100%;
 }
 
 .leftSection {
@@ -38,6 +42,7 @@
   gap: 20px;
   align-items: center;
   flex: 1;
+  width: 100%;
 }
 
 .rightSection {
@@ -72,6 +77,7 @@
 .searchContainer {
   position: relative;
   flex: 1;
+  max-width: 400px;
 }
 
 .searchIcon {
@@ -115,18 +121,19 @@
 
 .statusFilter {
   min-width: 180px;
-  width: auto;
+  flex: 1;
 }
 
 .eventFilter {
   min-width: 220px;
-  width: auto;
+  flex: 1;
 }
 
 .filtersGroupDesktop {
   display: flex;
   gap: 20px;
   align-items: center;
+  flex: 1;
 }
 
 /* Botón sin borde, solo icono (categoría ghost icon) */
@@ -464,6 +471,12 @@
   overflow: visible;
   position: relative;
   z-index: 1;
+  margin: 0;
+  padding: 0;
+}
+
+.tableContainer table {
+  position: relative;
 }
 
 .table {
@@ -483,6 +496,27 @@
   letter-spacing: 0.05em;
 }
 
+/* Header with Counter */
+.headerWithCounter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.headerCounter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--color-text-secondary);
+  border-radius: var(--radius-full);
+  padding: 2px 8px;
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+  min-width: 28px;
+  text-align: center;
+}
+
 .table th:nth-child(1) {
   width: 60px !important; /* Checkbox column - Fixed width */
   min-width: 60px !important;
@@ -490,23 +524,15 @@
 }
 
 .table th:nth-child(2) {
-  width: 35%; /* Vendedor name + phone */
+  width: 40%; /* Vendedor name + phone */
 }
 
 .table th:nth-child(3) {
-  width: 30%; /* Evento Asignado */
+  width: 45%; /* Evento Asignado */
 }
 
 .table th:nth-child(4) {
-  width: 12%; /* Estado */
-}
-
-.table th:nth-child(5) {
-  width: 15%; /* Última Actividad */
-}
-
-.table th:nth-child(6) {
-  width: 8%; /* Acciones */
+  width: 15%; /* Acciones */
 }
 
 .checkboxColumn {
@@ -572,10 +598,12 @@
   border-bottom: 1px solid var(--color-border-light);
   transition: all var(--transition-base);
   background-color: var(--color-bg-secondary);
+  position: relative;
 }
 
 .tableRow:hover {
   background: var(--color-bg-tertiary);
+  z-index: 5;
 }
 
 .tableRow:last-child {
@@ -583,12 +611,17 @@
 }
 
 .tableRowInactive {
-  opacity: 0.6;
   color: var(--color-text-tertiary);
 }
 
 .tableRowInactive:hover {
   background-color: var(--color-bg-tertiary);
+}
+
+.tableRowInactive .sellerInfo,
+.tableRowInactive .eventInfo,
+.tableRowInactive .checkboxWrapper {
+  opacity: 0.6;
 }
 
 .tableRowInactive .sellerName,
@@ -600,7 +633,7 @@
 .tableRow td {
   vertical-align: middle;
   word-wrap: break-word;
-  overflow: hidden;
+  overflow: visible;
 }
 
 /* Text alignment moved to padding section below */
@@ -638,18 +671,13 @@
 }
 
 .table th:nth-child(4),
-.tableRow td:nth-child(4) {
-  padding: 16px 12px !important;
-  vertical-align: middle !important;
-}
-
-.table th:nth-child(5),
-.tableRow td:nth-child(5),
+.tableRow td:nth-child(4),
 .table th.actionsColumn,
 .tableRow td.actionsColumn {
   padding: 16px 20px 16px 12px !important;
   text-align: center !important;
   vertical-align: middle !important;
+  overflow: visible !important;
 }
 
 /* Seller Info */
@@ -731,6 +759,11 @@
 }
 
 .mobileRowInactive {
+  color: var(--color-text-tertiary);
+}
+
+.mobileRowInactive .mobileRowMain,
+.mobileRowInactive .mobileRowCheckbox {
   opacity: 0.65;
 }
 
@@ -822,50 +855,102 @@
 
 /* Actions Column */
 .actionsColumn {
-  width: 10%;
+  width: 15%;
   text-align: center;
-  min-width: 90px;
+  min-width: 60px;
+  overflow: visible !important;
+  position: relative;
 }
 
-/* Edit Button - Secondary style (appears on hover) */
-.editButton {
-  background-color: var(--color-primary-light);
-  border: none;
-  padding: 6px 12px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  color: var(--color-primary);
-  transition: all var(--transition-base);
+/* Desktop Context Menu */
+.desktopMenuContainer {
+  position: relative;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 5px;
-  opacity: 0;
-  visibility: hidden;
+}
+
+.desktopMenuButton {
+  background: none;
+  border: none;
+  padding: var(--space-xs);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  color: var(--color-text-tertiary);
+  transition: color var(--transition-base), background-color var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 32px;
+  min-height: 32px;
+  width: 32px;
+  height: 32px;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.desktopMenuButton:hover {
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.desktopMenuButton:active {
+  background: var(--color-border-light);
+}
+
+.desktopMenuDropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  right: 0;
+  background: #1C1C1E;
+  border-radius: var(--radius-md);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  min-width: 180px;
+  z-index: 10000;
+  overflow: visible;
+  animation: menuSlideDown 0.2s ease-out;
+}
+
+.desktopMenuItem {
+  width: 100%;
+  min-height: 44px;
+  background: transparent;
+  border: none;
+  padding: 14px var(--space-md);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  color: var(--color-text-primary);
   font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-semibold);
-  white-space: nowrap;
+  font-weight: var(--font-weight-medium);
+  transition: background-color var(--transition-base);
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+  box-sizing: border-box;
 }
 
-.tableRow:hover .editButton {
-  opacity: 1;
-  visibility: visible;
+.desktopMenuItem:hover {
+  background: #2C2C2E;
 }
 
-.editButton:hover {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary-hover);
-  transform: translateY(-1px);
+.desktopMenuItem:active {
+  background: #3C3C3E;
 }
 
-.editButton:active {
-  background-color: rgba(0, 122, 255, 0.22);
-  transform: translateY(0);
+.desktopMenuItem + .desktopMenuItem {
+  border-top: 1px solid var(--color-border-light);
 }
 
-.editButton svg {
+.desktopMenuItem svg {
+  flex-shrink: 0;
+  color: var(--color-text-secondary);
   width: 16px;
   height: 16px;
+}
+
+.desktopMenuItem:hover svg {
+  color: var(--color-text-primary);
 }
 
 /* Toggle Switch */
@@ -1397,23 +1482,15 @@
   }
 
   .table th:nth-child(2) {
-    width: 35%;
+    width: 40%;
   }
 
   .table th:nth-child(3) {
-    width: 30%;
+    width: 45%;
   }
 
   .table th:nth-child(4) {
-    width: 12%;
-  }
-
-  .table th:nth-child(5) {
     width: 15%;
-  }
-
-  .table th:nth-child(6) {
-    width: 8%;
   }
 
 
@@ -1450,13 +1527,7 @@
   }
 
   .table th:nth-child(4),
-  .tableRow td:nth-child(4) {
-    padding: 12px 10px !important;
-    vertical-align: middle !important;
-  }
-
-  .table th:nth-child(5),
-  .tableRow td:nth-child(5),
+  .tableRow td:nth-child(4),
   .table th.actionsColumn,
   .tableRow td.actionsColumn {
     padding: 12px 16px 12px 10px !important;
@@ -2044,12 +2115,12 @@
   top: 100%;
   right: 0;
   margin-top: var(--space-xs);
-  background: var(--color-bg-secondary);
+  background: #1C1C1E;
   border-radius: var(--radius-md);
-  box-shadow: var(--shadow-lg);
-  border: 1px solid var(--color-border-light);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   min-width: 180px;
-  z-index: 100;
+  z-index: 10000;
   overflow: hidden;
   animation: menuSlideDown 0.2s ease-out;
 }
@@ -2058,7 +2129,7 @@
 .mobileMenuItem {
   width: 100%;
   min-height: 44px;
-  background: none;
+  background: transparent;
   border: none;
   padding: 14px var(--space-md);
   cursor: pointer;
@@ -2075,11 +2146,11 @@
 }
 
 .mobileMenuItem:hover {
-  background: var(--color-bg-tertiary);
+  background: #2C2C2E;
 }
 
 .mobileMenuItem:active {
-  background: var(--color-border-light);
+  background: #3C3C3E;
 }
 
 .mobileMenuItem + .mobileMenuItem {

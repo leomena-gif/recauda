@@ -1,13 +1,24 @@
-/* Event Detail Container - Override global padding-bottom */
+/* Event Detail Container */
 .eventDetailContainer {
   padding-bottom: var(--space-md) !important; /* Remove global padding-bottom since we handle it with salesList margin */
-  overflow-x: hidden;
+  width: 100%;
   max-width: 100%;
+  box-sizing: border-box;
+  /* No agregar padding aquí, hereda del pageContainer */
+  /* No agregar overflow-x aquí, puede causar problemas de alineación */
+}
+
+.eventDetailContent {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 /* Navigation - Dark Mode Mobile First */
 .navigationContainer {
   margin-bottom: var(--space-md);
+  width: 100%;
+  padding: 0;
 }
 
 .backButton {
@@ -51,6 +62,8 @@
   flex-direction: column;
   gap: var(--space-sm);
   border: 1px solid var(--color-border-light);
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .eventCardHeader {
@@ -143,12 +156,21 @@
   text-align: right;
 }
 
+/* Table Container - Desktop only */
+.tableContainer {
+  width: 100%;
+  padding: 0;
+  margin: 0;
+}
+
 /* Tabs - Dark Mode Mobile First */
 .tabsContainer {
   display: flex;
   background-color: transparent;
   border-bottom: 1px solid var(--color-border);
-  margin-bottom: var(--space-md);
+  margin-bottom: 0;
+  width: 100%;
+  padding: 0;
 }
 
 .tab {
@@ -182,7 +204,9 @@
 
 /* Search Container */
 .searchContainer {
-  margin-bottom: var(--space-md);
+  margin-bottom: 0;
+  width: 100%;
+  padding: 0;
 }
 
 .searchBar {
@@ -220,6 +244,8 @@
   flex-direction: column;
   gap: 0;
   margin-bottom: 90px; /* Space for fixed footer */
+  width: 100%;
+  padding: 0;
 }
 
 .salesItem {
@@ -284,9 +310,16 @@
   padding: var(--space-md);
   z-index: 100;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   box-sizing: border-box;
+}
+
+.footerContent {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .footerLeft {
@@ -336,11 +369,56 @@
   }
 }
 
-/* Desktop - mismo padding que Mis eventos (40px) */
+/* Desktop - mismo padding y max-width que Mis eventos */
 @media (min-width: 768px) {
   .eventDetailContainer {
-    padding: 40px !important;
-    padding-bottom: 40px !important;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    /* Hereda max-width: 1200px y padding: 40px del pageContainer */
+    /* El contenido interno tiene ancho efectivo de 1200px - 80px = 1120px */
+    /* Todos los elementos internos deben tener width: 100% y padding: 0 */
+  }
+
+  .eventDetailContent {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px;
+    box-sizing: border-box;
+  }
+  
+  /* Asegurar que todos los elementos respeten el ancho del contenedor */
+  .navigationContainer,
+  .eventCard,
+  .tableContainer {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* Table Container con borde (consistencia con otras tablas) - Contiene tabs, search, sales list y footer */
+  .tableContainer {
+    background: var(--color-bg-secondary);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--color-border-light);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* Tabs dentro del contenedor de tabla */
+  .tabsContainer {
+    padding: 0 var(--space-md);
+    margin-bottom: 0;
+  }
+
+  /* Search Container dentro del contenedor de tabla */
+  .searchContainer {
+    padding: var(--space-md) var(--space-md) 0 var(--space-md);
+    margin-bottom: 0;
+  }
+
+  .searchBar {
+    margin-bottom: var(--space-md);
   }
 
   .eventCard {
@@ -351,20 +429,42 @@
     font-size: var(--font-size-xl);
   }
 
-  /* Mismo ancho y padding que pageContainer (40px) */
+  /* Sales List dentro del contenedor de tabla */
+  .salesList {
+    margin-bottom: 0;
+    padding: 0 var(--space-md);
+  }
+
+  .salesItem {
+    padding: var(--space-md) 0;
+  }
+
+  /* Footer debe ser de la tabla (no fijo) en desktop - Estilo de totalizador */
   .footerContainer {
-    padding: 40px;
+    position: static;
     width: 100%;
-    max-width: 1200px;
-    margin-left: auto;
-    margin-right: auto;
-    left: 50%;
-    right: auto;
-    transform: translateX(-50%);
+    max-width: 100%;
+    padding: 0;
+    margin-top: 0;
+    border-top: 2px solid var(--color-border);
+    background-color: var(--color-bg-tertiary);
     box-sizing: border-box;
   }
 
-  .salesList {
-    margin-bottom: 110px;
+  .footerContent {
+    width: 100%;
+    padding: var(--space-lg) var(--space-md);
+    box-sizing: border-box;
+  }
+
+  /* Estilos de totalizador para el footer */
+  .footerLabel {
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+  }
+
+  .footerAmount {
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
   }
 }
