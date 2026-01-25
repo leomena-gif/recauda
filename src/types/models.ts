@@ -15,6 +15,19 @@ export interface Seller {
   lastActivity: string;
 }
 
+export interface Buyer {
+  id: string;
+  firstName: string;
+  lastName: string;
+  phone: string;
+  email: string;
+  status: BuyerStatus;
+  eventsAssigned: number;
+  assignedEvents: string[]; // Array of event IDs
+  totalBought: number;
+  lastActivity: string;
+}
+
 export interface Event {
   id: string;
   name: string;
@@ -26,6 +39,7 @@ export interface Event {
 }
 
 export type SellerStatus = 'active' | 'inactive';
+export type BuyerStatus = 'active' | 'inactive';
 export type EventType = 'raffle' | 'food_sale';
 export type EventStatus = 'active' | 'inactive' | 'completed';
 export type StatusFilter = 'all' | 'active' | 'inactive';

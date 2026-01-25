@@ -29,34 +29,28 @@
 .backButton {
   background: none;
   border: none;
-  color: var(--color-primary);
-  font-size: 18px;
-  font-weight: 700;
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
   cursor: pointer;
-  padding: 12px 16px;
-  margin: -12px -16px;
-  transition: all 0.2s ease;
+  padding: var(--space-xs) 0;
+  transition: all var(--transition-base);
   display: flex;
   align-items: center;
-  gap: 12px;
-  text-decoration: none;
-  border-radius: var(--radius-md);
+  gap: var(--space-xs);
   width: fit-content;
 }
 
 .backButton:hover {
-  color: var(--color-primary-hover);
-  background-color: var(--color-primary-light);
-  transform: translateX(-2px);
+  opacity: 0.7;
 }
 
 .backButton:active {
-  transform: translateY(1px) translateX(-2px);
-  background-color: rgba(90, 200, 250, 0.18);
+  transform: scale(0.98);
 }
 
 .chevronIcon {
-  transition: transform 0.2s ease;
+  transition: transform var(--transition-base);
 }
 
 .backButton:hover .chevronIcon {
@@ -65,9 +59,9 @@
 
 .mainContent {
   flex: 1;
-  padding: var(--space-xl) var(--space-lg);
+  padding: 40px;
   min-height: 100vh;
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   width: 100%;
   background-color: var(--color-bg-primary);

@@ -38,6 +38,8 @@ export default function SellersList() {
 
   // Mobile menu state
   const [mobileMenuOpen, setMobileMenuOpen] = useState<string | null>(null);
+  // Desktop context menu state
+  const [desktopMenuOpen, setDesktopMenuOpen] = useState<string | null>(null);
   // Mobile-only: Filtros sheet, Assign sticky + sheet
   const [filtersSheetOpen, setFiltersSheetOpen] = useState(false);
   const [assignSheetOpen, setAssignSheetOpen] = useState(false);
@@ -58,13 +60,16 @@ export default function SellersList() {
       if (mobileMenuOpen && !(event.target as Element).closest(`.${styles.mobileMenuContainer}`)) {
         handleMobileMenuClose();
       }
+      if (desktopMenuOpen && !(event.target as Element).closest(`.${styles.desktopMenuContainer}`)) {
+        setDesktopMenuOpen(null);
+      }
     };
 
     document.addEventListener('mousedown', handleClickOutside);
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
-  }, [mobileMenuOpen]);
+  }, [mobileMenuOpen, desktopMenuOpen]);
 
   // Filtered sellers with useMemo for performance
   const filteredSellers = useMemo(() => {
@@ -283,6 +288,21 @@ export default function SellersList() {
   const handleMobileToggleStatus = (sellerId: string) => {
     handleToggleSellerStatus(sellerId);
     handleMobileMenuClose();
+  };
+
+  // Desktop context menu handlers
+  const handleDesktopMenuToggle = (sellerId: string) => {
+    setDesktopMenuOpen(desktopMenuOpen === sellerId ? null : sellerId);
+  };
+
+  const handleDesktopEdit = (seller: Seller) => {
+    handleEditSeller(seller);
+    setDesktopMenuOpen(null);
+  };
+
+  const handleDesktopToggleStatus = (sellerId: string) => {
+    handleToggleSellerStatus(sellerId);
+    setDesktopMenuOpen(null);
   };
 
   const handleAddSeller = () => {
@@ -504,9 +524,13 @@ export default function SellersList() {
                   title={filteredSellers.filter(s => s.status === 'active').length === 0 ? 'No hay vendedores activos para seleccionar' : 'Seleccionar todos los vendedores activos'}
                 />
               </th>
-              <th>Vendedor</th>
+              <th>
+                <div className={styles.headerWithCounter}>
+                  <span>Vendedor</span>
+                  <span className={styles.headerCounter}>{filteredSellers.length}</span>
+                </div>
+              </th>
               <th>Evento Asignado</th>
-              <th>Estado</th>
               <th className={styles.actionsColumn}></th>
             </tr>
           </thead>
@@ -558,37 +582,65 @@ export default function SellersList() {
                     )}
                   </div>
                 </td>
-                <td>
-                  <div className={styles.switchWrapper}>
-                    <label 
-                      className={styles.switchContainer}
-                      title={seller.status === 'active' ? 'Deshabilitar vendedor' : 'Habilitar vendedor'}
-                    >
-                      <input
-                        type="checkbox"
-                        checked={seller.status === 'active'}
-                        onChange={() => handleToggleSellerStatus(seller.id)}
-                        className={styles.switchInput}
-                      />
-                      <span className={styles.switchSlider}></span>
-                    </label>
-                    <span className={`${styles.switchLabel} ${seller.status === 'active' ? styles.switchLabelActive : styles.switchLabelInactive}`}>
-                      {seller.status === 'active' ? 'ACTIVO' : 'INACTIVO'}
-                    </span>
-                  </div>
-                </td>
                 <td className={styles.actionsColumn}>
-                  <button
-                    className={styles.editButton}
-                    onClick={() => handleEditSeller(seller)}
-                    title="Editar vendedor"
-                  >
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                    </svg>
-                    <span>Editar</span>
-                  </button>
+                  <div className={styles.desktopMenuContainer}>
+                    <button
+                      className={styles.desktopMenuButton}
+                      onClick={() => handleDesktopMenuToggle(seller.id)}
+                      title="Más opciones"
+                      aria-label="Menú de opciones"
+                      aria-expanded={desktopMenuOpen === seller.id}
+                      aria-haspopup="true"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                        <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
+                        <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
+                        <circle cx="12" cy="18" r="1.5" fill="currentColor"/>
+                      </svg>
+                    </button>
+                    {desktopMenuOpen === seller.id && (
+                      <div 
+                        className={styles.desktopMenuDropdown} 
+                        role="menu"
+                      >
+                        <button
+                          type="button"
+                          role="menuitem"
+                          className={styles.desktopMenuItem}
+                          onClick={() => handleDesktopEdit(seller)}
+                        >
+                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                          </svg>
+                          Editar datos
+                        </button>
+                        <button
+                          type="button"
+                          role="menuitem"
+                          className={styles.desktopMenuItem}
+                          onClick={() => handleDesktopToggleStatus(seller.id)}
+                        >
+                          {seller.status === 'active' ? (
+                            <>
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                              Deshabilitar
+                            </>
+                          ) : (
+                            <>
+                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                              </svg>
+                              Habilitar
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 </td>
               </tr>
             ))}
@@ -664,15 +716,15 @@ export default function SellersList() {
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
-                          Desactivar
+                          Deshabilitar
                         </>
                       ) : (
                         <>
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12 C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
                           </svg>
-                          Activar
+                          Habilitar
                         </>
                       )}
                     </button>

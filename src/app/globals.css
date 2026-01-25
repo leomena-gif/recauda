@@ -144,6 +144,14 @@ body {
   overflow-x: hidden;
 }
 
+/* Content Container - width alignment helper */
+.contentContainer {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  box-sizing: border-box;
+}
+
 .pageTitle {
   font-size: var(--font-size-2xl);
   font-weight: var(--font-weight-bold);
@@ -156,6 +164,8 @@ body {
   flex-direction: column;
   gap: var(--space-md);
   align-items: stretch;
+  padding: 0;
+  width: 100%;
 }
 
 /* Mobile: ocultar H1 de páginas (reemplazados por el título del header) */
@@ -185,6 +195,18 @@ body {
     margin: 0 auto;
     padding: 40px;
     padding-bottom: 110px; /* Space for bottom button on desktop */
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .contentContainer {
+    max-width: 1200px;
+    padding: 40px;
+  }
+
+  .contentContainer {
+    max-width: 1200px;
+    padding: 40px;
   }
   
   .pageTitle {
@@ -195,6 +217,10 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
     gap: var(--space-lg);
+    padding: 0;
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
   }
 }
 
