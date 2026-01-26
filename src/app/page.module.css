@@ -1,7 +1,7 @@
 /* Header Section - Hidden on mobile, visible on desktop */
 .header {
   display: none;
-  margin-bottom: var(--space-2xl);
+  margin-bottom: 60px;
   justify-content: space-between;
   align-items: flex-start;
   gap: var(--space-lg);
@@ -27,7 +27,7 @@
 /* Filter Pills - Dark Mode Mobile First */
 .filtersContainer {
   margin-bottom: var(--space-md);
-  margin-top: 0;
+  margin-top: 40px;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
@@ -74,7 +74,8 @@
 }
 
 .pillBadge {
-  display: none; /* Hide badges in mobile design */
+  display: none;
+  /* Hide badges in mobile design */
 }
 
 .pill:hover {
@@ -173,6 +174,7 @@
     opacity: 0;
     transform: translateY(100%);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -303,8 +305,116 @@
   transform: scale(0.98);
 }
 
+.registerSaleSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Mobile Wizard: Event Selection List */
+.registerSaleEventList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.registerSaleEventCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-md);
+  width: 100%;
+  padding: var(--space-md);
+  background: var(--color-bg-tertiary);
+  border: 2px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-align: left;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.registerSaleEventCard:hover {
+  border-color: var(--color-border);
+}
+
+.registerSaleEventCardSelected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.registerSaleEventCardContent {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+}
+
+.registerSaleEventCardTitle {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: 1.3;
+}
+
+.registerSaleEventCardStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-success);
+}
+
+.registerSaleEventStatusDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+}
+
+.registerSaleEventCard svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
+/* Mobile Wizard Navigation */
+.registerSaleWizardNav {
+  display: flex;
+  gap: var(--space-md);
+  margin-top: var(--space-sm);
+}
+
+.registerSaleBackButton {
+  flex: 1;
+  min-height: 48px;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: background-color var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.registerSaleBackButton:hover {
+  background: var(--color-border);
+}
+
+.registerSaleBackButton:active {
+  transform: scale(0.98);
+}
+
+.registerSaleWizardNav .registerSaleSubmit {
+  flex: 2;
+  margin-top: 0;
+}
+
 /* Ocultar sheet en desktop */
 @media (min-width: 768px) {
+
   .registerSaleSheetOverlay,
   .registerSaleSheetPanel {
     display: none !important;
@@ -423,6 +533,36 @@
   color: var(--color-text-tertiary);
 }
 
+/* Select dropdown specific styles */
+.registerSaleModalInput[type="select"],
+.registerSaleModalInput:is(select) {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1.5L6 6.5L11 1.5' stroke='%23FFFFFF' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+
+.registerSaleModalInput:is(select):focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+}
+
+.registerSaleModalInput:is(select) option {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  padding: 12px;
+}
+
+.registerSaleModalInput:is(select) option:checked {
+  background-color: var(--color-primary);
+  color: var(--color-white);
+}
+
 .registerSaleModalInstruction {
   font-size: var(--font-size-sm);
   color: var(--color-text-tertiary);
@@ -487,6 +627,49 @@
   transform: scale(0.98);
 }
 
+.registerSaleModalSubmit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Desktop Wizard: Event Selection */
+.registerSaleDesktopEventList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-md);
+  margin-bottom: var(--space-lg);
+}
+
+.registerSaleDesktopEventCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-lg);
+  width: 100%;
+  padding: var(--space-lg);
+  background: var(--color-bg-tertiary);
+  border: 2px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-align: left;
+}
+
+.registerSaleDesktopEventCard:hover {
+  border-color: var(--color-border);
+  background: var(--color-bg-secondary);
+}
+
+.registerSaleDesktopEventCardSelected {
+  border-color: var(--color-primary);
+  background: var(--color-primary-light);
+}
+
+.registerSaleDesktopEventCard svg {
+  flex-shrink: 0;
+  color: var(--color-primary);
+}
+
 /* Mostrar modal solo en desktop */
 @media (min-width: 768px) {
   .registerSaleModalOverlay {
@@ -507,24 +690,25 @@
     max-width: 1200px;
     margin: 0 auto;
   }
-  
+
   .pageTitle {
     display: block;
     margin: 0;
   }
-  
+
   .filtersContainer {
     margin-bottom: var(--space-lg);
     max-width: 1200px;
     margin-left: auto;
     margin-right: auto;
   }
-  
+
   .pill {
     padding: 10px 20px;
   }
 
   .bottomButtonContainer {
-    display: none; /* Ocultar "Registrar venta" solo en desktop */
+    display: none;
+    /* Ocultar "Registrar venta" solo en desktop */
   }
 }
