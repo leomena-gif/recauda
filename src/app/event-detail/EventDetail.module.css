@@ -1,6 +1,7 @@
 /* Event Detail Container */
 .eventDetailContainer {
-  padding-bottom: var(--space-md) !important; /* Remove global padding-bottom since we handle it with salesList margin */
+  padding-bottom: var(--space-md) !important;
+  /* Remove global padding-bottom since we handle it with salesList margin */
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -16,7 +17,7 @@
 
 /* Navigation - Dark Mode Mobile First */
 .navigationContainer {
-  margin-bottom: var(--space-md);
+  margin-bottom: 32px;
   width: 100%;
   padding: 0;
 }
@@ -243,7 +244,8 @@
   display: flex;
   flex-direction: column;
   gap: 0;
-  margin-bottom: 90px; /* Space for fixed footer */
+  margin-bottom: 90px;
+  /* Space for fixed footer */
   width: 100%;
   padding: 0;
 }
@@ -384,10 +386,10 @@
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
-    padding: 40px;
+    padding: 0 40px 40px 40px;
     box-sizing: border-box;
   }
-  
+
   /* Asegurar que todos los elementos respeten el ancho del contenedor */
   .navigationContainer,
   .eventCard,
@@ -424,7 +426,7 @@
   .eventCard {
     padding: var(--space-lg);
   }
-  
+
   .eventTitle {
     font-size: var(--font-size-xl);
   }

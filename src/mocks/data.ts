@@ -135,6 +135,16 @@ const generateBuyers = (): Buyer[] => {
   const buyers: Buyer[] = [];
   let buyerId = 1;
 
+  const pickSellerForEvent = (eventId: string): { id: string; name: string } => {
+    const eligibleSellers = MOCK_SELLERS.filter(seller => seller.assignedEvents.includes(eventId));
+    const fallbackSellers = eligibleSellers.length > 0 ? eligibleSellers : MOCK_SELLERS;
+    const selectedSeller = fallbackSellers[Math.floor(Math.random() * fallbackSellers.length)];
+    return {
+      id: selectedSeller.id,
+      name: `${selectedSeller.firstName} ${selectedSeller.lastName}`
+    };
+  };
+
   // 100 compradores para RIFA (evento 1)
   for (let i = 0; i < 100; i++) {
     const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
@@ -142,10 +152,13 @@ const generateBuyers = (): Buyer[] => {
     const phone = `3584${String(100000 + buyerId).padStart(6, '0')}`;
     const isActive = Math.random() > 0.1; // 90% activos
     
+    const seller = pickSellerForEvent('1');
     buyers.push({
       id: String(buyerId),
       firstName,
       lastName,
+      sellerId: seller.id,
+      sellerName: seller.name,
       phone,
       email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${buyerId}@email.com`,
       status: isActive ? 'active' : 'inactive',
@@ -164,10 +177,13 @@ const generateBuyers = (): Buyer[] => {
     const phone = `3584${String(100000 + buyerId).padStart(6, '0')}`;
     const isActive = Math.random() > 0.1; // 90% activos
     
+    const seller = pickSellerForEvent('2');
     buyers.push({
       id: String(buyerId),
       firstName,
       lastName,
+      sellerId: seller.id,
+      sellerName: seller.name,
       phone,
       email: `${firstName.toLowerCase()}.${lastName.toLowerCase()}${buyerId}@email.com`,
       status: isActive ? 'active' : 'inactive',

@@ -19,6 +19,8 @@ export interface Buyer {
   id: string;
   firstName: string;
   lastName: string;
+  sellerId: string;
+  sellerName: string;
   phone: string;
   email: string;
   status: BuyerStatus;
@@ -26,6 +28,7 @@ export interface Buyer {
   assignedEvents: string[]; // Array of event IDs
   totalBought: number;
   lastActivity: string;
+  isDelivered?: boolean;
 }
 
 export interface Event {

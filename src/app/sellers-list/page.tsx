@@ -7,6 +7,7 @@ import { STATUS_OPTIONS, SNACKBAR_DURATION } from '@/constants';
 import { validateName, validatePhone } from '@/utils/validation';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { MOCK_SELLERS, MOCK_EVENTS } from '@/mocks/data';
+import { useMediaQuery } from '@/hooks/useMediaQuery';
 import CustomDropdown from '@/components/CustomDropdown';
 import styles from './SellersList.module.css';
 
@@ -15,13 +16,13 @@ export default function SellersList() {
   // State
   const [sellers, setSellers] = useState<Seller[]>(MOCK_SELLERS);
   const [events, setEvents] = useState<Event[]>(MOCK_EVENTS);
-  
+
   const [selectedSellers, setSelectedSellers] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<StatusFilter>('all');
   const [eventFilter, setEventFilter] = useState<string>('all');
   const [showEventSelector, setShowEventSelector] = useState(false);
-  
+
   // Edit modal state
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [editingSeller, setEditingSeller] = useState<Seller | null>(null);
@@ -43,11 +44,12 @@ export default function SellersList() {
   // Mobile-only: Filtros sheet, Assign sticky + sheet
   const [filtersSheetOpen, setFiltersSheetOpen] = useState(false);
   const [assignSheetOpen, setAssignSheetOpen] = useState(false);
-  
+
   // Custom hooks
   const successSnackbar = useSnackbar();
   const errorSnackbar = useSnackbar(SNACKBAR_DURATION.ERROR);
-  
+  const isDesktop = useMediaQuery('(min-width: 768px)');
+
   // Computed values
   const activeEvents = useMemo(
     () => events.filter(event => event.status === 'active'),
@@ -74,14 +76,16 @@ export default function SellersList() {
   // Filtered sellers with useMemo for performance
   const filteredSellers = useMemo(() => {
     return sellers.filter(seller => {
-      const matchesSearch = 
-        seller.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        seller.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      const matchesSearch =
+        (isDesktop && (
+          seller.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          seller.lastName.toLowerCase().includes(searchTerm.toLowerCase())
+        )) ||
         seller.phone.includes(searchTerm) ||
         seller.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
         // Buscar por nombre de evento asignado
-        (seller.assignedEvents.length > 0 && events.find(e => 
-          e.id === seller.assignedEvents[0] && 
+        (seller.assignedEvents.length > 0 && events.find(e =>
+          e.id === seller.assignedEvents[0] &&
           e.name.toLowerCase().includes(searchTerm.toLowerCase())
         ));
       const matchesStatus = statusFilter === 'all' || seller.status === statusFilter;
@@ -89,16 +93,16 @@ export default function SellersList() {
         eventFilter === 'all'
           ? true
           : seller.assignedEvents.some(eventId => {
-              const event = events.find(e => e.id === eventId);
-              return event?.status === 'active' && event.id === eventFilter;
-            });
+            const event = events.find(e => e.id === eventId);
+            return event?.status === 'active' && event.id === eventFilter;
+          });
       return matchesSearch && matchesStatus && matchesEvent;
     });
-  }, [sellers, searchTerm, statusFilter, events, eventFilter]);
+  }, [sellers, searchTerm, statusFilter, events, eventFilter, isDesktop]);
 
   const handleSelectSeller = (sellerId: string) => {
-    setSelectedSellers(prev => 
-      prev.includes(sellerId) 
+    setSelectedSellers(prev =>
+      prev.includes(sellerId)
         ? prev.filter(id => id !== sellerId)
         : [...prev, sellerId]
     );
@@ -118,7 +122,7 @@ export default function SellersList() {
   };
 
   const handleToggleSellerStatus = (sellerId: string) => {
-    setSellers(prevSellers => 
+    setSellers(prevSellers =>
       prevSellers.map(seller => {
         if (seller.id === sellerId) {
           const newStatus = seller.status === 'active' ? 'inactive' : 'active';
@@ -136,33 +140,33 @@ export default function SellersList() {
   const handleTooltipMouseEnter = (e: React.MouseEvent<HTMLDivElement>, sellerId: string) => {
     const seller = sellers.find(s => s.id === sellerId);
     if (!seller || seller.status === 'active') return;
-    
+
     const tooltip = e.currentTarget.querySelector('.checkboxTooltip') as HTMLElement;
     if (tooltip) {
       const rect = e.currentTarget.getBoundingClientRect();
       const tooltipWidth = 280;
       const tooltipHeight = 60;
-      
+
       // Calcular posición horizontal centrada en el checkbox
       let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
-      
+
       // Ajustar límites considerando el sidebar (280px de ancho)
       const sidebarWidth = 280;
       const margin = 30;
-      
+
       // Asegurar que no se corte detrás del sidebar
       if (left < sidebarWidth + margin) {
         left = sidebarWidth + margin;
       }
-      
+
       // Ajustar si se sale por la derecha
       if (left + tooltipWidth > window.innerWidth - margin) {
         left = window.innerWidth - tooltipWidth - margin;
       }
-      
+
       // Posición vertical - arriba del checkbox con más espacio
       const top = rect.top - tooltipHeight - 15;
-      
+
       tooltip.style.left = `${left}px`;
       tooltip.style.top = `${top}px`;
       tooltip.style.display = 'block';
@@ -203,7 +207,7 @@ export default function SellersList() {
   ) => {
     const value = e.target.value;
     setEditFormData(prev => ({ ...prev, [field]: value }));
-    
+
     // Clear error when user starts typing
     if (editFormErrors[field]) {
       setEditFormErrors(prev => ({ ...prev, [field]: undefined }));
@@ -230,17 +234,17 @@ export default function SellersList() {
         // En una aplicación real, aquí iría la llamada a la API
         // Simular un posible error del sistema (descomenta para probar)
         // throw new Error('Error del sistema');
-        
+
         // Update seller data
         setSellers(prevSellers =>
           prevSellers.map(seller =>
             seller.id === editingSeller.id
               ? {
-                  ...seller,
-                  firstName: editFormData.firstName,
-                  lastName: editFormData.lastName,
-                  phone: editFormData.phone,
-                }
+                ...seller,
+                firstName: editFormData.firstName,
+                lastName: editFormData.lastName,
+                phone: editFormData.phone,
+              }
               : seller
           )
         );
@@ -311,102 +315,104 @@ export default function SellersList() {
 
   return (
     <div className="pageContainer">
-      <div className={styles.header}>
-        <div className={styles.titleSection}>
-          <h1 className="pageTitle">Lista de Vendedores</h1>
-        </div>
-        <div className={styles.headerActions}>
-          <button className="btn btn-primary" onClick={handleAddSeller}>
-            Agregar vendedor
-          </button>
-        </div>
-      </div>
-
-      {/* Action Bar */}
-      <div className={styles.actionBar}>
-        <div className={styles.leftSection}>
-          <div className={styles.searchContainer}>
-            <svg className={styles.searchIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2"/>
-              <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <input
-              type="text"
-              placeholder="Buscar por nombre, teléfono o evento"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className={styles.searchInput}
-            />
+      <div className={styles.stickyHeader}>
+        <div className={styles.header}>
+          <div className={styles.titleSection}>
+            <h1 className="pageTitle">Lista de Vendedores</h1>
           </div>
+          <div className={styles.headerActions}>
+            <button className="btn btn-primary" onClick={handleAddSeller}>
+              Agregar vendedor
+            </button>
+          </div>
+        </div>
 
-          {/* Desktop: dos filtros en línea */}
-          <div className={styles.filtersGroupDesktop}>
-            <div className={styles.statusFilter}>
-              <CustomDropdown
-                options={STATUS_OPTIONS.map(opt => ({ value: opt.value, label: opt.label }))}
-                value={statusFilter}
-                onChange={(value) => setStatusFilter(value as StatusFilter)}
-                placeholder="Filtrar por estado"
+        {/* Action Bar */}
+        <div className={styles.actionBar}>
+          <div className={styles.leftSection}>
+            <div className={styles.searchContainer}>
+              <svg className={styles.searchIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
+                <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <input
+                type="text"
+                placeholder={isDesktop ? "Buscar por nombre, teléfono o evento" : "Buscar por teléfono o evento"}
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className={styles.searchInput}
               />
             </div>
-            <div className={styles.eventFilter}>
-              <CustomDropdown
-                options={[
-                  { value: 'all', label: 'Todos los eventos activos' },
-                  ...activeEvents.map(event => ({ value: event.id, label: event.name }))
-                ]}
-                value={eventFilter}
-                onChange={(value) => setEventFilter(value as string)}
-                placeholder="Filtrar por evento"
-              />
+
+            {/* Desktop: dos filtros en línea */}
+            <div className={styles.filtersGroupDesktop}>
+              <div className={styles.statusFilter}>
+                <CustomDropdown
+                  options={STATUS_OPTIONS.map(opt => ({ value: opt.value, label: opt.label }))}
+                  value={statusFilter}
+                  onChange={(value) => setStatusFilter(value as StatusFilter)}
+                  placeholder="Filtrar por estado"
+                />
+              </div>
+              <div className={styles.eventFilter}>
+                <CustomDropdown
+                  options={[
+                    { value: 'all', label: 'Todos los eventos activos' },
+                    ...activeEvents.map(event => ({ value: event.id, label: event.name }))
+                  ]}
+                  value={eventFilter}
+                  onChange={(value) => setEventFilter(value as string)}
+                  placeholder="Filtrar por evento"
+                />
+              </div>
             </div>
+
+            {/* Mobile: botón Filtros abre sheet */}
+            <button
+              type="button"
+              className={styles.filtersTriggerMobile}
+              onClick={openFiltersSheet}
+              aria-label="Abrir filtros"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M4 6h16M4 12h16M4 18h7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              <span>Filtros</span>
+            </button>
           </div>
 
-          {/* Mobile: botón Filtros abre sheet */}
-          <button
-            type="button"
-            className={styles.filtersTriggerMobile}
-            onClick={openFiltersSheet}
-            aria-label="Abrir filtros"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-              <path d="M4 6h16M4 12h16M4 18h7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <span>Filtros</span>
-          </button>
-        </div>
-
-        {/* Desktop: Asignar + selector inline */}
-        <div className={styles.rightSection}>
-          {selectedSellers.length > 0 && (
-            <div className={styles.assignmentContainer}>
-              <button
-                className={styles.assignButton}
-                onClick={toggleEventSelector}
-              >
-                {showEventSelector ? 'Cancelar' : `Asignar ${selectedSellers.length} vendedor${selectedSellers.length > 1 ? 'es' : ''}`}
-              </button>
-              {showEventSelector && activeEvents.length > 0 && (
-                <div className={styles.inlineEventSelector}>
-                  <span className={styles.selectorLabel}>Selecciona un evento:</span>
-                  <div className={styles.eventButtons}>
-                    {activeEvents.map((event) => (
-                      <button
-                        key={event.id}
-                        className={styles.eventButton}
-                        onClick={() => handleAssignToEvent(event.id)}
-                      >
-                        <span className={styles.eventButtonName}>{event.name}</span>
-                      </button>
-                    ))}
+          {/* Desktop: Asignar + selector inline */}
+          <div className={styles.rightSection}>
+            {selectedSellers.length > 0 && (
+              <div className={styles.assignmentContainer}>
+                <button
+                  className={styles.assignButton}
+                  onClick={toggleEventSelector}
+                >
+                  {showEventSelector ? 'Cancelar' : `Asignar ${selectedSellers.length} vendedor${selectedSellers.length > 1 ? 'es' : ''}`}
+                </button>
+                {showEventSelector && activeEvents.length > 0 && (
+                  <div className={styles.inlineEventSelector}>
+                    <span className={styles.selectorLabel}>Selecciona un evento:</span>
+                    <div className={styles.eventButtons}>
+                      {activeEvents.map((event) => (
+                        <button
+                          key={event.id}
+                          className={styles.eventButton}
+                          onClick={() => handleAssignToEvent(event.id)}
+                        >
+                          <span className={styles.eventButtonName}>{event.name}</span>
+                        </button>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
-              {showEventSelector && activeEvents.length === 0 && (
-                <div className={styles.noEventsMessage}>No hay eventos en estado ACTIVO</div>
-              )}
-            </div>
-          )}
+                )}
+                {showEventSelector && activeEvents.length === 0 && (
+                  <div className={styles.noEventsMessage}>No hay eventos en estado ACTIVO</div>
+                )}
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
@@ -536,16 +542,12 @@ export default function SellersList() {
           </thead>
           <tbody>
             {filteredSellers.map((seller) => (
-              <tr 
-                key={seller.id} 
+              <tr
+                key={seller.id}
                 className={`${styles.tableRow} ${seller.status === 'inactive' ? styles.tableRowInactive : ''}`}
               >
                 <td className={styles.checkboxColumn}>
-                  <div 
-                    className={styles.checkboxWrapper}
-                    onMouseEnter={(e) => handleTooltipMouseEnter(e, seller.id)}
-                    onMouseLeave={handleTooltipMouseLeave}
-                  >
+                  <div className={styles.checkboxWrapper}>
                     <input
                       type="checkbox"
                       checked={selectedSellers.includes(seller.id)}
@@ -553,11 +555,6 @@ export default function SellersList() {
                       disabled={seller.status === 'inactive'}
                       className={styles.checkbox}
                     />
-                    {seller.status === 'inactive' && (
-                      <div className={`${styles.checkboxTooltip} checkboxTooltip`}>
-                        Activa este vendedor para asignarlo a eventos
-                      </div>
-                    )}
                   </div>
                 </td>
                 <td>
@@ -593,14 +590,14 @@ export default function SellersList() {
                       aria-haspopup="true"
                     >
                       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
-                        <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
-                        <circle cx="12" cy="18" r="1.5" fill="currentColor"/>
+                        <circle cx="12" cy="6" r="1.5" fill="currentColor" />
+                        <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                        <circle cx="12" cy="18" r="1.5" fill="currentColor" />
                       </svg>
                     </button>
                     {desktopMenuOpen === seller.id && (
-                      <div 
-                        className={styles.desktopMenuDropdown} 
+                      <div
+                        className={styles.desktopMenuDropdown}
                         role="menu"
                       >
                         <button
@@ -610,8 +607,8 @@ export default function SellersList() {
                           onClick={() => handleDesktopEdit(seller)}
                         >
                           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                            <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                           </svg>
                           Editar datos
                         </button>
@@ -624,15 +621,15 @@ export default function SellersList() {
                           {seller.status === 'active' ? (
                             <>
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                               </svg>
                               Deshabilitar
                             </>
                           ) : (
                             <>
                               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                                <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                                <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                                <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                               </svg>
                               Habilitar
                             </>
@@ -677,58 +674,58 @@ export default function SellersList() {
                 </h3>
                 <div className={styles.mobileMenuContainer}>
                   <button
-                  type="button"
-                  className={styles.mobileMenuButton}
-                  onClick={() => handleMobileMenuToggle(seller.id)}
-                  title="Más opciones"
-                  aria-label="Menú de opciones"
-                  aria-expanded={mobileMenuOpen === seller.id}
-                  aria-haspopup="true"
-                >
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                    <circle cx="12" cy="6" r="1.5" fill="currentColor"/>
-                    <circle cx="12" cy="12" r="1.5" fill="currentColor"/>
-                    <circle cx="12" cy="18" r="1.5" fill="currentColor"/>
-                  </svg>
+                    type="button"
+                    className={styles.mobileMenuButton}
+                    onClick={() => handleMobileMenuToggle(seller.id)}
+                    title="Más opciones"
+                    aria-label="Menú de opciones"
+                    aria-expanded={mobileMenuOpen === seller.id}
+                    aria-haspopup="true"
+                  >
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                      <circle cx="12" cy="6" r="1.5" fill="currentColor" />
+                      <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+                      <circle cx="12" cy="18" r="1.5" fill="currentColor" />
+                    </svg>
                   </button>
                   {mobileMenuOpen === seller.id && (
-                  <div className={styles.mobileMenuDropdown} role="menu">
-                    <button
-                      type="button"
-                      role="menuitem"
-                      className={styles.mobileMenuItem}
-                      onClick={() => handleMobileEdit(seller)}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                        <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
-                      Editar datos
-                    </button>
-                    <button
-                      type="button"
-                      role="menuitem"
-                      className={styles.mobileMenuItem}
-                      onClick={() => handleMobileToggleStatus(seller.id)}
-                    >
-                      {seller.status === 'active' ? (
-                        <>
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                          Deshabilitar
-                        </>
-                      ) : (
-                        <>
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                            <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12 C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                          </svg>
-                          Habilitar
-                        </>
-                      )}
-                    </button>
-                  </div>
+                    <div className={styles.mobileMenuDropdown} role="menu">
+                      <button
+                        type="button"
+                        role="menuitem"
+                        className={styles.mobileMenuItem}
+                        onClick={() => handleMobileEdit(seller)}
+                      >
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        Editar datos
+                      </button>
+                      <button
+                        type="button"
+                        role="menuitem"
+                        className={styles.mobileMenuItem}
+                        onClick={() => handleMobileToggleStatus(seller.id)}
+                      >
+                        {seller.status === 'active' ? (
+                          <>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Deshabilitar
+                          </>
+                        ) : (
+                          <>
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                              <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12 C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Habilitar
+                          </>
+                        )}
+                      </button>
+                    </div>
                   )}
                 </div>
               </div>
@@ -736,28 +733,28 @@ export default function SellersList() {
               <p className={styles.mobileRowEventLine}>
                 {seller.assignedEvents.length > 0
                   ? (() => {
-                      const firstEvent = events.find(e => e.id === seller.assignedEvents[0]);
-                      return firstEvent ? firstEvent.name : 'Sin evento';
-                    })()
+                    const firstEvent = events.find(e => e.id === seller.assignedEvents[0]);
+                    return firstEvent ? firstEvent.name : 'Sin evento';
+                  })()
                   : 'Sin evento asignado'}
               </p>
             </div>
           </article>
         ))}
       </div>
-        
-        {filteredSellers.length === 0 && (
-          <div className={styles.emptyState}>
-            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <circle cx="9" cy="7" r="4" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M23 21V19C23 18.1645 22.7155 17.3541 22.2094 16.6977C21.7033 16.0413 20.9999 15.5767 20.2 15.3778" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-              <path d="M16 3.37781C16.7999 3.57668 17.5033 4.04129 18.0094 4.6977C18.5155 5.35411 18.8 6.16449 18.8 7C18.8 7.83551 18.5155 8.64589 18.0094 9.3023C17.5033 9.95871 16.7999 10.4233 16 10.6222" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            </svg>
-            <h3>No se encontraron vendedores</h3>
-            <p>Intenta ajustar los filtros de búsqueda</p>
-          </div>
-        )}
+
+      {filteredSellers.length === 0 && (
+        <div className={styles.emptyState}>
+          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <circle cx="9" cy="7" r="4" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M23 21V19C23 18.1645 22.7155 17.3541 22.2094 16.6977C21.7033 16.0413 20.9999 15.5767 20.2 15.3778" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M16 3.37781C16.7999 3.57668 17.5033 4.04129 18.0094 4.6977C18.5155 5.35411 18.8 6.16449 18.8 7C18.8 7.83551 18.5155 8.64589 18.0094 9.3023C17.5033 9.95871 16.7999 10.4233 16 10.6222" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          <h3>No se encontraron vendedores</h3>
+          <p>Intenta ajustar los filtros de búsqueda</p>
+        </div>
+      )}
 
 
       {/* Edit Seller Modal */}
@@ -766,16 +763,16 @@ export default function SellersList() {
           <div className={styles.editModal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h2>Editar Vendedor</h2>
-              <button 
+              <button
                 className={styles.closeButton}
                 onClick={handleCancelEdit}
               >
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
             </div>
-            
+
             <div className={styles.editModalContent}>
               <div className={styles.editFormCard}>
                 <div className={`${styles.editFieldGroup} ${editFormErrors.firstName ? styles.editError : ''}`}>
@@ -847,8 +844,8 @@ export default function SellersList() {
       {successSnackbar.isVisible && (
         <div className={`${styles.snackbar} ${successSnackbar.isClosing ? styles.snackbarClosing : ''}`}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.7088 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-            <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            <path d="M22 11.08V12C21.9988 14.1564 21.3005 16.2547 20.0093 17.9818C18.7182 19.7088 16.9033 20.9725 14.8354 21.5839C12.7674 22.1953 10.5573 22.1219 8.53447 21.3746C6.51168 20.6273 4.78465 19.2461 3.61096 17.4371C2.43727 15.628 1.87979 13.4881 2.02168 11.3363C2.16356 9.18455 2.99721 7.13631 4.39828 5.49706C5.79935 3.85781 7.69279 2.71537 9.79619 2.24013C11.8996 1.7649 14.1003 1.98232 16.07 2.85999" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           <span>Operación exitosa</span>
         </div>
@@ -858,9 +855,9 @@ export default function SellersList() {
       {errorSnackbar.isVisible && (
         <div className={`${styles.snackbarError} ${errorSnackbar.isClosing ? styles.snackbarClosing : ''}`}>
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2"/>
-            <path d="M12 8V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-            <circle cx="12" cy="16" r="1" fill="currentColor"/>
+            <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="2" />
+            <path d="M12 8V12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+            <circle cx="12" cy="16" r="1" fill="currentColor" />
           </svg>
           <span>Error al procesar la solicitud</span>
         </div>
