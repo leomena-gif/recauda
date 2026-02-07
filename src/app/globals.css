@@ -188,8 +188,9 @@ body {
 @media (min-width: 768px) {
   .mainContent {
     padding-top: 0;
-    margin-left: 280px;
-    /* mismo ancho que el sidebar fijo */
+    margin-left: 80px;
+    /* Collapsed sidebar width - expands on hover */
+    transition: margin-left var(--transition-base);
   }
 
   .pageContainer {

@@ -270,11 +270,13 @@ export default function BuyersList() {
               <div className={styles.eventFilter}>
                 <CustomDropdown
                   options={[
+                    { value: 'all', label: 'Todos los eventos activos' },
                     ...activeEvents.map(event => ({ value: event.id, label: event.name }))
                   ]}
                   value={eventFilter}
                   onChange={(value) => setEventFilter(value as string)}
                   placeholder="Filtrar por evento"
+                  alignRight={true}
                 />
               </div>
             </div>

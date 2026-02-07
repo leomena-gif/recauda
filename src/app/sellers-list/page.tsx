@@ -363,6 +363,7 @@ export default function SellersList() {
                   value={eventFilter}
                   onChange={(value) => setEventFilter(value as string)}
                   placeholder="Filtrar por evento"
+                  alignRight={true}
                 />
               </div>
             </div>
@@ -502,7 +503,11 @@ export default function SellersList() {
                   className={styles.sheetEventButton}
                   onClick={() => handleAssignToEvent(event.id)}
                 >
-                  {event.name}
+                  <div className={styles.sheetEventStatus}>
+                    <span className={styles.sheetEventStatusDot}></span>
+                    <span className={styles.sheetEventStatusText}>ACTIVO</span>
+                  </div>
+                  <div className={styles.sheetEventName}>{event.name}</div>
                 </button>
               ))}
             </div>

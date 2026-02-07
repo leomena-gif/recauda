@@ -54,7 +54,7 @@
   align-items: center;
   flex: 1;
   width: 100%;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .rightSection {
@@ -133,12 +133,12 @@
 
 .statusFilter {
   min-width: 180px;
-  flex: 1;
+  max-width: 200px;
 }
 
 .eventFilter {
   min-width: 220px;
-  flex: 1;
+  max-width: 280px;
 }
 
 .filtersGroupDesktop {
@@ -146,7 +146,7 @@
   gap: 20px;
   align-items: center;
   flex: 1;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 
@@ -390,28 +390,63 @@
 }
 
 .sheetEventButton {
-  min-height: 44px;
-  padding: 0 var(--space-md);
-  border-radius: var(--radius-md);
+  min-height: 80px;
+  padding: var(--space-md);
+  border-radius: var(--radius-lg);
   border: 1px solid var(--color-border-light);
-  background: var(--color-bg-tertiary);
+  background: var(--color-bg-secondary);
   color: var(--color-text-primary);
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   text-align: left;
   cursor: pointer;
   transition: all var(--transition-base);
   -webkit-tap-highlight-color: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  position: relative;
 }
 
 .sheetEventButton:hover {
-  border-color: var(--color-primary);
-  background: var(--color-primary-light);
-  color: var(--color-primary);
+  border-color: var(--color-border);
+  background: var(--color-bg-tertiary);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .sheetEventButton:active {
-  transform: scale(0.98);
+  transform: scale(0.98) translateY(0);
+}
+
+/* Event Status Indicator - matching event cards */
+.sheetEventStatus {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+}
+
+.sheetEventStatusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-success);
+  flex-shrink: 0;
+}
+
+.sheetEventStatusText {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-success);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.sheetEventName {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-primary);
+  line-height: 1.4;
 }
 
 .sheetNoEvents {
