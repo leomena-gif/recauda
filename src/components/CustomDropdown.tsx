@@ -13,13 +13,15 @@ interface CustomDropdownProps {
   value: string;
   onChange: (value: string) => void;
   placeholder?: string;
+  alignRight?: boolean; // Align dropdown menu to the right
 }
 
-export default function CustomDropdown({ 
-  options, 
-  value, 
-  onChange, 
-  placeholder = 'Seleccionar...' 
+export default function CustomDropdown({
+  options,
+  value,
+  onChange,
+  placeholder = 'Seleccionar...',
+  alignRight = false
 }: CustomDropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -89,13 +91,15 @@ export default function CustomDropdown({
       </button>
 
       {isOpen && (
-        <ul className={styles.dropdownMenu} role="listbox">
+        <ul
+          className={`${styles.dropdownMenu} ${alignRight ? styles.dropdownMenuRight : ''}`}
+          role="listbox"
+        >
           {options.map((option) => (
             <li
               key={option.value}
-              className={`${styles.dropdownOption} ${
-                option.value === value ? styles.dropdownOptionSelected : ''
-              }`}
+              className={`${styles.dropdownOption} ${option.value === value ? styles.dropdownOptionSelected : ''
+                }`}
               onClick={() => handleOptionClick(option.value)}
               role="option"
               aria-selected={option.value === value}

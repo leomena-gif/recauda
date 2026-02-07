@@ -39,7 +39,7 @@
   align-items: center;
   flex: 1;
   width: 100%;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .rightSection {
@@ -89,12 +89,12 @@
 
 .statusFilter {
   min-width: 180px;
-  flex: 1;
+  max-width: 200px;
 }
 
 .eventFilter {
   min-width: 220px;
-  flex: 1;
+  max-width: 280px;
 }
 
 .filtersGroupDesktop {
@@ -102,7 +102,7 @@
   gap: 20px;
   align-items: center;
   flex: 1;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 /* Table Container */

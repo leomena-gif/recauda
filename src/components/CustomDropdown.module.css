@@ -43,6 +43,8 @@
 .dropdownValue {
   flex: 1;
   white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Arrow Icon - Dark Mode */
@@ -63,22 +65,29 @@
   top: calc(100% + 4px);
   left: 0;
   right: auto;
-  min-width: 100%;
   width: max-content;
-  margin: 0;
-  padding: 4px;
-  list-style: none;
-  background-color: #1C1C1E !important;
+  min-width: 100%;
+  max-width: 400px;
+  background: var(--color-bg-secondary);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-md);
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  list-style: none;
+  margin: 0;
+  padding: var(--space-xs) 0;
   z-index: 1000;
-  max-height: 300px;
   overflow-y: auto;
+  max-height: 300px;
   animation: slideDown 0.2s ease;
   isolation: isolate;
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
+}
+
+/* Right-aligned dropdown menu */
+.dropdownMenuRight {
+  left: auto;
+  right: 0;
 }
 
 @keyframes slideDown {
@@ -86,6 +95,7 @@
     opacity: 0;
     transform: translateY(-8px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -161,7 +171,8 @@
 /* Responsive */
 @media (max-width: 768px) {
   .dropdownButton {
-    font-size: 16px; /* Prevent zoom on iOS */
+    font-size: 16px;
+    /* Prevent zoom on iOS */
     padding: 14px;
   }
 
@@ -184,4 +195,3 @@
     padding: 16px;
   }
 }
-

@@ -138,6 +138,97 @@
   white-space: nowrap;
 }
 
+.eventRow:hover .eventMenuDropdown {
+  display: block;
+}
+
+/* Mobile Sticky Bar - matches sellers-list pattern */
+.assignStickyBar {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  max-width: 100vw;
+  z-index: 200;
+  padding: var(--space-md);
+  padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
+  background-color: var(--color-bg-primary);
+  border-top: 1px solid var(--color-border-light);
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-md);
+  box-sizing: border-box;
+}
+
+.assignStickyCancel {
+  min-height: 44px;
+  padding: var(--space-md) var(--space-lg);
+  background: transparent;
+  border: 1px solid #E5E5EA;
+  border-radius: var(--radius-xl);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.assignStickyCancel:hover {
+  background-color: rgba(229, 229, 234, 0.15);
+}
+
+.assignStickyCancel:active {
+  background-color: rgba(229, 229, 234, 0.25);
+  transform: scale(0.98);
+}
+
+.assignStickyPrimary {
+  flex: 1;
+  min-height: 44px;
+  padding: var(--space-md) var(--space-lg);
+  background-color: #E5E5EA;
+  color: var(--color-bg-primary);
+  border: none;
+  border-radius: var(--radius-xl);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  -webkit-tap-highlight-color: transparent;
+}
+
+.assignStickyPrimary:hover {
+  background-color: #D1D1D6;
+}
+
+.assignStickyPrimary:active {
+  transform: scale(0.98);
+}
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
+
+  /* Hide desktop inline buttons on mobile */
+  .markAsPaidButton,
+  .assignNumbersButton {
+    display: none !important;
+  }
+
+  /* Show sticky bar on mobile */
+  .assignStickyBar {
+    display: flex;
+  }
+
+  /* Add bottom padding to salesList when sticky bar is visible */
+  .salesList {
+    padding-bottom: 80px;
+  }
+}
+
 .eventDetailsRow {
   display: flex;
   justify-content: space-between;
@@ -206,6 +297,8 @@
 /* Search Container */
 .searchContainer {
   margin-bottom: 0;
+  margin-top: var(--space-lg);
+  /* Add spacing between tabs and search on mobile */
   width: 100%;
   padding: 0;
 }
@@ -256,10 +349,37 @@
   align-items: center;
   padding: var(--space-md) 0;
   border-bottom: 1px solid var(--color-border-light);
+  gap: var(--space-sm);
 }
 
 .salesItem:last-child {
   border-bottom: none;
+}
+
+/* Checkbox wrapper for mobile list */
+.salesList .checkboxWrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 44px;
+  padding: var(--space-sm);
+}
+
+.salesList .checkbox {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  vertical-align: middle;
+  margin: 0;
+  flex-shrink: 0;
+}
+
+.salesList .checkbox:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
 }
 
 .salesItemLeft {
@@ -297,6 +417,61 @@
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);
+}
+
+/* Context Menu Styles */
+.menuContainer {
+  position: relative;
+  margin-left: var(--space-md);
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  padding: var(--space-xs);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-base);
+}
+
+.menuButton:hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.dropdownMenu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: var(--space-xs);
+  min-width: 220px;
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  overflow: hidden;
+}
+
+.menuOption {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  padding: var(--space-sm) var(--space-md);
+  color: var(--color-text-primary);
+  font-size: var(--font-size-base);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  white-space: nowrap;
+}
+
+.menuOption:hover {
+  background-color: var(--color-bg-tertiary);
 }
 
 /* Fixed Footer */
@@ -415,12 +590,17 @@
 
   /* Search Container dentro del contenedor de tabla */
   .searchContainer {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
     padding: var(--space-md) var(--space-md) 0 var(--space-md);
     margin-bottom: 0;
   }
 
   .searchBar {
+    flex: 1;
     margin-bottom: var(--space-md);
+    min-width: 200px;
   }
 
   .eventCard {
@@ -429,6 +609,11 @@
 
   .eventTitle {
     font-size: var(--font-size-xl);
+  }
+
+  /* Hide original salesList on desktop - use tableView instead */
+  .salesList {
+    display: none;
   }
 
   /* Sales List dentro del contenedor de tabla */
@@ -468,5 +653,94 @@
   .footerAmount {
     font-size: var(--font-size-xl);
     font-weight: var(--font-weight-bold);
+  }
+
+  /* Mark as Paid Button - Desktop only, now inline with search */
+  .markAsPaidButton {
+    background-color: var(--color-white);
+    color: var(--color-bg-primary);
+    border: none;
+    border-radius: var(--radius-md);
+    padding: var(--space-sm) var(--space-lg);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-semibold);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    min-height: 40px;
+    margin-bottom: var(--space-md);
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .markAsPaidButton:hover {
+    background-color: var(--color-gray-900);
+    transform: translateY(-1px);
+  }
+
+  .markAsPaidButton:active {
+    transform: scale(0.98);
+  }
+
+  /* Table View - Desktop only, now using list-style design */
+  .tableView {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    padding: 0 var(--space-md);
+  }
+
+  .tableView .salesItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--space-md) 0;
+    border-bottom: 1px solid var(--color-border-light);
+    gap: var(--space-md);
+  }
+
+  .tableView .salesItem:last-child {
+    border-bottom: none;
+  }
+
+  .tableView .checkboxWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+  }
+
+  .tableView .checkbox {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--color-primary);
+    cursor: pointer;
+    vertical-align: middle;
+    margin: 0;
+  }
+
+  .tableView .checkbox:disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+  }
+
+  .tableView .tableRow {
+    transition: all var(--transition-base);
+  }
+
+  .tableView .paidRow {
+    opacity: 0.6;
+    background-color: rgba(34, 197, 94, 0.08) !important;
+  }
+
+  .tableView .paidRow:hover {
+    background-color: rgba(34, 197, 94, 0.12) !important;
+  }
+}
+
+/* Mobile: Hide desktop-only payment features */
+@media (max-width: 767px) {
+  .tableView {
+    display: none;
   }
 }

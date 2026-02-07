@@ -191,12 +191,12 @@ export default function Home() {
                       }}
                     >
                       <div className={styles.registerSaleEventCardContent}>
-                        <div className={styles.registerSaleEventCardTitle}>
-                          Rifa día del niño del Grupo Scout General Deheza
-                        </div>
                         <div className={styles.registerSaleEventCardStatus}>
                           <span className={styles.registerSaleEventStatusDot}></span>
                           <span>ACTIVO</span>
+                        </div>
+                        <div className={styles.registerSaleEventCardTitle}>
+                          Rifa día del niño del Grupo Scout General Deheza
                         </div>
                       </div>
                       {selectedEvent === event.id && (
@@ -350,12 +350,12 @@ export default function Home() {
                         }}
                       >
                         <div className={styles.registerSaleEventCardContent}>
-                          <div className={styles.registerSaleEventCardTitle}>
-                            Rifa día del niño del Grupo Scout General Deheza
-                          </div>
                           <div className={styles.registerSaleEventCardStatus}>
                             <span className={styles.registerSaleEventStatusDot}></span>
                             <span>ACTIVO</span>
+                          </div>
+                          <div className={styles.registerSaleEventCardTitle}>
+                            Rifa día del niño del Grupo Scout General Deheza
                           </div>
                         </div>
                         {selectedEvent === event.id && (
