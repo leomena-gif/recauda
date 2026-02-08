@@ -208,11 +208,6 @@ body {
     padding: 40px;
   }
 
-  .contentContainer {
-    max-width: 1200px;
-    padding: 40px;
-  }
-
   .pageTitle {
     font-size: var(--font-size-3xl);
   }
@@ -225,6 +220,22 @@ body {
     width: 100%;
     max-width: 1200px;
     margin: 0 auto;
+  }
+}
+
+/* Desktop Layout - Wide screens with expanded sidebar */
+@media (min-width: 1601px) {
+  .mainContent {
+    margin-left: 280px;
+    /* Expanded sidebar width on wide screens */
+  }
+
+  .pageContainer {
+    max-width: 1400px;
+    /* Wider max-width for large screens */
+    margin-left: auto;
+    margin-right: auto;
+    /* Center the content in the available space */
   }
 }
 

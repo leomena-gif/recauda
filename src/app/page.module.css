@@ -712,3 +712,38 @@
     /* Ocultar "Registrar venta" solo en desktop */
   }
 }
+
+/* Dish Selector - Food Sale */
+.dishSelector {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding: var(--space-md);
+  background: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--space-xs);
+}
+
+.dishSelectorHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-xs);
+}
+
+.dishSelectorName {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-primary);
+}
+
+.dishSelectorPrice {
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
+}
+
+.dishSelector .registerSaleInput {
+  min-height: 44px;
+}
