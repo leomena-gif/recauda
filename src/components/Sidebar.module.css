@@ -71,8 +71,26 @@
   transition: opacity var(--transition-base);
 }
 
-/* Show title on hover */
-.sidebar:hover .sidebarTitle {
+/* Logo Styles */
+.logoShort {
+  opacity: 1;
+  transition: opacity var(--transition-base);
+  object-fit: contain;
+}
+
+.logoLong {
+  position: absolute;
+  opacity: 0;
+  transition: opacity var(--transition-base);
+  object-fit: contain;
+}
+
+/* Show long logo on hover, hide short logo */
+.sidebar:hover .logoShort {
+  opacity: 0;
+}
+
+.sidebar:hover .logoLong {
   opacity: 1;
 }
 
@@ -183,4 +201,46 @@
     display: none;
     /* Hide sidebar on mobile */
   }
+}
+
+/* Desktop - Always expanded on screens > 1600px */
+@media (min-width: 1601px) {
+  .sidebar {
+    width: 280px !important;
+  }
+
+  .sidebarTitle,
+  .sidebarLabel {
+    opacity: 1 !important;
+  }
+
+  .logoShort {
+    opacity: 0 !important;
+  }
+
+  .logoLong {
+    opacity: 1 !important;
+  }
+
+  .sidebarOverlay {
+    display: none !important;
+  }
+}
+
+/* Class for expanded state on wide screens */
+.sidebarExpanded {
+  width: 280px;
+}
+
+.sidebarExpanded .sidebarTitle,
+.sidebarExpanded .sidebarLabel {
+  opacity: 1;
+}
+
+.sidebarExpanded .logoShort {
+  opacity: 0;
+}
+
+.sidebarExpanded .logoLong {
+  opacity: 1;
 }

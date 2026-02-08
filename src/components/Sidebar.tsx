@@ -2,6 +2,7 @@
 
 import React from 'react';
 import { useRouter, usePathname } from 'next/navigation';
+import Image from 'next/image';
 import styles from './Sidebar.module.css';
 
 interface SidebarItem {
@@ -36,26 +37,59 @@ const Sidebar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
   const [isHovered, setIsHovered] = React.useState(false);
+  const [isWideScreen, setIsWideScreen] = React.useState(false);
+
+  React.useEffect(() => {
+    const checkScreenWidth = () => {
+      setIsWideScreen(window.innerWidth > 1600);
+    };
+
+    // Check initial width
+    checkScreenWidth();
+
+    // Add resize listener
+    window.addEventListener('resize', checkScreenWidth);
+
+    // Cleanup
+    return () => window.removeEventListener('resize', checkScreenWidth);
+  }, []);
 
   const handleNavigation = (path: string) => {
     router.push(path);
   };
 
+  const shouldExpand = isWideScreen || isHovered;
+
   return (
     <>
-      {/* Overlay - appears when sidebar is expanded */}
+      {/* Overlay - appears when sidebar is expanded (but not on wide screens) */}
       <div
-        className={`${styles.sidebarOverlay} ${isHovered ? styles.sidebarOverlayVisible : ''}`}
+        className={`${styles.sidebarOverlay} ${isHovered && !isWideScreen ? styles.sidebarOverlayVisible : ''}`}
         onClick={() => setIsHovered(false)}
       />
 
       <aside
-        className={styles.sidebar}
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        className={`${styles.sidebar} ${isWideScreen ? styles.sidebarExpanded : ''}`}
+        onMouseEnter={() => !isWideScreen && setIsHovered(true)}
+        onMouseLeave={() => !isWideScreen && setIsHovered(false)}
       >
         <div className={styles.sidebarHeader}>
-          <h2 className={styles.sidebarTitle}>Recauda</h2>
+          <Image
+            src="/images/logo-short.png"
+            alt="Recauda Logo"
+            width={40}
+            height={40}
+            className={styles.logoShort}
+            priority
+          />
+          <Image
+            src="/images/logo-long.png"
+            alt="Recauda"
+            width={180}
+            height={40}
+            className={styles.logoLong}
+            priority
+          />
         </div>
 
         <nav className={styles.sidebarNav}>
