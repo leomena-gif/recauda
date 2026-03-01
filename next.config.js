@@ -7,6 +7,11 @@ const nextConfig = {
   publicRuntimeConfig: {
     // Only use localhost, don't detect network interfaces
   },
+  eslint: {
+    // ESLint is run separately via `npm run lint`.
+    // Disabled here to avoid ESLint v8/v9 config incompatibilities during build.
+    ignoreDuringBuilds: true,
+  },
 }
 
 module.exports = nextConfig
