@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { EventStatusFilter } from '@/types/models';
 import { EVENT_FILTER_OPTIONS } from '@/constants';
@@ -12,45 +12,64 @@ import CompletedEventCard from '@/components/CompletedEventCard';
 import CardEmptyState from '@/components/CardEmptyState';
 import EventsEmptyState from '@/components/EventsEmptyState';
 import styles from './page.module.css';
+import { listCampaigns, type CampaignWithStats } from '@/actions/campaigns';
+import { registerSale } from '@/actions/sales';
+import { createClient } from '@/lib/supabase/client';
 
-// Mock events data - TODO: Replace with API
-const MOCK_EVENTS = [
-  {
-    id: '1',
-    status: 'active',
-    type: 'raffle',
-    name: 'Rifa día del niño del Grupo Scout General Deheza',
-    component: ActiveEventCard
-  },
-  {
-    id: '2',
-    status: 'active',
-    type: 'food_sale',
-    name: 'Venta de comida - Platos especiales',
-    component: FoodEventCard,
-    dishes: [
-      { name: 'Milanesa con papas', price: 2500, sold: 45, total: 100 },
-      { name: 'Empanadas (docena)', price: 3000, sold: 30, total: 80 },
-    ]
-  },
-  { id: '3', status: 'cancelled', type: 'raffle', name: 'Rifa cancelada', component: CancelledEventCard },
-  { id: '4', status: 'completed', type: 'raffle', name: 'Rifa completada', component: CompletedEventCard },
-  { id: '5', status: 'completed', type: 'raffle', name: 'Rifa completada 2', component: CompletedEventCard },
-];
+type LocalEvent = {
+  id: string;
+  status: string;
+  type: string;
+  name: string;
+  endDate?: string | null;
+  totalNumbers?: number | null;
+  soldNumbers?: number;
+  numberValue?: number | null;
+  component: React.ComponentType<Record<string, unknown>>;
+  dishes?: Array<{ name: string; price: number; sold: number; total: number }>;
+};
+
+function campaignToLocalEvent(c: CampaignWithStats): LocalEvent {
+  const component =
+    c.status === 'cancelled' ? CancelledEventCard :
+    c.status === 'completed' ? CompletedEventCard :
+    c.type === 'food_sale' ? FoodEventCard :
+    ActiveEventCard;
+
+  return {
+    id: c.id,
+    status: c.status,
+    type: c.type,
+    name: c.name,
+    endDate: c.end_date,
+    totalNumbers: c.total_numbers,
+    soldNumbers: c.sold_numbers,
+    numberValue: c.number_value,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    component: component as React.ComponentType<any>,
+  };
+}
 
 export default function Home() {
   const router = useRouter();
   const [selectedFilter, setSelectedFilter] = useState<EventStatusFilter>('all');
+  const [events, setEvents] = useState<LocalEvent[]>([]);
+
+  useEffect(() => {
+    listCampaigns().then(res => {
+      if (res.data) setEvents(res.data.map(campaignToLocalEvent));
+    });
+  }, []);
 
   // Filter events based on selected pill
   const filteredEvents = useMemo(() => {
     if (selectedFilter === 'all') {
-      return MOCK_EVENTS;
+      return events;
     }
-    return MOCK_EVENTS.filter(event => event.status === selectedFilter);
-  }, [selectedFilter]);
+    return events.filter(event => event.status === selectedFilter);
+  }, [selectedFilter, events]);
 
-  const hasEvents = MOCK_EVENTS.length > 0;
+  const hasEvents = events.length > 0;
   const hasFilteredEvents = filteredEvents.length > 0;
 
   const [registerSaleSheetOpen, setRegisterSaleSheetOpen] = useState(false);
@@ -82,7 +101,7 @@ export default function Home() {
     openRegisterSaleSheet();
   };
 
-  const handleSubmitReceipt = (e: React.FormEvent) => {
+  const handleSubmitReceipt = async (e: React.FormEvent) => {
     e.preventDefault();
     const err: { buyerName?: string; phone?: string; event?: string; dishes?: string } = {};
 
@@ -92,7 +111,7 @@ export default function Home() {
     }
 
     // Validate dishes for food sale events
-    const currentEvent = MOCK_EVENTS.find(e => e.id === selectedEvent);
+    const currentEvent = events.find(ev => ev.id === selectedEvent);
     if (currentEvent?.type === 'food_sale') {
       const totalDishes = Object.values(selectedDishes).reduce((sum, qty) => sum + qty, 0);
       if (totalDishes === 0) {
@@ -107,7 +126,39 @@ export default function Home() {
     setSaleFormErrors(err);
     if (Object.keys(err).length > 0) return;
 
-    // TODO: Submit with selectedEvent, selectedDishes (for food), saleQuantity (for raffle), saleBuyerName, salePhone
+    // Fetch available items for the selected campaign and auto-assign
+    const supabase = createClient();
+    const { data: availableItems } = await supabase
+      .from('items')
+      .select('id, number, food_item_id')
+      .eq('campaign_id', selectedEvent)
+      .eq('status', 'available')
+      .is('seller_id', null)
+      .limit(saleQuantity);
+
+    if (!availableItems || availableItems.length === 0) {
+      setSaleFormErrors(prev => ({ ...prev, event: 'No hay números disponibles en este evento' }));
+      return;
+    }
+
+    const lines = (availableItems as { id: string; number: number | null; food_item_id: string | null }[]).map(item => ({
+      item_id: item.id,
+      quantity: 1,
+      unit_price: 0, // price stored on campaign, simplified for quick sale
+    }));
+
+    const nameParts = saleBuyerName.trim().split(' ');
+    const buyer_first_name = nameParts[0] ?? '';
+    const buyer_last_name = nameParts.slice(1).join(' ') || buyer_first_name;
+
+    await registerSale({
+      campaign_id: selectedEvent,
+      buyer_first_name,
+      buyer_last_name,
+      buyer_phone: salePhone,
+      lines,
+    });
+
     closeRegisterSaleSheet();
   };
 
@@ -168,8 +219,7 @@ export default function Home() {
           <div className="cardsContainer">
             {filteredEvents.map((event) => {
               const EventComponent = event.component;
-              // Pass specific props for FoodEventCard
-              if (event.type === 'food_sale' && event.dishes) {
+              if (event.type === 'food_sale') {
                 return (
                   <EventComponent
                     key={event.id}
@@ -179,7 +229,17 @@ export default function Home() {
                   />
                 );
               }
-              return <EventComponent key={event.id} />;
+              return (
+                <EventComponent
+                  key={event.id}
+                  id={event.id}
+                  name={event.name}
+                  endDate={event.endDate}
+                  totalNumbers={event.totalNumbers}
+                  soldNumbers={event.soldNumbers}
+                  numberValue={event.numberValue}
+                />
+              );
             })}
           </div>
         )}
@@ -221,7 +281,7 @@ export default function Home() {
                   </button>
                 </div>
                 <div className={styles.registerSaleEventList}>
-                  {MOCK_EVENTS.filter(e => e.status === 'active').map((event) => (
+                  {events.filter(e => e.status === 'active').map((event) => (
                     <button
                       key={event.id}
                       type="button"
@@ -270,7 +330,7 @@ export default function Home() {
 
             {/* Step 2: Sale Details */}
             {mobileSheetStep === 2 && (() => {
-              const currentEvent = MOCK_EVENTS.find(e => e.id === selectedEvent);
+              const currentEvent = events.find(e => e.id === selectedEvent);
               const isFoodSale = currentEvent?.type === 'food_sale';
 
               return (
@@ -424,7 +484,7 @@ export default function Home() {
                   </div>
                   <div className={styles.registerSaleModalContent}>
                     <div className={styles.registerSaleDesktopEventList}>
-                      {MOCK_EVENTS.filter(e => e.status === 'active').map((event) => (
+                      {events.filter(e => e.status === 'active').map((event) => (
                         <button
                           key={event.id}
                           type="button"
@@ -479,7 +539,7 @@ export default function Home() {
 
               {/* Step 2: Sale Form */}
               {desktopModalStep === 2 && (() => {
-                const currentEvent = MOCK_EVENTS.find(e => e.id === selectedEvent);
+                const currentEvent = events.find(e => e.id === selectedEvent);
                 const isFoodSale = currentEvent?.type === 'food_sale';
 
                 return (
