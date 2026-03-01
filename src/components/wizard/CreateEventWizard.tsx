@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createCampaign } from '@/actions/campaigns';
 import ProgressIndicator from './ProgressIndicator';
 import ActionButtons from './ActionButtons';
 import EventTypeStep, { EventTypeStepRef } from './EventTypeStep';
@@ -101,23 +102,44 @@ const CreateEventWizard: React.FC = () => {
   };
 
   const handleCreateEvent = async () => {
+    if (!eventData) return;
     setIsCreating(true);
-    
-    try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // TODO: Replace with API call to save event data
-      void eventData;
 
-      // Show success screen
-      setIsCreating(false);
-      setShowSuccess(true);
-      
-    } catch (error) {
-      console.error('Error creating event:', error);
-      setIsCreating(false);
+    const input =
+      eventData.type === 'raffle'
+        ? {
+            type: 'raffle' as const,
+            name: eventData.name,
+            end_date: eventData.endDate?.toISOString().split('T')[0] ?? '',
+            start_date: eventData.startDate?.toISOString().split('T')[0],
+            number_value: parseFloat(eventData.numberValue ?? '0'),
+            total_numbers: parseInt(eventData.totalNumbers ?? '0', 10),
+            auto_adjust: eventData.autoAdjust ?? true,
+            prizes: (eventData.prizes ?? []).filter(p => p.trim() !== ''),
+          }
+        : {
+            type: 'food_sale' as const,
+            name: eventData.name,
+            end_date: eventData.endDate?.toISOString().split('T')[0] ?? '',
+            start_date: eventData.startDate?.toISOString().split('T')[0],
+            food_items: (eventData.foodItems ?? [])
+              .filter(fi => fi.name.trim() !== '')
+              .map((fi, idx) => ({
+                name: fi.name,
+                price: parseFloat(fi.price) || 0,
+                sort_order: idx,
+              })),
+          };
+
+    const result = await createCampaign(input);
+    setIsCreating(false);
+
+    if (result.error) {
+      console.error('Error creating campaign:', result.error);
+      return;
     }
+
+    setShowSuccess(true);
   };
 
   const handleBackToEvents = () => {

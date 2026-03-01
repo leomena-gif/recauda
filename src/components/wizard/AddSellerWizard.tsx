@@ -2,6 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { createSeller } from '@/actions/sellers';
 import ProgressIndicator from './ProgressIndicator';
 import ActionButtons from './ActionButtons';
 import SellerDataStep, { SellerDataStepRef } from './SellerDataStep';
@@ -73,24 +74,35 @@ const AddSellerWizard: React.FC = () => {
   };
 
   const handleConfirm = async () => {
+    if (!sellerData) return;
     setIsConfirming(true);
-    
-    try {
-      // Simulate API call delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // TODO: Replace with API call to save seller data
-      void sellerData;
-      void numberAssignment;
 
-      // Show success screen
-      setIsConfirming(false);
-      setShowSuccess(true);
-      
-    } catch (error) {
-      console.error('Error creating seller:', error);
-      setIsConfirming(false);
+    const result = await createSeller({
+      first_name: sellerData.firstName,
+      last_name: sellerData.lastName,
+      phone: sellerData.phone,
+      ...(numberAssignment
+        ? {
+            quantity: numberAssignment.quantity,
+            auto_assign: numberAssignment.autoAssign,
+            from_number: numberAssignment.autoAssign
+              ? undefined
+              : parseInt(numberAssignment.fromNumber, 10),
+            to_number: numberAssignment.autoAssign
+              ? undefined
+              : parseInt(numberAssignment.toNumber, 10),
+          }
+        : {}),
+    });
+
+    setIsConfirming(false);
+
+    if (result.error) {
+      console.error('Error creating seller:', result.error);
+      return;
     }
+
+    setShowSuccess(true);
   };
 
   const handleAddAnother = () => {
