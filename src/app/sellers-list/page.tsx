@@ -6,16 +6,44 @@ import { Seller, Event, StatusFilter } from '@/types/models';
 import { STATUS_OPTIONS, SNACKBAR_DURATION } from '@/constants';
 import { validateName, validatePhone } from '@/utils/validation';
 import { useSnackbar } from '@/hooks/useSnackbar';
-import { MOCK_SELLERS, MOCK_EVENTS } from '@/mocks/data';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import CustomDropdown from '@/components/CustomDropdown';
 import styles from './SellersList.module.css';
+import { listSellers, updateSeller, toggleSellerStatus, assignSellersToEvent, type SellerWithStats } from '@/actions/sellers';
+import { listCampaigns, type CampaignWithStats } from '@/actions/campaigns';
+
+function toFrontendSeller(s: SellerWithStats): Seller {
+  return {
+    id: s.id,
+    firstName: s.first_name,
+    lastName: s.last_name,
+    phone: s.phone ?? '',
+    email: s.email ?? '',
+    status: s.status,
+    eventsAssigned: s.events_assigned,
+    assignedEvents: s.assigned_campaign_ids,
+    totalSold: s.total_sold,
+    lastActivity: s.updated_at,
+  };
+}
+
+function toFrontendEvent(c: CampaignWithStats): Event {
+  return {
+    id: c.id,
+    name: c.name,
+    type: c.type,
+    status: c.status as Event['status'],
+    endDate: c.end_date ?? '',
+    totalNumbers: c.total_numbers ?? 0,
+    soldNumbers: c.sold_numbers,
+  };
+}
 
 export default function SellersList() {
   const router = useRouter();
   // State
-  const [sellers, setSellers] = useState<Seller[]>(MOCK_SELLERS);
-  const [events, setEvents] = useState<Event[]>(MOCK_EVENTS);
+  const [sellers, setSellers] = useState<Seller[]>([]);
+  const [events, setEvents] = useState<Event[]>([]);
 
   const [selectedSellers, setSelectedSellers] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -49,6 +77,16 @@ export default function SellersList() {
   const successSnackbar = useSnackbar();
   const errorSnackbar = useSnackbar(SNACKBAR_DURATION.ERROR);
   const isDesktop = useMediaQuery('(min-width: 768px)');
+
+  // Load real data on mount
+  useEffect(() => {
+    listSellers().then(res => {
+      if (res.data) setSellers(res.data.map(toFrontendSeller));
+    });
+    listCampaigns().then(res => {
+      if (res.data) setEvents(res.data.map(toFrontendEvent));
+    });
+  }, []);
 
   // Computed values
   const activeEvents = useMemo(
@@ -121,16 +159,20 @@ export default function SellersList() {
     setShowEventSelector(!showEventSelector);
   };
 
-  const handleToggleSellerStatus = (sellerId: string) => {
+  const handleToggleSellerStatus = async (sellerId: string) => {
+    const result = await toggleSellerStatus(sellerId);
+    if (result.error || !result.data) {
+      errorSnackbar.showSnackbar();
+      return;
+    }
+    const updated = result.data;
     setSellers(prevSellers =>
       prevSellers.map(seller => {
         if (seller.id === sellerId) {
-          const newStatus = seller.status === 'active' ? 'inactive' : 'active';
-          // Si se desactiva, removerlo de la selección
-          if (newStatus === 'inactive' && selectedSellers.includes(sellerId)) {
+          if (updated.status === 'inactive' && selectedSellers.includes(sellerId)) {
             setSelectedSellers(prev => prev.filter(id => id !== sellerId));
           }
-          return { ...seller, status: newStatus };
+          return { ...seller, status: updated.status };
         }
         return seller;
       })
@@ -182,14 +224,22 @@ export default function SellersList() {
     }
   };
 
-  const handleAssignToEvent = useCallback((eventId: string) => {
+  const handleAssignToEvent = useCallback(async (eventId: string) => {
     if (eventId && selectedSellers.length > 0) {
+      const result = await assignSellersToEvent(selectedSellers, eventId);
+      if (result.error) {
+        errorSnackbar.showSnackbar();
+        return;
+      }
+      // Refresh sellers to pick up new assignments
+      const refreshed = await listSellers();
+      if (refreshed.data) setSellers(refreshed.data.map(toFrontendSeller));
       setSelectedSellers([]);
       setShowEventSelector(false);
       setAssignSheetOpen(false);
       successSnackbar.showSnackbar();
     }
-  }, [selectedSellers, successSnackbar]);
+  }, [selectedSellers, successSnackbar, errorSnackbar]);
 
   const handleEditSeller = (seller: Seller) => {
     setEditingSeller(seller);
@@ -214,7 +264,7 @@ export default function SellersList() {
     }
   };
 
-  const handleSaveEdit = () => {
+  const handleSaveEdit = async () => {
     const newErrors: typeof editFormErrors = {};
 
     if (!editFormData.firstName.trim()) {
@@ -230,32 +280,32 @@ export default function SellersList() {
     setEditFormErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0 && editingSeller) {
-      try {
-        // En una aplicación real, aquí iría la llamada a la API
-        // Simular un posible error del sistema (descomenta para probar)
-        // throw new Error('Error del sistema');
-
-        // Update seller data
-        setSellers(prevSellers =>
-          prevSellers.map(seller =>
-            seller.id === editingSeller.id
-              ? {
-                ...seller,
-                firstName: editFormData.firstName,
-                lastName: editFormData.lastName,
-                phone: editFormData.phone,
-              }
-              : seller
-          )
-        );
-        setIsEditModalOpen(false);
-        setEditingSeller(null);
-        successSnackbar.showSnackbar();
-      } catch (error) {
+      const result = await updateSeller(editingSeller.id, {
+        first_name: editFormData.firstName,
+        last_name: editFormData.lastName,
+        phone: editFormData.phone,
+      });
+      if (result.error || !result.data) {
         setIsEditModalOpen(false);
         setEditingSeller(null);
         errorSnackbar.showSnackbar();
+        return;
       }
+      setSellers(prevSellers =>
+        prevSellers.map(seller =>
+          seller.id === editingSeller.id
+            ? {
+              ...seller,
+              firstName: editFormData.firstName,
+              lastName: editFormData.lastName,
+              phone: editFormData.phone,
+            }
+            : seller
+        )
+      );
+      setIsEditModalOpen(false);
+      setEditingSeller(null);
+      successSnackbar.showSnackbar();
     }
   };
 
