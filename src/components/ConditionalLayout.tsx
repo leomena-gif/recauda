@@ -12,11 +12,16 @@ interface ConditionalLayoutProps {
 const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({ children }) => {
   const pathname = usePathname();
   
-  // Pages that should not show the global header and sidebar
-  const noHeaderPages: string[] = [];
-  
-  const shouldShowHeader = !noHeaderPages.includes(pathname);
-  const shouldShowSidebar = !noHeaderPages.includes(pathname);
+  // Pages and path prefixes that should not show the global header and sidebar
+  const noHeaderPages = ['/login', '/create-account'];
+  const noHeaderPrefixes = ['/seller/', '/auth/'];
+
+  const isNoHeaderPage =
+    noHeaderPages.includes(pathname) ||
+    noHeaderPrefixes.some(prefix => pathname.startsWith(prefix));
+
+  const shouldShowHeader = !isNoHeaderPage;
+  const shouldShowSidebar = !isNoHeaderPage;
 
   if (!shouldShowHeader && !shouldShowSidebar) {
     return <>{children}</>;
