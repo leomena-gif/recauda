@@ -1,74 +1,131 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, useCallback, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './EventDetail.module.css';
 import AssignNumbersModal from './AssignNumbersModal';
+import { getSellerStatsForCampaign, type SellerStat, type CampaignWithStats } from '@/actions/campaigns';
+import { markCollected } from '@/actions/sales';
 
-export default function EventDetail() {
+type VendorRow = {
+  id: string;
+  name: string;
+  sold: number;
+  total: number;
+  amount: number;
+  percentage: number;
+  item_ids: string[];
+};
+
+const STATUS_LABELS: Record<string, string> = {
+  active: 'ACTIVO',
+  completed: 'FINALIZADO',
+  cancelled: 'CANCELADO',
+  draft: 'BORRADOR',
+};
+
+function toCollectedRow(stat: SellerStat): VendorRow {
+  return {
+    id: stat.seller_id,
+    name: stat.seller_name,
+    sold: stat.collected,
+    total: stat.assigned,
+    amount: stat.amount_collected,
+    percentage: stat.assigned > 0 ? Math.round((stat.collected / stat.assigned) * 100) : 0,
+    item_ids: [],
+  };
+}
+
+function toPendingRow(stat: SellerStat): VendorRow {
+  return {
+    id: stat.seller_id,
+    name: stat.seller_name,
+    sold: stat.sold,
+    total: stat.assigned,
+    amount: stat.amount_pending,
+    percentage: stat.assigned > 0 ? Math.round((stat.sold / stat.assigned) * 100) : 0,
+    item_ids: stat.pending_item_ids,
+  };
+}
+
+function EventDetailInner() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const campaignId = searchParams.get('id');
+
   const [activeTab, setActiveTab] = useState<'collected' | 'pending'>('collected');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedVendors, setSelectedVendors] = useState<number[]>([]);
-  const [selectedCollectedVendors, setSelectedCollectedVendors] = useState<number[]>([]);
-  const [openMenuId, setOpenMenuId] = useState<number | null>(null);
+  const [selectedVendors, setSelectedVendors] = useState<string[]>([]);
+  const [selectedCollectedVendors, setSelectedCollectedVendors] = useState<string[]>([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isMarkingPaid, setIsMarkingPaid] = useState(false);
 
-  // Dynamic data management
-  const [collectedData, setCollectedData] = useState([
-    { id: 101, name: 'Jacob Jones', sold: 10, total: 10, amount: 8000, percentage: 100 },
-    { id: 102, name: 'Jerome Bell', sold: 10, total: 10, amount: 8000, percentage: 100 },
-    { id: 103, name: 'Ronald Richards', sold: 10, total: 10, amount: 8000, percentage: 100 },
-    { id: 104, name: 'Savannah Nguyen', sold: 10, total: 10, amount: 8000, percentage: 100 },
-    { id: 105, name: 'Cameron Williamson', sold: 10, total: 10, amount: 8000, percentage: 100 },
-    { id: 106, name: 'Robert Fox', sold: 10, total: 10, amount: 8000, percentage: 100 },
-    { id: 107, name: 'Darrell Steward', sold: 10, total: 10, amount: 8000, percentage: 100 },
-  ]);
+  const [campaign, setCampaign] = useState<CampaignWithStats | null>(null);
+  const [collectedData, setCollectedData] = useState<VendorRow[]>([]);
+  const [pendingData, setPendingData] = useState<VendorRow[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  const [pendingData, setPendingData] = useState([
-    { id: 1, name: 'Nombre Apellido', sold: 5, total: 10, amount: 5000, percentage: 50 },
-    { id: 2, name: 'Nombre Apellido', sold: 3, total: 10, amount: 3000, percentage: 30 },
-    { id: 3, name: 'Nombre Apellido', sold: 6, total: 10, amount: 6000, percentage: 60 },
-  ]);
+  const loadData = useCallback(async () => {
+    if (!campaignId) {
+      setError('No se especificó un evento');
+      setLoading(false);
+      return;
+    }
+    setLoading(true);
+    const result = await getSellerStatsForCampaign(campaignId);
+    if (result.error || !result.data) {
+      setError(result.error ?? 'Error al cargar el evento');
+      setLoading(false);
+      return;
+    }
+    const { campaign: c, sellerStats } = result.data;
+    setCampaign(c);
+    setCollectedData(sellerStats.filter(s => s.collected > 0).map(toCollectedRow));
+    setPendingData(sellerStats.filter(s => s.sold > 0).map(toPendingRow));
+    setLoading(false);
+  }, [campaignId]);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const handleBackToEvents = () => {
     router.push('/');
   };
 
-  const handleSelectVendor = (vendorId: number) => {
+  const handleSelectVendor = (vendorId: string) => {
     setSelectedVendors(prev =>
-      prev.includes(vendorId)
-        ? prev.filter(id => id !== vendorId)
-        : [...prev, vendorId]
+      prev.includes(vendorId) ? prev.filter(id => id !== vendorId) : [...prev, vendorId]
     );
   };
 
-  const handleSelectCollectedVendor = (vendorId: number) => {
+  const handleSelectCollectedVendor = (vendorId: string) => {
     setSelectedCollectedVendors(prev =>
-      prev.includes(vendorId)
-        ? prev.filter(id => id !== vendorId)
-        : [...prev, vendorId]
+      prev.includes(vendorId) ? prev.filter(id => id !== vendorId) : [...prev, vendorId]
     );
   };
 
-  const handleMarkAsPaid = () => {
-    if (selectedVendors.length > 0) {
-      // Find vendors to move
-      const vendorsToMove = pendingData.filter(vendor => selectedVendors.includes(vendor.id));
+  const handleMarkAsPaid = async () => {
+    if (selectedVendors.length === 0) return;
 
-      // Add to collected data
-      setCollectedData(prev => [...prev, ...vendorsToMove]);
+    const itemIds = pendingData
+      .filter(v => selectedVendors.includes(v.id))
+      .flatMap(v => v.item_ids);
 
-      // Remove from pending data
-      setPendingData(prev => prev.filter(vendor => !selectedVendors.includes(vendor.id)));
+    if (itemIds.length === 0) return;
 
-      // Clear selection
-      setSelectedVendors([]);
+    setIsMarkingPaid(true);
+    const result = await markCollected(itemIds);
+    setIsMarkingPaid(false);
+
+    if (result.error) {
+      console.error('Error al marcar como cobrado:', result.error);
+      return;
     }
-  };
 
-  const toggleMenu = (vendorId: number) => {
-    setOpenMenuId(openMenuId === vendorId ? null : vendorId);
+    setSelectedVendors([]);
+    await loadData();
   };
 
   const handleAssignMoreNumbers = () => {
@@ -77,51 +134,61 @@ export default function EventDetail() {
     }
   };
 
-  const handleModalConfirm = (data: any) => {
-    console.log('Assigning numbers to vendors:', selectedCollectedVendors, data);
-
-    // Find vendors to move
-    const vendorsToMove = collectedData.filter(v => selectedCollectedVendors.includes(v.id));
-
-    // Update vendors with new number assignment
-    const updatedVendors = vendorsToMove.map(vendor => ({
-      ...vendor,
-      total: vendor.total + data.quantity, // Add new numbers to total
-      sold: 0, // Reset sold count for new numbers
-      amount: 0, // Reset amount for new numbers
-      percentage: 0 // Reset percentage
-    }));
-
-    // Remove from collected data
-    setCollectedData(prev => prev.filter(v => !selectedCollectedVendors.includes(v.id)));
-
-    // Add to pending data
-    setPendingData(prev => [...prev, ...updatedVendors]);
-
-    // Close modal and clear selection
+  const handleModalConfirm = async () => {
     setIsModalOpen(false);
     setSelectedCollectedVendors([]);
-
-    // Switch to pending tab to show the moved vendors
-    setActiveTab('pending');
+    await loadData();
   };
 
   const handleModalClose = () => {
     setIsModalOpen(false);
   };
 
-
-
   const currentData = activeTab === 'collected' ? collectedData : pendingData;
   const filteredData = currentData.filter(item =>
     item.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // Calculate totals
   const totalSold = filteredData.reduce((sum, item) => sum + item.sold, 0);
   const totalNumbers = filteredData.reduce((sum, item) => sum + item.total, 0);
   const totalAmount = filteredData.reduce((sum, item) => sum + item.amount, 0);
   const totalPercentage = totalNumbers > 0 ? Math.round((totalSold / totalNumbers) * 100) : 0;
+
+  // Campaign card derived values
+  const progress = campaign && campaign.total_numbers && campaign.total_numbers > 0
+    ? Math.round((campaign.sold_numbers / campaign.total_numbers) * 100)
+    : 0;
+  const goal = campaign && campaign.total_numbers && campaign.number_value
+    ? (campaign.total_numbers * campaign.number_value).toLocaleString('es-AR')
+    : null;
+  const formattedDate = campaign?.end_date
+    ? new Date(campaign.end_date + 'T12:00:00').toLocaleDateString('es-AR', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric',
+      })
+    : null;
+  const statusLabel = campaign ? (STATUS_LABELS[campaign.status] ?? campaign.status.toUpperCase()) : '';
+
+  if (loading) {
+    return (
+      <div className={`pageContainer ${styles.eventDetailContainer}`}>
+        <div className={`contentContainer ${styles.eventDetailContent}`}>
+          <p style={{ padding: 'var(--space-lg)', color: 'var(--text-secondary)' }}>Cargando...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className={`pageContainer ${styles.eventDetailContainer}`}>
+        <div className={`contentContainer ${styles.eventDetailContent}`}>
+          <p style={{ padding: 'var(--space-lg)', color: 'var(--color-error)' }}>{error}</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -142,34 +209,38 @@ export default function EventDetail() {
             <div className={styles.eventCardHeader}>
               <div className={styles.statusContainer}>
                 <span className={styles.statusDot}></span>
-                <span className={styles.statusText}>ACTIVO</span>
+                <span className={styles.statusText}>{statusLabel}</span>
               </div>
-              <div className={styles.dateInfo}>
-                Finaliza el 20 de diciembre de 2025
-              </div>
+              {formattedDate && (
+                <div className={styles.dateInfo}>
+                  Finaliza el {formattedDate}
+                </div>
+              )}
             </div>
 
-            <h2 className={styles.eventTitle}>
-              Rifa día del niño del Grupo Scout General Deheza
-            </h2>
+            <h2 className={styles.eventTitle}>{campaign?.name}</h2>
 
             {/* Progress Bar */}
             <div className={styles.progressContainer}>
               <div className={styles.progressBar}>
-                <div className={styles.progressFill} style={{ width: '80%' }}>
-                  <span className={styles.progressText}>80%</span>
+                <div className={styles.progressFill} style={{ width: `${progress}%` }}>
+                  <span className={styles.progressText}>{progress}%</span>
                 </div>
               </div>
             </div>
 
             {/* Bottom Details */}
             <div className={styles.eventDetailsRow}>
-              <span className={styles.detailLeft}>Objetivo $300.000</span>
-              <span className={styles.detailRight}>300 números de $1.000</span>
+              {goal && <span className={styles.detailLeft}>Objetivo ${goal}</span>}
+              {campaign?.total_numbers && campaign?.number_value && (
+                <span className={styles.detailRight}>
+                  {campaign.total_numbers} números de ${campaign.number_value.toLocaleString('es-AR')}
+                </span>
+              )}
             </div>
           </div>
 
-          {/* Table Container - Contains tabs, search, sales list and footer */}
+          {/* Table Container */}
           <div className={styles.tableContainer}>
             {/* Tabs */}
             <div className={styles.tabsContainer}>
@@ -187,7 +258,7 @@ export default function EventDetail() {
               </button>
             </div>
 
-            {/* Search Bar and Mark as Paid Button */}
+            {/* Search Bar and Action Button */}
             <div className={styles.searchContainer}>
               <div className={styles.searchBar}>
                 <svg className={styles.searchIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -202,48 +273,40 @@ export default function EventDetail() {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
               </div>
-              {/* Desktop: Mark as Paid Button - Only for pending tab */}
               {activeTab === 'pending' && selectedVendors.length > 0 && (
                 <button
                   className={styles.markAsPaidButton}
                   onClick={handleMarkAsPaid}
+                  disabled={isMarkingPaid}
                 >
-                  Cobrado
+                  {isMarkingPaid ? 'Guardando...' : 'Cobrado'}
                 </button>
               )}
-              {/* Desktop: Assign More Numbers Button - Only for collected tab */}
               {activeTab === 'collected' && selectedCollectedVendors.length > 0 && (
                 <button
                   className={styles.markAsPaidButton}
-                  onClick={() => handleAssignMoreNumbers()}
+                  onClick={handleAssignMoreNumbers}
                 >
                   Asignar más números
                 </button>
               )}
             </div>
 
-            {/* Desktop: Table View with checkboxes (pending only) */}
+            {/* Desktop: Table View */}
             <div className={styles.tableView}>
-              {filteredData.map((item: any, index) => {
-                const isSelected = item.id && (activeTab === 'pending'
+              {filteredData.map((item, index) => {
+                const isSelected = activeTab === 'pending'
                   ? selectedVendors.includes(item.id)
-                  : selectedCollectedVendors.includes(item.id));
+                  : selectedCollectedVendors.includes(item.id);
                 return (
-                  <div
-                    key={item.id || index}
-                    className={`${styles.salesItem} ${styles.tableRow}`}
-                  >
-                    {/* Checkbox for both tabs */}
+                  <div key={item.id || index} className={`${styles.salesItem} ${styles.tableRow}`}>
                     <div className={styles.checkboxWrapper}>
                       <input
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => {
-                          if (activeTab === 'pending' && item.id) {
-                            handleSelectVendor(item.id);
-                          } else if (activeTab === 'collected' && item.id) {
-                            handleSelectCollectedVendor(item.id);
-                          }
+                          if (activeTab === 'pending') handleSelectVendor(item.id);
+                          else handleSelectCollectedVendor(item.id);
                         }}
                         className={styles.checkbox}
                       />
@@ -255,7 +318,7 @@ export default function EventDetail() {
                       </div>
                     </div>
                     <div className={styles.salesItemRight}>
-                      <div className={styles.salesAmount}>${item.amount.toLocaleString()}</div>
+                      <div className={styles.salesAmount}>${item.amount.toLocaleString('es-AR')}</div>
                       <div className={styles.salesPercentage}>{item.percentage}%</div>
                     </div>
                   </div>
@@ -263,25 +326,21 @@ export default function EventDetail() {
               })}
             </div>
 
-            {/* Mobile: List View with checkboxes */}
+            {/* Mobile: List View */}
             <div className={styles.salesList}>
-              {filteredData.map((item: any, index) => {
-                const isSelected = item.id && (activeTab === 'pending'
+              {filteredData.map((item, index) => {
+                const isSelected = activeTab === 'pending'
                   ? selectedVendors.includes(item.id)
-                  : selectedCollectedVendors.includes(item.id));
+                  : selectedCollectedVendors.includes(item.id);
                 return (
                   <div key={item.id || index} className={styles.salesItem}>
-                    {/* Checkbox for mobile */}
                     <div className={styles.checkboxWrapper}>
                       <input
                         type="checkbox"
                         checked={isSelected}
                         onChange={() => {
-                          if (activeTab === 'pending' && item.id) {
-                            handleSelectVendor(item.id);
-                          } else if (activeTab === 'collected' && item.id) {
-                            handleSelectCollectedVendor(item.id);
-                          }
+                          if (activeTab === 'pending') handleSelectVendor(item.id);
+                          else handleSelectCollectedVendor(item.id);
                         }}
                         className={styles.checkbox}
                         aria-label={`Seleccionar ${item.name}`}
@@ -294,13 +353,14 @@ export default function EventDetail() {
                       </div>
                     </div>
                     <div className={styles.salesItemRight}>
-                      <div className={styles.salesAmount}>${item.amount.toLocaleString()}</div>
+                      <div className={styles.salesAmount}>${item.amount.toLocaleString('es-AR')}</div>
                       <div className={styles.salesPercentage}>{item.percentage}%</div>
                     </div>
                   </div>
                 );
               })}
             </div>
+
             {/* Table Footer */}
             <div className={styles.footerContainer}>
               <div className={styles.footerContent}>
@@ -313,7 +373,7 @@ export default function EventDetail() {
                   </div>
                 </div>
                 <div className={styles.footerRight}>
-                  <div className={styles.footerAmount}>${totalAmount.toLocaleString()}</div>
+                  <div className={styles.footerAmount}>${totalAmount.toLocaleString('es-AR')}</div>
                   <div className={styles.footerPercentage}>{totalPercentage}%</div>
                 </div>
               </div>
@@ -336,8 +396,9 @@ export default function EventDetail() {
             type="button"
             className={styles.assignStickyPrimary}
             onClick={handleMarkAsPaid}
+            disabled={isMarkingPaid}
           >
-            Cobrado
+            {isMarkingPaid ? 'Guardando...' : 'Cobrado'}
           </button>
         </div>
       )}
@@ -373,5 +434,13 @@ export default function EventDetail() {
         onConfirm={handleModalConfirm}
       />
     </>
+  );
+}
+
+export default function EventDetail() {
+  return (
+    <Suspense fallback={null}>
+      <EventDetailInner />
+    </Suspense>
   );
 }
