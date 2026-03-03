@@ -53,71 +53,73 @@
   transform: translateX(-2px);
 }
 
-/* Event Card - Dark Mode Mobile First */
-.eventCard {
-  background-color: var(--color-bg-secondary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
-  margin-bottom: var(--space-md);
+/* Page Header — open layout, no card */
+.pageHeader {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  border: 1px solid var(--color-border-light);
-  width: 100%;
-  box-sizing: border-box;
+  gap: var(--space-lg);
+  margin-bottom: var(--space-xl);
 }
 
-.eventCardHeader {
+/* Meta row: status + date */
+.metaRow {
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: var(--space-xs);
+  gap: var(--space-md);
 }
 
-.statusContainer {
-  display: flex;
+.statusBadge {
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(52, 199, 89, 0.1);
+  border-radius: var(--radius-full);
 }
 
 .statusDot {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
   border-radius: 50%;
   background-color: var(--color-success);
   flex-shrink: 0;
 }
 
 .statusText {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-success);
+  letter-spacing: 0.5px;
 }
 
 .dateInfo {
   font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  text-align: right;
+  color: var(--color-text-tertiary);
 }
 
+/* H1 */
 .eventTitle {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xl);
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-  line-height: 1.4;
+  line-height: 1.3;
   margin: 0;
+  letter-spacing: -0.3px;
 }
 
-/* Progress Container */
-.progressContainer {
-  margin: var(--space-sm) 0;
+/* Progress bar */
+.progressSection {
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
 }
 
-.progressBar {
+.progressTrack {
+  flex: 1;
   background-color: var(--color-bg-tertiary);
   border-radius: var(--radius-full);
-  height: 24px;
-  position: relative;
+  height: 8px;
   overflow: hidden;
 }
 
@@ -125,17 +127,52 @@
   background-color: var(--color-primary);
   border-radius: var(--radius-full);
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: width var(--transition-slow);
 }
 
-.progressText {
-  color: var(--color-bg-primary);
-  font-size: var(--font-size-xs);
+.progressPct {
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
+  color: var(--color-primary);
   white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 36px;
+  text-align: right;
+}
+
+/* Stats row */
+.statsRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-lg);
+}
+
+.statItem {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.statValue {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1.1;
+}
+
+.statLabel {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.statDivider {
+  width: 1px;
+  height: 32px;
+  background: var(--color-border-light);
+  flex-shrink: 0;
 }
 
 .eventRow:hover .eventMenuDropdown {
@@ -211,6 +248,22 @@
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {
+
+  /* Override global H1 hide rule — needs higher specificity than .mainContent h1 (0,1,1) */
+  .pageHeader .eventTitle {
+    display: block !important;
+  }
+
+  /* Stack stats vertically on small screens */
+  .statsRow {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-md);
+  }
+
+  .statDivider {
+    display: none;
+  }
 
   /* Hide desktop inline buttons on mobile */
   .markAsPaidButton,
@@ -567,7 +620,7 @@
 
   /* Asegurar que todos los elementos respeten el ancho del contenedor */
   .navigationContainer,
-  .eventCard,
+  .pageHeader,
   .tableContainer {
     max-width: 100%;
     box-sizing: border-box;
@@ -603,12 +656,25 @@
     min-width: 200px;
   }
 
-  .eventCard {
-    padding: var(--space-lg);
+  .eventTitle {
+    font-size: var(--font-size-3xl);
+    letter-spacing: -0.5px;
   }
 
-  .eventTitle {
-    font-size: var(--font-size-xl);
+  .statsRow {
+    gap: var(--space-xl);
+  }
+
+  .statValue {
+    font-size: var(--font-size-2xl);
+  }
+
+  .statLabel {
+    font-size: var(--font-size-xs);
+  }
+
+  .statDivider {
+    height: 40px;
   }
 
   /* Hide original salesList on desktop - use tableView instead */

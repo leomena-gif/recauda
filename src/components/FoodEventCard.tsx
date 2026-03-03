@@ -8,7 +8,7 @@ interface FoodEventCardProps {
     id?: string;
     title?: string;
     endDate?: string;
-    dishes?: Array<{ name: string; price: number; sold: number; total: number }>;
+    dishes?: Array<{ name: string; price: number; sold?: number; total?: number }>;
 }
 
 const FoodEventCard: React.FC<FoodEventCardProps> = ({
@@ -27,9 +27,10 @@ const FoodEventCard: React.FC<FoodEventCardProps> = ({
     };
 
     // Calculate totals
-    const totalRevenue = dishes.reduce((sum, dish) => sum + (dish.sold * dish.price), 0);
-    const totalGoal = dishes.reduce((sum, dish) => sum + (dish.total * dish.price), 0);
+    const totalRevenue = dishes.reduce((sum, dish) => sum + ((dish.sold ?? 0) * dish.price), 0);
+    const totalGoal = dishes.reduce((sum, dish) => sum + ((dish.total ?? 0) * dish.price), 0);
     const overallProgress = totalGoal > 0 ? Math.round((totalRevenue / totalGoal) * 100) : 0;
+
 
     return (
         <div className={styles.card} onClick={handleCardClick}>
@@ -48,7 +49,9 @@ const FoodEventCard: React.FC<FoodEventCardProps> = ({
             {/* Dishes List */}
             <div className={styles.dishesContainer}>
                 {dishes.map((dish, index) => {
-                    const dishProgress = dish.total > 0 ? Math.round((dish.sold / dish.total) * 100) : 0;
+                    const dishSold = dish.sold ?? 0;
+                    const dishTotal = dish.total ?? 0;
+                    const dishProgress = dishTotal > 0 ? Math.round((dishSold / dishTotal) * 100) : 0;
                     return (
                         <div key={index} className={styles.dishItem}>
                             <div className={styles.dishHeader}>
@@ -62,7 +65,7 @@ const FoodEventCard: React.FC<FoodEventCardProps> = ({
                                     </div>
                                 </div>
                                 <span className={styles.dishStats}>
-                                    {dish.sold}/{dish.total} vendidos
+                                    {dishSold}/{dishTotal} vendidos
                                 </span>
                             </div>
                         </div>

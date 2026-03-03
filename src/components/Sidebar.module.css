@@ -7,7 +7,7 @@
   /* Collapsed width - only icons */
   height: 100vh;
   background: var(--color-bg-secondary);
-  border-right: 1px solid var(--color-border-light);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
   display: flex;
   flex-direction: column;
   z-index: 1000;
@@ -49,7 +49,7 @@
 /* Sidebar Header */
 .sidebarHeader {
   padding: 32px 20px;
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   background: var(--color-bg-secondary);
   min-height: 88px;
   /* Fixed height to prevent jumping */
@@ -114,7 +114,7 @@
   width: 100%;
   background: transparent;
   border: none;
-  border-radius: 0;
+  border-radius: var(--radius-lg);
   padding: 10px 16px;
   display: flex;
   align-items: center;
@@ -122,9 +122,9 @@
   cursor: pointer;
   transition: all var(--transition-base);
   text-align: left;
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 500;
   position: relative;
   justify-content: flex-start;
 }
@@ -134,9 +134,9 @@
 }
 
 .sidebarButton:hover {
-  background: transparent;
+  background: rgba(255, 255, 255, 0.06);
   color: var(--color-text-primary);
-  opacity: 0.7;
+  opacity: 1;
 }
 
 .sidebarButton:hover::before {
@@ -144,9 +144,10 @@
 }
 
 .sidebarButtonActive {
-  background: transparent;
+  background: rgba(90, 200, 250, 0.10);
   color: var(--color-primary);
   border: none;
+  font-weight: 600;
 }
 
 .sidebarButtonActive::before {
@@ -154,9 +155,9 @@
 }
 
 .sidebarButtonActive:hover {
-  background: transparent;
+  background: rgba(90, 200, 250, 0.14);
   color: var(--color-primary);
-  opacity: 0.8;
+  opacity: 1;
 }
 
 .sidebarIcon {

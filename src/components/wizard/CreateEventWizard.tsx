@@ -36,7 +36,7 @@ const CreateEventWizard: React.FC = () => {
   const [eventData, setEventData] = useState<EventData | null>(null);
   const [showSuccess, setShowSuccess] = useState(false);
   const [isCreating, setIsCreating] = useState(false);
-  
+
   // Refs to trigger step validation
   const eventTypeStepRef = React.useRef<EventTypeStepRef>(null);
   const eventDataStepRef = React.useRef<EventDataStepRef>(null);
@@ -48,7 +48,7 @@ const CreateEventWizard: React.FC = () => {
       if (prev) {
         return { ...prev, ...data };
       }
-      
+
       // Initialize based on event type
       if (data.type === 'food_sale') {
         return {
@@ -102,18 +102,18 @@ const CreateEventWizard: React.FC = () => {
 
   const handleCreateEvent = async () => {
     setIsCreating(true);
-    
+
     try {
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1500));
-      
+
       // TODO: Replace with API call to save event data
       void eventData;
 
       // Show success screen
       setIsCreating(false);
       setShowSuccess(true);
-      
+
     } catch (error) {
       console.error('Error creating event:', error);
       setIsCreating(false);
@@ -202,10 +202,10 @@ const CreateEventWizard: React.FC = () => {
               </button>
             </div>
           )}
-          
+
           {/* Page Title */}
           <h1 className={styles.pageTitle}>Crear evento</h1>
-          
+
           <ProgressIndicator currentStep={currentStep} totalSteps={totalSteps} />
           {renderCurrentStep()}
           <ActionButtons

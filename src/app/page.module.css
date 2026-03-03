@@ -54,18 +54,19 @@
   align-items: center;
   justify-content: center;
   gap: var(--space-xs);
-  padding: 8px 16px;
+  padding: 8px 18px;
   background: transparent;
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: var(--radius-full);
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   cursor: pointer;
   transition: all var(--transition-base);
   white-space: nowrap;
   position: relative;
   flex-shrink: 0;
+  letter-spacing: 0.1px;
 }
 
 .pillText {
@@ -79,12 +80,12 @@
 }
 
 .pill:hover {
-  border-color: var(--color-text-primary);
-  opacity: 0.8;
+  border-color: rgba(255, 255, 255, 0.28);
+  color: var(--color-text-primary);
 }
 
 .pill:active {
-  transform: scale(0.98);
+  transform: scale(0.97);
 }
 
 .pillActive {
@@ -92,10 +93,11 @@
   border-color: var(--color-white);
   color: var(--color-bg-primary);
   font-weight: var(--font-weight-semibold);
+  letter-spacing: 0px;
 }
 
 .pillActive:hover {
-  opacity: 0.95;
+  opacity: 0.92;
 }
 
 /* Bottom Button Container */
@@ -106,29 +108,36 @@
   right: 0;
   width: 100%;
   max-width: 100vw;
-  background-color: var(--color-bg-primary);
-  border-top: 1px solid var(--color-border-light);
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.98) 70%, rgba(0, 0, 0, 0) 100%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding: var(--space-md);
+  padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
   z-index: 100;
   box-sizing: border-box;
 }
 
 .registerSaleButton {
-  background-color: #E5E5EA;
+  background-color: var(--color-white);
   color: var(--color-bg-primary);
   border: none;
   border-radius: var(--radius-xl);
   font-weight: var(--font-weight-semibold);
   padding: var(--space-md) var(--space-lg);
   font-size: var(--font-size-base);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
 .registerSaleButton:hover {
-  background-color: #D1D1D6;
+  background-color: var(--color-gray-900);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
 .registerSaleButton:active {
   transform: scale(0.98);
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Mínimo 360px: evitar scroll horizontal */
@@ -286,19 +295,21 @@
   width: 100%;
   min-height: 48px;
   margin-top: var(--space-sm);
-  background: #E5E5EA;
+  background: var(--color-white);
   color: var(--color-bg-primary);
   border: none;
   border-radius: var(--radius-xl);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
-  transition: background-color var(--transition-base), transform var(--transition-base);
+  transition: all var(--transition-base);
   -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .registerSaleSubmit:hover {
-  background: #D1D1D6;
+  background: var(--color-gray-900);
+  transform: translateY(-1px);
 }
 
 .registerSaleSubmit:active {
@@ -306,8 +317,9 @@
 }
 
 .registerSaleSubmit:disabled {
-  opacity: 0.5;
+  opacity: 0.45;
   cursor: not-allowed;
+  transform: none;
 }
 
 /* Mobile Wizard: Event Selection List */
@@ -326,7 +338,7 @@
   width: 100%;
   padding: var(--space-md);
   background: var(--color-bg-tertiary);
-  border: 2px solid var(--color-border-light);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--transition-base);
@@ -335,7 +347,8 @@
 }
 
 .registerSaleEventCard:hover {
-  border-color: var(--color-border);
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .registerSaleEventCardSelected {
@@ -443,7 +456,8 @@
   max-width: 600px;
   max-height: 90vh;
   overflow-y: auto;
-  border: 1px solid var(--color-border-light);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 24px 64px rgba(0, 0, 0, 0.6);
 }
 
 .registerSaleModalHeader {
@@ -608,19 +622,21 @@
 }
 
 .registerSaleModalSubmit {
-  background: #E5E5EA;
+  background: var(--color-white);
   color: var(--color-bg-primary);
   border: none;
-  border-radius: var(--radius-md);
+  border-radius: var(--radius-lg);
   padding: 14px var(--space-xl);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all var(--transition-base);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .registerSaleModalSubmit:hover {
-  background: #D1D1D6;
+  background: var(--color-gray-900);
+  transform: translateY(-1px);
 }
 
 .registerSaleModalSubmit:active {
@@ -648,7 +664,7 @@
   width: 100%;
   padding: var(--space-lg);
   background: var(--color-bg-tertiary);
-  border: 2px solid var(--color-border-light);
+  border: 1.5px solid rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-lg);
   cursor: pointer;
   transition: all var(--transition-base);
@@ -656,8 +672,8 @@
 }
 
 .registerSaleDesktopEventCard:hover {
-  border-color: var(--color-border);
-  background: var(--color-bg-secondary);
+  border-color: rgba(255, 255, 255, 0.18);
+  background: rgba(255, 255, 255, 0.04);
 }
 
 .registerSaleDesktopEventCardSelected {

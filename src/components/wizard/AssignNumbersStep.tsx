@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useImperativeHandle, forwardRef } from 'react';
+import React, { useState, useImperativeHandle, forwardRef, useRef } from 'react';
 import styles from './AssignNumbersStep.module.css';
 
 interface NumberAssignment {
@@ -32,30 +32,54 @@ const AssignNumbersStep = forwardRef<AssignNumbersStepRef, AssignNumbersStepProp
 
   const [errors, setErrors] = useState<Partial<NumberAssignment>>({});
 
+  // Refs for long-press continuous increment/decrement
+  const pressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const pressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
+  const isLongPressRef = useRef(false);
+
+  // Functional update avoids stale closure inside setInterval
   const handleQuantityChange = (delta: number) => {
-    const newQuantity = Math.max(1, formData.quantity + delta);
-    setFormData(prev => ({ ...prev, quantity: newQuantity }));
+    setFormData(prev => ({ ...prev, quantity: Math.max(1, prev.quantity + delta) }));
+  };
+
+  // Start long-press: after 400ms hold, fire every 80ms
+  const startPress = (delta: number) => {
+    isLongPressRef.current = false;
+    pressTimerRef.current = setTimeout(() => {
+      isLongPressRef.current = true;
+      pressIntervalRef.current = setInterval(() => handleQuantityChange(delta), 80);
+    }, 400);
+  };
+
+  const stopPress = () => {
+    if (pressTimerRef.current) clearTimeout(pressTimerRef.current);
+    if (pressIntervalRef.current) clearInterval(pressIntervalRef.current);
+  };
+
+  // Keyboard: ↑/+ increment, ↓/- decrement
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowUp' || e.key === '+') {
+      e.preventDefault();
+      handleQuantityChange(1);
+    } else if (e.key === 'ArrowDown' || e.key === '-') {
+      e.preventDefault();
+      handleQuantityChange(-1);
+    }
   };
 
   const handleQuantityInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
-    
-    // Permitir campo vacío temporalmente mientras el usuario escribe
     if (value === '') {
       setFormData(prev => ({ ...prev, quantity: 0 }));
       return;
     }
-    
     const numValue = parseInt(value, 10);
-    
-    // Solo actualizar si es un número válido y mayor a 0
     if (!isNaN(numValue) && numValue >= 1) {
       setFormData(prev => ({ ...prev, quantity: numValue }));
     }
   };
 
   const handleQuantityBlur = () => {
-    // Si el campo está vacío o es 0, establecer el mínimo valor (1)
     if (formData.quantity <= 0) {
       setFormData(prev => ({ ...prev, quantity: 1 }));
     }
@@ -64,7 +88,6 @@ const AssignNumbersStep = forwardRef<AssignNumbersStepRef, AssignNumbersStepProp
   const handleInputChange = (field: keyof NumberAssignment) => (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = e.target.value;
     setFormData(prev => ({ ...prev, [field]: value }));
-    
     if (errors[field]) {
       setErrors(prev => ({ ...prev, [field]: undefined }));
     }
@@ -100,30 +123,44 @@ const AssignNumbersStep = forwardRef<AssignNumbersStepRef, AssignNumbersStepProp
   return (
     <div className={styles.container}>
       <h1 className={styles.title}>Asignar números</h1>
-      
+
       <div className={styles.formCard}>
         <div className={styles.fieldGroup}>
           <label className={styles.label}>Cantidad</label>
           <div className={styles.quantitySelector}>
-            <button 
+            <button
               className={styles.quantityButton}
-              onClick={() => handleQuantityChange(-1)}
+              onMouseDown={() => startPress(-1)}
+              onMouseUp={stopPress}
+              onMouseLeave={stopPress}
+              onTouchStart={(e) => { e.preventDefault(); startPress(-1); }}
+              onTouchEnd={stopPress}
+              onClick={() => { if (!isLongPressRef.current) handleQuantityChange(-1); }}
               disabled={formData.quantity <= 1}
+              aria-label="Reducir cantidad"
             >
-              -
+              −
             </button>
             <input
               type="number"
               className={styles.quantityInput}
               value={formData.quantity || ''}
               onChange={handleQuantityInputChange}
+              onKeyDown={handleKeyDown}
               onBlur={handleQuantityBlur}
               min="1"
               placeholder="1"
+              aria-label="Cantidad"
             />
-            <button 
+            <button
               className={styles.quantityButton}
-              onClick={() => handleQuantityChange(1)}
+              onMouseDown={() => startPress(1)}
+              onMouseUp={stopPress}
+              onMouseLeave={stopPress}
+              onTouchStart={(e) => { e.preventDefault(); startPress(1); }}
+              onTouchEnd={stopPress}
+              onClick={() => { if (!isLongPressRef.current) handleQuantityChange(1); }}
+              aria-label="Aumentar cantidad"
             >
               +
             </button>

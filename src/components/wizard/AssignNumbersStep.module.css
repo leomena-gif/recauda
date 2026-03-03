@@ -64,21 +64,31 @@
   align-items: center;
   gap: 0;
   width: 100%;
+  border-radius: var(--radius-md);
+  transition: box-shadow 0.2s ease;
+}
+
+.quantitySelector:focus-within {
+  box-shadow: 0 0 0 2px var(--color-primary);
 }
 
 .quantityButton {
-  width: 48px;
+  width: 52px;
   height: 48px;
   border: 1px solid var(--color-border);
   background: var(--color-bg-tertiary);
   color: var(--color-primary);
-  font-size: 20px;
-  font-weight: 500;
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background-color 0.15s ease, transform 0.1s ease;
   display: flex;
   align-items: center;
   justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  flex-shrink: 0;
 }
 
 .quantityButton:first-child {
@@ -92,12 +102,24 @@
 }
 
 .quantityButton:hover:not(:disabled) {
-  background: var(--color-primary-light);
+  background: var(--color-bg-secondary);
+}
+
+.quantityButton:active:not(:disabled) {
+  background: rgba(0, 122, 255, 0.15);
+  transform: scale(0.92);
+}
+
+.quantityButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+  z-index: 1;
 }
 
 .quantityButton:disabled {
   color: var(--color-text-tertiary);
   cursor: not-allowed;
+  opacity: 0.4;
 }
 
 .quantityInput {
@@ -108,11 +130,12 @@
   border-right: none;
   background: var(--color-bg-tertiary);
   text-align: center;
-  font-size: 16px;
-  font-weight: 500;
+  font-size: 18px;
+  font-weight: 600;
   color: var(--color-text-primary);
   outline: none;
   transition: background-color 0.2s ease;
+  min-width: 0;
 }
 
 .quantityInput:focus {

@@ -14,11 +14,12 @@
 
 .confirmationCard {
   background: var(--color-bg-secondary);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 24px;
   width: 100%;
   max-width: 100%;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
 
 .detailRow {
@@ -27,7 +28,7 @@
   align-items: center;
   margin-bottom: 16px;
   padding: 12px 0;
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .detailRow:last-child {
@@ -74,7 +75,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid var(--color-border-light);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .prizeItem:last-child {
@@ -100,44 +101,44 @@
     min-height: 300px;
     padding: 16px 0;
   }
-  
+
   .title {
     font-size: 24px;
     margin-bottom: 20px;
   }
-  
+
   .confirmationCard {
     padding: 24px;
   }
-  
+
   .detailRow {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
     padding: 16px 0;
   }
-  
+
   .label {
     font-size: 13px;
   }
-  
+
   .value {
     font-size: 15px;
     text-align: left;
     margin-left: 0;
   }
-  
+
   .prizeItem {
     flex-direction: column;
     align-items: flex-start;
     gap: 4px;
   }
-  
+
   .prizeValue {
     text-align: left;
     margin-left: 0;
   }
-  
+
   .sectionLabel {
     font-size: 18px;
     margin-bottom: 16px;
@@ -149,27 +150,27 @@
     font-size: 22px;
     margin-bottom: 16px;
   }
-  
+
   .confirmationCard {
     padding: 20px;
   }
-  
+
   .label {
     font-size: 12px;
   }
-  
+
   .value {
     font-size: 14px;
   }
-  
+
   .prizeNumber {
     font-size: 13px;
   }
-  
+
   .prizeValue {
     font-size: 14px;
   }
-  
+
   .sectionLabel {
     font-size: 16px;
     margin-bottom: 12px;
