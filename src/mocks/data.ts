@@ -4,6 +4,8 @@
  */
 
 import { Seller, Event, Buyer } from '@/types/models';
+import type { SaleEvent } from '@/components/wizard/RegisterSaleWizard';
+
 
 export const MOCK_SELLERS: Seller[] = [
   {
@@ -121,12 +123,12 @@ export const MOCK_EVENTS: Event[] = [
 
 // Generar compradores mock
 const generateBuyers = (): Buyer[] => {
-  const firstNames = ['Juan', 'María', 'Carlos', 'Ana', 'Luis', 'Laura', 'Pedro', 'Sofía', 'Diego', 'Carmen', 
+  const firstNames = ['Juan', 'María', 'Carlos', 'Ana', 'Luis', 'Laura', 'Pedro', 'Sofía', 'Diego', 'Carmen',
     'Roberto', 'Elena', 'Miguel', 'Patricia', 'José', 'Isabel', 'Francisco', 'Rosa', 'Antonio', 'Teresa',
     'Manuel', 'Raquel', 'Javier', 'Beatriz', 'Fernando', 'Lucía', 'Alejandro', 'Marta', 'Ricardo', 'Julia',
     'Sergio', 'Cristina', 'Pablo', 'Silvia', 'Andrés', 'Gloria', 'Daniel', 'Pilar', 'Gabriel', 'Mercedes',
     'Óscar', 'Dolores', 'Rafael', 'Amparo', 'Jorge', 'Montserrat', 'Rubén', 'Concepción', 'Álvaro', 'Josefa'];
-  
+
   const lastNames = ['Pérez', 'García', 'Rodríguez', 'López', 'Martínez', 'Sánchez', 'González', 'Fernández',
     'Díaz', 'Torres', 'Ramírez', 'Flores', 'Rivera', 'Gómez', 'Morales', 'Jiménez', 'Herrera', 'Ruiz',
     'Álvarez', 'Castillo', 'Romero', 'Vázquez', 'Núñez', 'Mendoza', 'Cruz', 'Ortiz', 'Gutiérrez', 'Chávez',
@@ -151,7 +153,7 @@ const generateBuyers = (): Buyer[] => {
     const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     const phone = `3584${String(100000 + buyerId).padStart(6, '0')}`;
     const isActive = Math.random() > 0.1; // 90% activos
-    
+
     const seller = pickSellerForEvent('1');
     buyers.push({
       id: String(buyerId),
@@ -176,7 +178,7 @@ const generateBuyers = (): Buyer[] => {
     const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     const phone = `3584${String(100000 + buyerId).padStart(6, '0')}`;
     const isActive = Math.random() > 0.1; // 90% activos
-    
+
     const seller = pickSellerForEvent('2');
     buyers.push({
       id: String(buyerId),
@@ -199,4 +201,33 @@ const generateBuyers = (): Buyer[] => {
 };
 
 export const MOCK_BUYERS: Buyer[] = generateBuyers();
+
+// ─── Home Page Events (extended with UI-specific data) ──────────────────────
+// TODO: Replace with API call. This shape combines Event data with UI props.
+
+export const MOCK_HOME_EVENTS: SaleEvent[] = [
+  {
+    id: '1',
+    status: 'active',
+    type: 'raffle',
+    name: 'Rifa día del niño del Grupo Scout General Deheza',
+    collected: 640000,
+    goal: 800000,
+    soldUnits: 640,
+    totalUnits: 800,
+  },
+  {
+    id: '2',
+    status: 'active',
+    type: 'food_sale',
+    name: 'Venta de comida - Platos especiales',
+    dishes: [
+      { name: 'Milanesa con papas', price: 2500, sold: 45, total: 100 },
+      { name: 'Empanadas (docena)', price: 3000, sold: 30, total: 80 },
+    ],
+  },
+  { id: '3', status: 'cancelled', type: 'raffle', name: 'Rifa cancelada', collected: 80000, goal: 300000, soldUnits: 80, totalUnits: 300 },
+  { id: '4', status: 'completed', type: 'raffle', name: 'Rifa completada', collected: 600000, goal: 600000, soldUnits: 600, totalUnits: 600 },
+  { id: '5', status: 'completed', type: 'raffle', name: 'Rifa completada 2', collected: 150000, goal: 200000, soldUnits: 150, totalUnits: 200 },
+];
 

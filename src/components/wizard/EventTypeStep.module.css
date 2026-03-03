@@ -21,7 +21,7 @@
 
 .optionBox {
   background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: var(--radius-xl);
   padding: 24px;
   cursor: pointer;
@@ -33,20 +33,22 @@
   min-height: 180px;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .optionBox:hover {
-  border-color: var(--color-primary);
+  border-color: rgba(90, 200, 250, 0.5);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(90, 200, 250, 0.2);
+  box-shadow: 0 8px 28px rgba(90, 200, 250, 0.18);
+  background: var(--color-bg-tertiary);
 }
 
 .optionBox.selected {
-  border-color: var(--color-primary);
-  background: linear-gradient(135deg, var(--color-primary) 0%, #007AFF 100%);
+  border-color: rgba(90, 200, 250, 0.6);
+  background: linear-gradient(135deg, rgba(90, 200, 250, 0.15) 0%, rgba(0, 122, 255, 0.15) 100%);
   color: var(--color-white);
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(90, 200, 250, 0.35);
+  box-shadow: 0 8px 28px rgba(90, 200, 250, 0.25);
 }
 
 .iconContainer {
@@ -83,7 +85,7 @@
 }
 
 .optionBox.selected .optionText {
-  color: var(--color-white);
+  color: var(--color-primary);
 }
 
 /* Responsive */
@@ -91,7 +93,7 @@
   .optionsGrid {
     gap: 24px;
   }
-  
+
   .optionBox {
     padding: 32px;
     min-height: 200px;
@@ -103,7 +105,7 @@
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .optionBox {
     min-height: 160px;
   }
@@ -114,15 +116,15 @@
     padding: 20px;
     min-height: 140px;
   }
-  
+
   .title {
     font-size: 20px;
   }
-  
+
   .optionText {
     font-size: 14px;
   }
-  
+
   .emojiIcon {
     font-size: 67px;
   }

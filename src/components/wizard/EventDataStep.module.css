@@ -14,11 +14,12 @@
 
 .formCard {
   background: var(--color-bg-secondary);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 24px;
   width: 100%;
   max-width: 100%;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
 }
 
 .fieldGroup {
@@ -52,29 +53,30 @@
 
 .label {
   display: block;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 600;
-  color: var(--color-text-primary);
+  color: var(--color-text-secondary);
   margin-bottom: 8px;
   text-align: left;
+  letter-spacing: 0.1px;
 }
 
 .input {
   width: 100%;
-  padding: 16px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  border-radius: var(--radius-lg);
   font-size: 16px;
   background-color: var(--color-bg-tertiary);
   color: var(--color-text-primary);
-  transition: border-color 0.3s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
 }
 
 .input:focus {
   outline: none;
-  border: 1px solid var(--color-primary);
-  box-shadow: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
 }
 
 .input:focus-visible {
@@ -305,39 +307,39 @@
     min-height: 300px;
     padding: 16px 0;
   }
-  
+
   .title {
     font-size: 24px;
     margin-bottom: 20px;
   }
-  
+
   .formCard {
     padding: 24px;
   }
-  
+
   .twoColumnRow {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .twoColumnRow .fieldGroup {
     margin-bottom: 16px;
   }
-  
+
   .twoColumnRow .fieldGroup:last-child {
     margin-bottom: 0;
   }
-  
+
   .toggleFieldGroup .toggleContainer {
     margin-top: 0;
     height: auto;
   }
-  
+
   .dateRow {
     grid-template-columns: 1fr;
     gap: 16px;
   }
-  
+
   .toggleLabel {
     font-size: 14px;
   }
@@ -348,52 +350,52 @@
     font-size: 22px;
     margin-bottom: 16px;
   }
-  
+
   .formCard {
     padding: 20px;
   }
-  
+
   .input {
     font-size: 15px;
     padding: 10px 14px;
   }
-  
+
   .prizeItemWrapper {
     margin-bottom: 20px;
   }
-  
+
   .prizeItem {
     flex-direction: column;
     gap: 12px;
   }
-  
+
   .removePrizeButton {
     align-self: stretch;
     height: 48px;
   }
-  
+
   .addPrizeButton {
     margin-top: 20px;
   }
-  
+
   .prizesSection {
     margin-top: 24px;
   }
-  
+
   .sectionLabel {
     font-size: 18px;
     margin-bottom: 20px;
   }
-  
+
   .foodItemWrapper {
     margin-bottom: 20px;
   }
-  
+
   .foodItemRow {
     grid-template-columns: 1fr;
     gap: 12px;
   }
-  
+
   .removePrizeButton {
     width: 100%;
     justify-content: center;

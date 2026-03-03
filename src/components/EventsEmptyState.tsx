@@ -3,6 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import { EventStatusFilter } from '@/types/models';
+import { ROUTES } from '@/constants';
 import styles from './EventsEmptyState.module.css';
 
 interface EventsEmptyStateProps {
@@ -34,10 +35,10 @@ const EMPTY_STATE_CONFIG = {
 
 const EventsEmptyState: React.FC<EventsEmptyStateProps> = ({ filterType = 'all' }) => {
   const router = useRouter();
-  const config = EMPTY_STATE_CONFIG[filterType];
-  
+  const config = EMPTY_STATE_CONFIG[filterType as keyof typeof EMPTY_STATE_CONFIG] ?? EMPTY_STATE_CONFIG.all;
+
   const handleCreateEvent = () => {
-    router.push('/create-event');
+    router.push(ROUTES.CREATE_EVENT);
   };
 
   return (

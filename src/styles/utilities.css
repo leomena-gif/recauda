@@ -399,26 +399,23 @@
   outline-offset: 2px;
 }
 
-/* Tertiary Button - Botón terciario (outline azul) */
+/* Tertiary Button - Botón terciario (outline blanco) */
 .btn-tertiary {
   background-color: transparent;
-  color: #007AFF;
-  border: 2px solid #007AFF;
+  color: var(--color-white);
+  border: 1px solid var(--color-white);
 }
 
 .btn-tertiary:hover:not(:disabled) {
-  background-color: #007AFF;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .btn-tertiary:active:not(:disabled) {
-  background-color: #0056CC;
-  border-color: #0056CC;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 .btn-tertiary:focus-visible {
-  outline: 2px solid #007AFF;
+  outline: 2px solid var(--color-white);
   outline-offset: 2px;
 }
 

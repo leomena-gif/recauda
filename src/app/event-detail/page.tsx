@@ -137,35 +137,42 @@ export default function EventDetail() {
             </button>
           </div>
 
-          {/* Event Card */}
-          <div className={styles.eventCard}>
-            <div className={styles.eventCardHeader}>
-              <div className={styles.statusContainer}>
+          {/* Page Header */}
+          <div className={styles.pageHeader}>
+            <div className={styles.metaRow}>
+              <div className={styles.statusBadge}>
                 <span className={styles.statusDot}></span>
                 <span className={styles.statusText}>ACTIVO</span>
               </div>
-              <div className={styles.dateInfo}>
-                Finaliza el 20 de diciembre de 2025
-              </div>
+              <span className={styles.dateInfo}>Finaliza el 20 de diciembre de 2025</span>
             </div>
 
-            <h2 className={styles.eventTitle}>
+            <h1 className={styles.eventTitle}>
               Rifa día del niño del Grupo Scout General Deheza
-            </h2>
+            </h1>
 
-            {/* Progress Bar */}
-            <div className={styles.progressContainer}>
-              <div className={styles.progressBar}>
-                <div className={styles.progressFill} style={{ width: '80%' }}>
-                  <span className={styles.progressText}>80%</span>
-                </div>
+            <div className={styles.progressSection}>
+              <div className={styles.progressTrack}>
+                <div className={styles.progressFill} style={{ width: '80%' }} />
               </div>
+              <span className={styles.progressPct}>80%</span>
             </div>
 
-            {/* Bottom Details */}
-            <div className={styles.eventDetailsRow}>
-              <span className={styles.detailLeft}>Objetivo $300.000</span>
-              <span className={styles.detailRight}>300 números de $1.000</span>
+            <div className={styles.statsRow}>
+              <div className={styles.statItem}>
+                <span className={styles.statValue}>$240.000</span>
+                <span className={styles.statLabel}>Recaudado</span>
+              </div>
+              <div className={styles.statDivider} aria-hidden="true" />
+              <div className={styles.statItem}>
+                <span className={styles.statValue}>$300.000</span>
+                <span className={styles.statLabel}>Objetivo</span>
+              </div>
+              <div className={styles.statDivider} aria-hidden="true" />
+              <div className={styles.statItem}>
+                <span className={styles.statValue}>300</span>
+                <span className={styles.statLabel}>Números de $1.000</span>
+              </div>
             </div>
           </div>
 

@@ -1,8 +1,8 @@
 .formContainer {
-  background-color: white;
-  border-radius: 12px;
+  background-color: var(--color-bg-secondary);
+  border-radius: var(--radius-xl);
   padding: 24px;
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--color-border-light);
   width: 100%;
   max-width: 100%;
   margin: 0 auto;
@@ -12,14 +12,14 @@
 .formTitle {
   font-size: 28px;
   font-weight: bold;
-  color: #000;
+  color: var(--color-text-primary);
   margin-bottom: 8px;
   text-align: left;
 }
 
 .formSubtitle {
   font-size: 16px;
-  color: #666;
+  color: var(--color-text-secondary);
   margin-bottom: 32px;
   text-align: left;
 }
@@ -40,24 +40,25 @@
 .formLabel {
   font-size: 16px;
   font-weight: 600;
-  color: #000;
+  color: var(--color-text-primary);
   text-align: left;
 }
 
 .formInput {
   padding: 16px;
-  border: 2px solid #e0e0e0;
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
   font-size: 16px;
-  background-color: #fff;
-  transition: border-color 0.3s ease;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  transition: border-color var(--transition-base), box-shadow var(--transition-base);
   width: 100%;
 }
 
 .formInput:focus {
   outline: none;
-  border: 2px solid #007AFF;
-  box-shadow: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
 }
 
 .formInput:focus-visible {
@@ -65,13 +66,13 @@
 }
 
 .formInput::placeholder {
-  color: #999;
+  color: var(--color-text-tertiary);
   font-size: 16px;
 }
 
 .phoneInstruction {
   font-size: 14px;
-  color: #666;
+  color: var(--color-text-tertiary);
   margin-top: 4px;
 }
 
@@ -131,40 +132,40 @@
   left: 0;
   right: 0;
   height: 1px;
-  background-color: #e0e0e0;
+  background-color: var(--color-border-light);
 }
 
 .divider span {
-  background-color: white;
+  background-color: var(--color-bg-secondary);
   padding: 0 16px;
-  color: #666;
+  color: var(--color-text-tertiary);
   font-size: 14px;
 }
 
 .createAccountButton {
-  background-color: transparent;
-  color: #007AFF;
-  border: 2px solid #007AFF;
+  background-color: var(--color-bg-primary);
+  color: var(--color-white);
+  border: 1px solid var(--color-white);
   padding: 16px;
-  border-radius: 8px;
+  border-radius: var(--radius-lg);
   font-size: 18px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all var(--transition-base);
   width: 100%;
 }
 
 .createAccountButton:hover {
-  background-color: #007AFF;
-  color: white;
+  background-color: rgba(255, 255, 255, 0.08);
 }
 
 .createAccountButton:active {
   transform: translateY(1px);
+  background-color: rgba(255, 255, 255, 0.12);
 }
 
 .createAccountButton:focus-visible {
-  outline: 2px solid #007AFF;
+  outline: 2px solid var(--color-white);
   outline-offset: 2px;
 }
 

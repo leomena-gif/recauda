@@ -38,9 +38,9 @@ const EventTypeStep = forwardRef<EventTypeStepRef, EventTypeStepProps>(
         <h1 className={styles.title}>
           ¿Qué tipo de evento querés crear?
         </h1>
-        
+
         <div className={styles.optionsGrid}>
-          <div 
+          <div
             className={`${styles.optionBox} ${selectedType === 'food_sale' ? styles.selected : ''}`}
             onClick={() => handleTypeChange('food_sale')}
           >
@@ -49,8 +49,8 @@ const EventTypeStep = forwardRef<EventTypeStepRef, EventTypeStepProps>(
             </div>
             <span className={styles.optionText}>Venta de comida</span>
           </div>
-          
-          <div 
+
+          <div
             className={`${styles.optionBox} ${selectedType === 'raffle' ? styles.selected : ''}`}
             onClick={() => handleTypeChange('raffle')}
           >

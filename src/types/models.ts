@@ -2,6 +2,41 @@
  * Core data models for the application
  */
 
+// ─── Const Objects (Single Source of Truth) ────────────────────────────────
+
+export const SELLER_STATUS = {
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+} as const;
+
+export const BUYER_STATUS = {
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+} as const;
+
+export const EVENT_TYPE = {
+  RAFFLE: 'raffle',
+  FOOD_SALE: 'food_sale',
+} as const;
+
+export const EVENT_STATUS = {
+  ACTIVE: 'active',
+  INACTIVE: 'inactive',
+  COMPLETED: 'completed',
+  CANCELLED: 'cancelled',
+} as const;
+
+// ─── Derived Types ──────────────────────────────────────────────────────────
+
+export type SellerStatus = typeof SELLER_STATUS[keyof typeof SELLER_STATUS];
+export type BuyerStatus = typeof BUYER_STATUS[keyof typeof BUYER_STATUS];
+export type EventType = typeof EVENT_TYPE[keyof typeof EVENT_TYPE];
+export type EventStatus = typeof EVENT_STATUS[keyof typeof EVENT_STATUS];
+export type StatusFilter = 'all' | SellerStatus;
+export type EventStatusFilter = 'all' | EventStatus;
+
+// ─── Interfaces ─────────────────────────────────────────────────────────────
+
 export interface Seller {
   id: string;
   firstName: string;
@@ -40,11 +75,3 @@ export interface Event {
   totalNumbers: number;
   soldNumbers: number;
 }
-
-export type SellerStatus = 'active' | 'inactive';
-export type BuyerStatus = 'active' | 'inactive';
-export type EventType = 'raffle' | 'food_sale';
-export type EventStatus = 'active' | 'inactive' | 'completed';
-export type StatusFilter = 'all' | 'active' | 'inactive';
-export type EventStatusFilter = 'all' | 'active' | 'completed' | 'cancelled';
-

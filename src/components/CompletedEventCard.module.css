@@ -1,92 +1,104 @@
-/* Event Card - Dark Mode Mobile First */
+/* Completed Event Card - Dark Mode Mobile First */
 .card {
   background-color: var(--color-bg-secondary);
-  border-radius: var(--radius-lg);
-  padding: var(--space-md);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
   cursor: pointer;
   transition: all var(--transition-base);
-  border: 1px solid var(--color-border-light);
+  border: 1px solid rgba(255, 255, 255, 0.07);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
 }
 
 .card:hover {
   background-color: var(--color-bg-tertiary);
-  border-color: var(--color-border);
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+  transform: translateY(-1px);
 }
 
 .card:active {
   transform: scale(0.98);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
-/* Status Container */
+/* Status Badge - pill style for completed */
 .statusContainer {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: var(--space-xs);
-  margin-bottom: var(--space-xs);
+  gap: 6px;
+  padding: 4px 10px;
+  background: rgba(142, 142, 147, 0.12);
+  border-radius: var(--radius-full);
+  align-self: flex-start;
 }
 
 .statusDot {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   background-color: var(--color-gray-500);
   flex-shrink: 0;
 }
 
 .statusText {
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
   color: var(--color-gray-500);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
 }
 
 /* Date Info */
 .dateInfo {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin-bottom: var(--space-xs);
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
 }
 
 /* Event Title */
 .eventTitle {
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
+  font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-  line-height: 1.4;
+  line-height: 1.3;
   margin: 0;
-  margin-bottom: var(--space-sm);
 }
 
 /* Progress Container */
 .progressContainer {
-  margin: var(--space-sm) 0;
+  margin: var(--space-xs) 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .progressBar {
-  background-color: var(--color-bg-tertiary);
+  background-color: rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-full);
-  height: 24px;
+  height: 6px;
   position: relative;
   overflow: hidden;
 }
 
 .progressFill {
-  background-color: var(--color-primary);
+  background: linear-gradient(90deg, var(--color-gray-500) 0%, var(--color-gray-400) 100%);
   border-radius: var(--radius-full);
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   transition: width var(--transition-slow);
 }
 
+/* Bar is too thin to display text inside */
 .progressText {
-  color: var(--color-bg-primary);
+  display: none;
+}
+
+/* Unit Stats - below progress bar */
+.unitStats {
   font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-semibold);
-  white-space: nowrap;
+  color: var(--color-text-tertiary);
+  text-align: right;
 }
 
 /* Details Row */
@@ -95,6 +107,8 @@
   justify-content: space-between;
   align-items: center;
   margin-top: var(--space-xs);
+  padding-top: var(--space-sm);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   gap: var(--space-md);
 }
 
@@ -112,9 +126,9 @@
 /* Desktop */
 @media (min-width: 768px) {
   .card {
-    padding: var(--space-lg);
+    padding: var(--space-xl);
   }
-  
+
   .eventTitle {
     font-size: var(--font-size-xl);
   }
