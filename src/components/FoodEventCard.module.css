@@ -1,0 +1,172 @@
+/* Food Event Card - Dark Mode Mobile First */
+.card {
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-xl);
+    padding: var(--space-lg);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    cursor: pointer;
+    transition: all var(--transition-base);
+    border: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.card:hover {
+    background-color: var(--color-bg-tertiary);
+    border-color: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+    transform: translateY(-1px);
+}
+
+.card:active {
+    transform: scale(0.98);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+/* Status Badge - pill style */
+.statusContainer {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 10px;
+    background: rgba(52, 199, 89, 0.12);
+    border-radius: var(--radius-full);
+    align-self: flex-start;
+}
+
+.statusDot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--color-success);
+    flex-shrink: 0;
+}
+
+.statusText {
+    font-size: 11px;
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-success);
+    letter-spacing: 0.4px;
+    text-transform: uppercase;
+}
+
+/* Date Info */
+.dateInfo {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+}
+
+/* Event Title */
+.eventTitle {
+    font-size: var(--font-size-lg);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-primary);
+    line-height: 1.3;
+    margin: 0;
+}
+
+/* Dishes Container */
+.dishesContainer {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
+    margin: var(--space-xs) 0;
+}
+
+.dishItem {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.dishHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dishName {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-secondary);
+}
+
+.dishPrice {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-primary);
+}
+
+.dishProgress {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.progressBar {
+    background-color: rgba(255, 255, 255, 0.08);
+    border-radius: var(--radius-full);
+    height: 6px;
+    position: relative;
+    overflow: hidden;
+}
+
+.progressFill {
+    background: linear-gradient(90deg, var(--color-primary) 0%, #007AFF 100%);
+    border-radius: var(--radius-full);
+    height: 100%;
+    transition: width var(--transition-slow);
+}
+
+/* Bar is too thin to display text inside */
+.progressText {
+    display: none;
+}
+
+.dishStats {
+    font-size: var(--font-size-xs);
+    color: var(--color-text-tertiary);
+    text-align: right;
+}
+
+/* Details Row */
+.detailsRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: var(--space-xs);
+    padding-top: var(--space-sm);
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    gap: var(--space-md);
+}
+
+.detailLeft,
+.detailRight {
+    font-size: var(--font-size-sm);
+    color: var(--color-text-secondary);
+    flex: 1;
+}
+
+.detailRight {
+    text-align: right;
+}
+
+/* Desktop */
+@media (min-width: 768px) {
+    .card {
+        padding: var(--space-xl);
+    }
+
+    .eventTitle {
+        font-size: var(--font-size-xl);
+    }
+
+    .dishName {
+        font-size: var(--font-size-base);
+    }
+
+    .dishPrice {
+        font-size: var(--font-size-base);
+    }
+}

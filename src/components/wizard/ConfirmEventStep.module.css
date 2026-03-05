@@ -1,0 +1,178 @@
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--color-text-primary);
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.confirmationCard {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-xl);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 24px;
+  width: 100%;
+  max-width: 100%;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+}
+
+.detailRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.detailRow:last-child {
+  border-bottom: none;
+  margin-bottom: 0;
+}
+
+.label {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.value {
+  font-size: 16px;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  text-align: right;
+}
+
+.prizesSection {
+  margin-top: 24px;
+  padding-top: 0;
+}
+
+.sectionLabel {
+  display: block;
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: 20px;
+  margin-top: 8px;
+  line-height: 1.3;
+}
+
+.prizesList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.prizeItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.prizeItem:last-child {
+  border-bottom: none;
+}
+
+.prizeNumber {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
+}
+
+.prizeValue {
+  font-size: 16px;
+  color: var(--color-text-primary);
+  font-weight: 600;
+  text-align: right;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    min-height: 300px;
+    padding: 16px 0;
+  }
+
+  .title {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+
+  .confirmationCard {
+    padding: 24px;
+  }
+
+  .detailRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    padding: 16px 0;
+  }
+
+  .label {
+    font-size: 13px;
+  }
+
+  .value {
+    font-size: 15px;
+    text-align: left;
+    margin-left: 0;
+  }
+
+  .prizeItem {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .prizeValue {
+    text-align: left;
+    margin-left: 0;
+  }
+
+  .sectionLabel {
+    font-size: 18px;
+    margin-bottom: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .title {
+    font-size: 22px;
+    margin-bottom: 16px;
+  }
+
+  .confirmationCard {
+    padding: 20px;
+  }
+
+  .label {
+    font-size: 12px;
+  }
+
+  .value {
+    font-size: 14px;
+  }
+
+  .prizeNumber {
+    font-size: 13px;
+  }
+
+  .prizeValue {
+    font-size: 14px;
+  }
+
+  .sectionLabel {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+}

@@ -1,0 +1,267 @@
+.container {
+  width: 100%;
+  margin: 0 auto;
+  padding: 0;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--color-text-primary);
+  margin-bottom: 24px;
+  text-align: left;
+}
+
+.formCard {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border);
+  padding: 24px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.fieldGroup {
+  margin-bottom: 24px;
+}
+
+.fieldGroup:last-child {
+  margin-bottom: 0;
+}
+
+.label {
+  display: block;
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
+}
+
+.input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  color: var(--color-text-primary);
+  background: var(--color-bg-tertiary);
+  transition: border-color 0.2s ease;
+}
+
+.input::placeholder {
+  color: var(--color-text-tertiary);
+  font-size: 16px;
+}
+
+.input:focus {
+  outline: none;
+  border-color: var(--color-primary);
+}
+
+/* Quantity Selector */
+.quantitySelector {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 100%;
+  border-radius: var(--radius-md);
+  transition: box-shadow 0.2s ease;
+}
+
+.quantitySelector:focus-within {
+  box-shadow: 0 0 0 2px var(--color-primary);
+}
+
+.quantityButton {
+  width: 52px;
+  height: 48px;
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-tertiary);
+  color: var(--color-primary);
+  font-size: 22px;
+  font-weight: 400;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.15s ease, transform 0.1s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  user-select: none;
+  -webkit-user-select: none;
+  flex-shrink: 0;
+}
+
+.quantityButton:first-child {
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  border-right: none;
+}
+
+.quantityButton:last-child {
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  border-left: none;
+}
+
+.quantityButton:hover:not(:disabled) {
+  background: var(--color-bg-secondary);
+}
+
+.quantityButton:active:not(:disabled) {
+  background: rgba(0, 122, 255, 0.15);
+  transform: scale(0.92);
+}
+
+.quantityButton:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: -2px;
+  z-index: 1;
+}
+
+.quantityButton:disabled {
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+
+.quantityInput {
+  flex: 1;
+  height: 48px;
+  border: 1px solid var(--color-border);
+  border-left: none;
+  border-right: none;
+  background: var(--color-bg-tertiary);
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  outline: none;
+  transition: background-color 0.2s ease;
+  min-width: 0;
+}
+
+.quantityInput:focus {
+  background: var(--color-bg-secondary);
+}
+
+.quantityInput::-webkit-outer-spin-button,
+.quantityInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantityInput[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Toggle Switch */
+.toggleContainer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  cursor: pointer;
+}
+
+.toggleInput {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.toggleSlider {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--color-bg-tertiary);
+  transition: 0.3s;
+  border-radius: 34px;
+}
+
+.toggleSlider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: var(--color-white);
+  transition: 0.3s;
+  border-radius: 50%;
+}
+
+.toggleInput:checked + .toggleSlider {
+  background-color: var(--color-primary);
+}
+
+.toggleInput:checked + .toggleSlider:before {
+  transform: translateX(26px);
+}
+
+.toggleLabel {
+  font-size: 16px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+}
+
+/* Range Fields Layout */
+.rangeFields {
+  display: flex;
+  gap: 16px;
+}
+
+.rangeFields .fieldGroup {
+  flex: 1;
+}
+
+/* Error States */
+.error .input {
+  border-color: var(--color-error);
+}
+
+.error .label {
+  color: var(--color-error);
+}
+
+/* Responsive */
+@media (min-width: 768px) {
+  .formCard {
+    max-width: 100%;
+    padding: 32px;
+  }
+  
+  .rangeFields {
+    gap: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .formCard {
+    padding: 20px;
+  }
+  
+  .title {
+    font-size: 20px;
+  }
+  
+  .quantitySelector {
+    max-width: min(300px, calc(100% - 16px));
+  }
+  
+  .rangeFields {
+    flex-direction: column;
+    gap: 16px;
+  }
+}
+
+@media (max-width: 400px) {
+  .formCard {
+    padding: var(--space-md);
+  }
+}

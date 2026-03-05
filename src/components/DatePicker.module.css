@@ -1,0 +1,68 @@
+.datePickerWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.wrapper {
+  width: 100%;
+}
+
+.input {
+  width: 100%;
+  padding: 16px;
+  padding-right: 48px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.input:focus {
+  outline: none;
+  border: 1px solid var(--color-primary);
+  box-shadow: none;
+}
+
+.input::placeholder {
+  color: var(--color-text-tertiary);
+  font-size: 16px;
+}
+
+.input:disabled {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-tertiary);
+  cursor: not-allowed;
+}
+
+.inputError {
+  border-color: var(--color-error);
+}
+
+.inputError:focus {
+  border-color: var(--color-error);
+  box-shadow: none;
+}
+
+.calendarIcon {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--color-text-tertiary);
+  pointer-events: none;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .input {
+    font-size: 15px;
+    padding: 10px 14px;
+    padding-right: 44px;
+  }
+}
+

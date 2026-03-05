@@ -1,0 +1,197 @@
+/* Container */
+.dropdown {
+  position: relative;
+  width: 100%;
+}
+
+/* Button (Select) - Dark Mode */
+.dropdownButton {
+  width: 100%;
+  padding: var(--space-md);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-tertiary);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  text-align: left;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  box-sizing: border-box;
+}
+
+.dropdownButton:hover {
+  border-color: var(--color-border);
+  background-color: var(--color-bg-tertiary);
+}
+
+.dropdownButton:focus {
+  outline: none;
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px var(--color-primary-light);
+  background-color: var(--color-bg-tertiary);
+}
+
+.dropdownButtonActive {
+  border-color: var(--color-primary);
+}
+
+.dropdownValue {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Arrow Icon - Dark Mode */
+.dropdownArrow {
+  color: var(--color-text-tertiary);
+  transition: transform var(--transition-base);
+  flex-shrink: 0;
+}
+
+.dropdownArrowOpen {
+  transform: rotate(180deg);
+  color: var(--color-primary);
+}
+
+/* Dropdown Menu - Dark Mode */
+.dropdownMenu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: auto;
+  width: max-content;
+  min-width: 100%;
+  max-width: 400px;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  list-style: none;
+  margin: 0;
+  padding: var(--space-xs) 0;
+  z-index: 1000;
+  overflow-y: auto;
+  max-height: 300px;
+  animation: slideDown 0.2s ease;
+  isolation: isolate;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* Right-aligned dropdown menu */
+.dropdownMenuRight {
+  left: auto;
+  right: 0;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Custom Scrollbar */
+.dropdownMenu::-webkit-scrollbar {
+  width: 6px;
+}
+
+.dropdownMenu::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.dropdownMenu::-webkit-scrollbar-thumb {
+  background: var(--color-gray-400);
+  border-radius: 3px;
+}
+
+.dropdownMenu::-webkit-scrollbar-thumb:hover {
+  background: var(--color-gray-500);
+}
+
+/* Dropdown Option - Dark Mode */
+.dropdownOption {
+  padding: var(--space-sm);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  font-size: var(--font-size-base);
+  font-weight: var(--font-weight-normal);
+  color: var(--color-text-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-sm);
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.dropdownOption:last-child {
+  margin-bottom: 0;
+}
+
+.dropdownOption:hover {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+}
+
+.dropdownOption:active {
+  background-color: var(--color-primary-light);
+}
+
+/* Selected Option - Dark Mode */
+.dropdownOptionSelected {
+  background-color: var(--color-primary);
+  color: var(--color-bg-primary);
+  font-weight: var(--font-weight-semibold);
+}
+
+.dropdownOptionSelected:hover {
+  background-color: var(--color-primary-hover);
+  color: var(--color-bg-primary);
+}
+
+/* Check Icon - Dark Mode */
+.checkIcon {
+  color: var(--color-bg-primary);
+  flex-shrink: 0;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .dropdownButton {
+    font-size: 16px;
+    /* Prevent zoom on iOS */
+    padding: 14px;
+  }
+
+  .dropdownOption {
+    font-size: 16px;
+    padding: 14px;
+  }
+
+  .dropdownMenu {
+    max-height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  .dropdownButton {
+    padding: 16px;
+  }
+
+  .dropdownOption {
+    padding: 16px;
+  }
+}
