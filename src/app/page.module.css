@@ -27,7 +27,7 @@
 /* Filter Pills - Dark Mode Mobile First */
 .filtersContainer {
   margin-bottom: var(--space-md);
-  margin-top: 40px;
+  margin-top: 0;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;

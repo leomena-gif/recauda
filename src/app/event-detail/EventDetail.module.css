@@ -350,8 +350,7 @@
 /* Search Container */
 .searchContainer {
   margin-bottom: 0;
-  margin-top: var(--space-lg);
-  /* Add spacing between tabs and search on mobile */
+  margin-top: 0;
   width: 100%;
   padding: 0;
 }
