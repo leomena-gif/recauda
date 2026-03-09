@@ -5,7 +5,7 @@
   align-items: center;
   height: 48px;
   border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: var(--radius-lg);
+  border-radius: 7px;
   background: var(--color-bg-tertiary);
   overflow: hidden;
 }

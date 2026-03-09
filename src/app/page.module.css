@@ -124,7 +124,7 @@
   background-color: var(--color-white);
   color: var(--color-bg-primary);
   border: none;
-  border-radius: var(--radius-xl);
+  border-radius: 7px;
   font-weight: var(--font-weight-semibold);
   padding: var(--space-md) var(--space-lg);
   font-size: var(--font-size-base);

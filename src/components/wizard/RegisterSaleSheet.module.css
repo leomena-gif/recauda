@@ -73,7 +73,7 @@
   height: 36px;
   background: rgba(255, 255, 255, 0.07);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-md);
+  border-radius: 7px;
   color: var(--color-text-secondary);
   cursor: pointer;
   transition: color var(--transition-base), background-color var(--transition-base);
