@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './LoginForm.module.css';
+import Button from './Button';
 
 interface LoginData {
   phone: string;
@@ -88,22 +89,24 @@ const LoginForm: React.FC = () => {
           </p>
         </div>
 
-        <button type="submit" className={styles.submitButton}>
+        <Button type="submit" variant="primary" size="lg" fullWidth className={styles.submitButton}>
           Ingresar
-        </button>
+        </Button>
       </form>
 
       <div className={styles.divider}>
         <span>¿No tienes cuenta?</span>
       </div>
 
-      <button 
-        type="button" 
-        className={styles.createAccountButton}
+      <Button
+        type="button"
+        variant="secondary"
+        size="lg"
+        fullWidth
         onClick={handleCreateAccount}
       >
         Crear cuenta
-      </button>
+      </Button>
     </div>
   );
 };

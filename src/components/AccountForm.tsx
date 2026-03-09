@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './AccountForm.module.css';
+import Button from './Button';
 
 interface FormData {
   organization: string;
@@ -134,22 +135,24 @@ const AccountForm: React.FC = () => {
           </p>
         </div>
 
-        <button type="submit" className={styles.submitButton}>
+        <Button type="submit" variant="primary" size="lg" fullWidth className={styles.submitButton}>
           Crear cuenta
-        </button>
+        </Button>
       </form>
 
       <div className={styles.divider}>
         <span>¿Ya tienes cuenta?</span>
       </div>
 
-      <button 
-        type="button" 
-        className={styles.backToLoginButton}
+      <Button
+        type="button"
+        variant="secondary"
+        size="lg"
+        fullWidth
         onClick={handleBackToLogin}
       >
         Iniciar sesión
-      </button>
+      </Button>
     </div>
   );
 };

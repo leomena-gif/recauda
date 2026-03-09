@@ -2,26 +2,27 @@
 
 import React from 'react';
 import styles from './CardEmptyState.module.css';
+import Card from './Card';
+import Button from './Button';
 
 interface CardEmptyStateProps {
   onCreateEvent?: () => void;
 }
 
 const CardEmptyState: React.FC<CardEmptyStateProps> = ({ onCreateEvent }) => {
-  const handleCreateEvent = () => {
-    onCreateEvent?.();
-  };
-
   return (
-    <div className={styles.container}>
+    <Card
+      fullWidth
+      style={{ minHeight: '300px', alignItems: 'center', justifyContent: 'center' }}
+    >
       <div className={styles.emptyState}>
         <div className={styles.flagIcon}>🏁</div>
         <p className={styles.message}>Comencemos creando tu primer evento</p>
-        <button className={styles.createButton} onClick={handleCreateEvent} type="button">
+        <Button variant="primary" size="md" type="button" onClick={onCreateEvent}>
           Crear evento
-        </button>
+        </Button>
       </div>
-    </div>
+    </Card>
   );
 };
 

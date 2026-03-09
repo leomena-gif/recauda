@@ -5,6 +5,8 @@ import { useRouter } from 'next/navigation';
 import { EventStatusFilter } from '@/types/models';
 import { ROUTES } from '@/constants';
 import styles from './EventsEmptyState.module.css';
+import Card from './Card';
+import Button from './Button';
 
 interface EventsEmptyStateProps {
   filterType?: EventStatusFilter;
@@ -42,17 +44,20 @@ const EventsEmptyState: React.FC<EventsEmptyStateProps> = ({ filterType = 'all' 
   };
 
   return (
-    <div className={styles.container}>
+    <Card
+      fullWidth
+      style={{ minHeight: '300px', alignItems: 'center', justifyContent: 'center' }}
+    >
       <div className={styles.emptyState}>
         <div className={styles.flagIcon}>{config.emoji}</div>
         <p className={styles.message}>{config.message}</p>
         {config.showButton && (
-          <button className={styles.createButton} onClick={handleCreateEvent}>
+          <Button variant="primary" size="md" type="button" onClick={handleCreateEvent}>
             Crear evento
-          </button>
+          </Button>
         )}
       </div>
-    </div>
+    </Card>
   );
 };
 

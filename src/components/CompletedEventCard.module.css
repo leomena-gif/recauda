@@ -1,27 +1,8 @@
-/* Completed Event Card - Dark Mode Mobile First */
-.card {
-  background-color: var(--color-bg-secondary);
-  border-radius: var(--radius-xl);
-  padding: var(--space-lg);
+/* Completed Event Card - layout interno */
+.content {
   display: flex;
   flex-direction: column;
   gap: var(--space-sm);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  border: 1px solid rgba(255, 255, 255, 0.07);
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
-}
-
-.card:hover {
-  background-color: var(--color-bg-tertiary);
-  border-color: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
-  transform: translateY(-1px);
-}
-
-.card:active {
-  transform: scale(0.98);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 /* Status Badge - pill style for completed */
@@ -108,7 +89,7 @@
   align-items: center;
   margin-top: var(--space-xs);
   padding-top: var(--space-sm);
-  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-top: 1px solid var(--color-border-divider);
   gap: var(--space-md);
 }
 
@@ -125,10 +106,6 @@
 
 /* Desktop */
 @media (min-width: 768px) {
-  .card {
-    padding: var(--space-xl);
-  }
-
   .eventTitle {
     font-size: var(--font-size-xl);
   }
