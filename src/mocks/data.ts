@@ -148,11 +148,19 @@ const generateBuyers = (): Buyer[] => {
   };
 
   // 100 compradores para RIFA (evento 1)
+  const usedNumbers = new Set<number>();
   for (let i = 0; i < 100; i++) {
     const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
     const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     const phone = `3584${String(100000 + buyerId).padStart(6, '0')}`;
     const isActive = Math.random() > 0.1; // 90% activos
+    const ticketCount = Math.floor(Math.random() * 5) + 1;
+    const assignedNumbers: number[] = [];
+    while (assignedNumbers.length < ticketCount) {
+      const n = Math.floor(Math.random() * 1000) + 1;
+      if (!usedNumbers.has(n)) { usedNumbers.add(n); assignedNumbers.push(n); }
+    }
+    assignedNumbers.sort((a, b) => a - b);
 
     const seller = pickSellerForEvent('1');
     buyers.push({
@@ -166,8 +174,9 @@ const generateBuyers = (): Buyer[] => {
       status: isActive ? 'active' : 'inactive',
       eventsAssigned: 1,
       assignedEvents: ['1'], // Rifa
-      totalBought: Math.floor(Math.random() * 30) + 1,
-      lastActivity: `2024-01-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`
+      totalBought: ticketCount,
+      lastActivity: `2024-01-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
+      assignedNumbers,
     });
     buyerId++;
   }

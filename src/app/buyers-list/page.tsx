@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Buyer, Event, Seller, StatusFilter, FoodPurchaseItem } from '@/types/models';
-import { STATUS_OPTIONS } from '@/constants';
+import { Buyer, Event, Seller, StatusFilter } from '@/types/models';
+import { STATUS_OPTIONS, SNACKBAR_DURATION } from '@/constants';
+import { useSnackbar } from '@/hooks/useSnackbar';
 import { MOCK_BUYERS, MOCK_EVENTS, MOCK_SELLERS } from '@/mocks/data';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import CustomDropdown from '@/components/CustomDropdown';
@@ -35,11 +36,17 @@ export default function BuyersList() {
   const [filtersSheetOpen, setFiltersSheetOpen] = useState(false);
   // Filtro de entrega (solo food_sale)
   const [deliveryFilter, setDeliveryFilter] = useState<'all' | 'delivered' | 'pending'>('all');
-  // Detalle de compra modal
+  // Filtro de impresión (solo raffle)
+  const [printFilter, setPrintFilter] = useState<'all' | 'printed' | 'pending'>('all');
+  // Detalle de compra modal (food sale)
   const [purchaseDetailBuyer, setPurchaseDetailBuyer] = useState<Buyer | null>(null);
+  // Detalle de números modal (rifa)
+  const [raffleDetailBuyer, setRaffleDetailBuyer] = useState<Buyer | null>(null);
 
   // Custom hooks
   const isDesktop = useMediaQuery('(min-width: 768px)');
+  const deliverySnackbar = useSnackbar(SNACKBAR_DURATION.SUCCESS);
+  const raffleSnackbar = useSnackbar(SNACKBAR_DURATION.SUCCESS);
 
   // Computed values
   const activeEvents = useMemo(
@@ -51,6 +58,12 @@ export default function BuyersList() {
   const showDeliveryFilter = useMemo(() => {
     const event = events.find(e => e.id === eventFilter);
     return event?.type === 'food_sale';
+  }, [eventFilter, events]);
+
+  // Mostrar filtro de impresión solo cuando el evento seleccionado es raffle
+  const showPrintFilter = useMemo(() => {
+    const event = events.find(e => e.id === eventFilter);
+    return event?.type === 'raffle';
   }, [eventFilter, events]);
 
   // Enforce single event selection
@@ -102,9 +115,16 @@ export default function BuyersList() {
           ? buyer.isDelivered === true
           : buyer.isDelivered !== true;
 
-      return matchesSearch && matchesStatus && matchesEvent && matchesDelivery;
+      const matchesPrint =
+        !showPrintFilter || printFilter === 'all'
+          ? true
+          : printFilter === 'printed'
+          ? buyer.isPrinted === true
+          : buyer.isPrinted !== true;
+
+      return matchesSearch && matchesStatus && matchesEvent && matchesDelivery && matchesPrint;
     });
-  }, [buyers, searchTerm, statusFilter, events, eventFilter, sellers, deliveryFilter, showDeliveryFilter]);
+  }, [buyers, searchTerm, statusFilter, events, eventFilter, sellers, deliveryFilter, showDeliveryFilter, printFilter, showPrintFilter]);
 
   // Close menus when clicking outside
   React.useEffect(() => {
@@ -126,6 +146,10 @@ export default function BuyersList() {
   // Check if buyer is from a food_sale event
   const isFoodSaleBuyer = (buyer: Buyer): boolean =>
     buyer.assignedEvents.some(eventId => events.find(e => e.id === eventId)?.type === 'food_sale');
+
+  // Check if buyer is from a raffle event
+  const isRaffleBuyer = (buyer: Buyer): boolean =>
+    buyer.assignedEvents.some(eventId => events.find(e => e.id === eventId)?.type === 'raffle');
 
   // Check if buyer should show checkbox based on current filter
   const shouldShowCheckbox = (buyer: Buyer): boolean => {
@@ -162,6 +186,15 @@ export default function BuyersList() {
     return selectedBuyers.every(id => {
       const buyer = buyers.find(b => b.id === id);
       return buyer?.isDelivered;
+    });
+  }, [selectedBuyers, buyers]);
+
+  // Check if all selected buyers are already printed
+  const areAllSelectedPrinted = useMemo(() => {
+    if (selectedBuyers.length === 0) return false;
+    return selectedBuyers.every(id => {
+      const buyer = buyers.find(b => b.id === id);
+      return buyer?.isPrinted;
     });
   }, [selectedBuyers, buyers]);
 
@@ -227,9 +260,11 @@ export default function BuyersList() {
     }
   };
 
-  const handlePrintReceipts = () => {
-    console.log('Imprimir comprobantes para:', selectedBuyers);
-    alert(`Imprimiendo ${selectedBuyers.length} comprobantes`);
+  const handlePrintReceipts = (printed: boolean) => {
+    setBuyers(prev => prev.map(b =>
+      selectedBuyers.includes(b.id) ? { ...b, isPrinted: printed } : b
+    ));
+    setSelectedBuyers([]);
   };
 
   const handleSetDeliveredStatus = (status: boolean) => {
@@ -273,11 +308,6 @@ export default function BuyersList() {
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-  const IconDelivered = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M20 6L9 17L4 12" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
   const IconDetail = () => (
@@ -353,6 +383,21 @@ export default function BuyersList() {
                   />
                 </div>
               )}
+              {showPrintFilter && (
+                <div className={listStyles.eventFilter}>
+                  <CustomDropdown
+                    options={[
+                      { value: 'all', label: 'Toda impresión' },
+                      { value: 'printed', label: 'Impreso' },
+                      { value: 'pending', label: 'Sin imprimir' },
+                    ]}
+                    value={printFilter}
+                    onChange={(value) => setPrintFilter(value as 'all' | 'printed' | 'pending')}
+                    placeholder="Filtrar por impresión"
+                    alignRight={true}
+                  />
+                </div>
+              )}
             </div>
 
             {/* Mobile: botón Filtros abre sheet */}
@@ -373,26 +418,16 @@ export default function BuyersList() {
 
           {/* Dynamic Action Button (Desktop) */}
           {isDesktop && selectedBuyers.length > 0 && selectionType === 'raffle' && (
-            <button onClick={handlePrintReceipts} className="btn btn-sm btn-primary" style={{ gap: '6px' }}>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M6 9V2H18V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <path d="M6 18H4C3.46957 18 2.96086 17.7893 2.58579 17.4142C2.21071 17.0391 2 16.5304 2 16V11C2 10.4696 2.21071 9.96086 2.58579 9.58579C2.96086 9.21071 3.46957 9 4 9H20C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V16C22 16.5304 21.7893 17.0391 21.4142 17.4142C21.0391 17.7893 20.5304 18 20 18H18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                <rect x="6" y="14" width="12" height="8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span>Imprimir comprobantes</span>
+            <button onClick={() => handlePrintReceipts(!areAllSelectedPrinted)} className="btn btn-sm btn-primary">
+              {areAllSelectedPrinted ? 'Desmarcar impreso' : 'Imprimir comprobantes'} ({selectedBuyers.length})
             </button>
           )}
           {isDesktop && selectedBuyers.length > 0 && selectionType === 'food_sale' && (
             <button
               onClick={() => handleSetDeliveredStatus(!areAllSelectedDelivered)}
               className="btn btn-sm btn-primary"
-              style={{
-                gap: '6px',
-                backgroundColor: areAllSelectedDelivered ? 'var(--color-error)' : 'var(--color-success)',
-                borderColor: areAllSelectedDelivered ? 'var(--color-error)' : 'var(--color-success)'
-              }}
             >
-              {areAllSelectedDelivered ? 'Desmarcar' : 'Entregado'}
+              {areAllSelectedDelivered ? 'Desmarcar' : 'Entregado'} ({selectedBuyers.length})
             </button>
           )}
         </div>
@@ -407,9 +442,9 @@ export default function BuyersList() {
           <button
             type="button"
             className={listStyles.assignStickyPrimary}
-            onClick={handlePrintReceipts}
+            onClick={() => handlePrintReceipts(!areAllSelectedPrinted)}
           >
-            Imprimir {selectedBuyers.length} comprobante{selectedBuyers.length > 1 ? 's' : ''}
+            {areAllSelectedPrinted ? `Desmarcar impreso (${selectedBuyers.length})` : `Imprimir comprobantes (${selectedBuyers.length})`}
           </button>
         )}
         {selectionType === 'food_sale' && (
@@ -417,12 +452,8 @@ export default function BuyersList() {
             type="button"
             className={listStyles.assignStickyPrimary}
             onClick={() => handleSetDeliveredStatus(!areAllSelectedDelivered)}
-            style={{
-              backgroundColor: areAllSelectedDelivered ? 'var(--color-error)' : 'var(--color-success)',
-              color: 'white'
-            }}
           >
-            {areAllSelectedDelivered ? 'Desmarcar' : 'Entregado'}
+            {areAllSelectedDelivered ? `Desmarcar (${selectedBuyers.length})` : `Entregado (${selectedBuyers.length})`}
           </button>
         )}
       </MobileStickyActionBar>
@@ -459,6 +490,27 @@ export default function BuyersList() {
             ))}
           </div>
         </div>
+        {showPrintFilter && (
+          <div className={listStyles.sheetFilterGroup}>
+            <span className={listStyles.sheetFilterLabel}>Impresión</span>
+            <div className={listStyles.sheetFilterOptions}>
+              {([
+                { value: 'all', label: 'Toda impresión' },
+                { value: 'printed', label: 'Impreso' },
+                { value: 'pending', label: 'Sin imprimir' },
+              ] as const).map((opt) => (
+                <button
+                  key={opt.value}
+                  type="button"
+                  className={printFilter === opt.value ? listStyles.sheetFilterOptionActive : listStyles.sheetFilterOption}
+                  onClick={() => setPrintFilter(opt.value)}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
         {showDeliveryFilter && (
           <div className={listStyles.sheetFilterGroup}>
             <span className={listStyles.sheetFilterLabel}>Entrega</span>
@@ -539,12 +591,29 @@ export default function BuyersList() {
                   </td>
                   <td>
                     <div className={styles.buyerInfo}>
-                      <div className={styles.buyerName}>
+                      <div
+                        className={styles.buyerName}
+                        onClick={
+                          isFoodSaleBuyer(buyer) ? () => setPurchaseDetailBuyer(buyer) :
+                          isRaffleBuyer(buyer) ? () => setRaffleDetailBuyer(buyer) :
+                          undefined
+                        }
+                        style={(isFoodSaleBuyer(buyer) || isRaffleBuyer(buyer)) ? { cursor: 'pointer' } : undefined}
+                      >
                         {buyer.firstName} {buyer.lastName}
                         {buyer.isDelivered && (
                           <span className={styles.deliveredPill}>
                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Entregado">
                               <path d="M20 6L9 17L4 12" stroke="#000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                          </span>
+                        )}
+                        {buyer.isPrinted && (
+                          <span className={styles.printedPill} aria-label="Comprobante impreso">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                              <path d="M6 9V2H18V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                              <path d="M6 18H4C3.46957 18 2.96086 17.7893 2.58579 17.4142C2.21071 17.0391 2 16.5304 2 16V11C2 10.4696 2.21071 9.96086 2.58579 9.58579C2.96086 9.21071 3.46957 9 4 9H20C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V16C22 16.5304 21.7893 17.0391 21.4142 17.4142C21.0391 17.7893 20.5304 18 20 18H18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                              <path d="M6 14H18V22H6V14Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                           </span>
                         )}
@@ -595,7 +664,18 @@ export default function BuyersList() {
                               onClick={() => { setPurchaseDetailBuyer(buyer); setDesktopMenuOpen(null); }}
                             >
                               <IconDetail />
-                              Detalle de compra
+                              Detalle
+                            </button>
+                          )}
+                          {isRaffleBuyer(buyer) && (
+                            <button
+                              type="button"
+                              role="menuitem"
+                              className={listStyles.desktopMenuItem}
+                              onClick={() => { setRaffleDetailBuyer(buyer); setDesktopMenuOpen(null); }}
+                            >
+                              <IconDetail />
+                              Detalle
                             </button>
                           )}
                           <button
@@ -645,7 +725,14 @@ export default function BuyersList() {
                 )
               }
               name={
-                <>
+                <span
+                  onClick={
+                    isFoodSaleBuyer(buyer) ? () => setPurchaseDetailBuyer(buyer) :
+                    isRaffleBuyer(buyer) ? () => setRaffleDetailBuyer(buyer) :
+                    undefined
+                  }
+                  style={(isFoodSaleBuyer(buyer) || isRaffleBuyer(buyer)) ? { cursor: 'pointer' } : undefined}
+                >
                   {buyer.firstName} {buyer.lastName}
                   {buyer.isDelivered && (
                     <span className={styles.deliveredPill}>
@@ -654,7 +741,16 @@ export default function BuyersList() {
                       </svg>
                     </span>
                   )}
-                </>
+                  {buyer.isPrinted && (
+                    <span className={styles.printedPill} aria-label="Comprobante impreso">
+                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 9V2H18V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M6 18H4C3.46957 18 2.96086 17.7893 2.58579 17.4142C2.21071 17.0391 2 16.5304 2 16V11C2 10.4696 2.21071 9.96086 2.58579 9.58579C2.96086 9.21071 3.46957 9 4 9H20C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V16C22 16.5304 21.7893 17.0391 21.4142 17.4142C21.0391 17.7893 20.5304 18 20 18H18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M6 14H18V22H6V14Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
+                      </svg>
+                    </span>
+                  )}
+                </span>
               }
               phone={buyer.phone}
               eventLine={getDisplayEventName(buyer)}
@@ -681,7 +777,18 @@ export default function BuyersList() {
                           onClick={() => { setPurchaseDetailBuyer(buyer); handleMobileMenuClose(); }}
                         >
                           <IconDetail />
-                          Detalle de compra
+                          Detalle
+                        </button>
+                      )}
+                      {isRaffleBuyer(buyer) && (
+                        <button
+                          type="button"
+                          role="menuitem"
+                          className={listStyles.mobileMenuItem}
+                          onClick={() => { setRaffleDetailBuyer(buyer); handleMobileMenuClose(); }}
+                        >
+                          <IconDetail />
+                          Detalle
                         </button>
                       )}
                       <button
@@ -767,12 +874,13 @@ export default function BuyersList() {
             </div>
             <div className={styles.purchaseDetailFooter}>
               <button
-                className={`btn btn-primary ${purchaseDetailBuyer.isDelivered ? styles.btnDelivered : styles.btnUndelivered}`}
+                className="btn btn-primary"
                 onClick={() => {
                   setBuyers(prev => prev.map(b =>
                     b.id === purchaseDetailBuyer.id ? { ...b, isDelivered: !b.isDelivered } : b
                   ));
-                  setPurchaseDetailBuyer(prev => prev ? { ...prev, isDelivered: !prev.isDelivered } : null);
+                  setPurchaseDetailBuyer(null);
+                  deliverySnackbar.showSnackbar();
                 }}
               >
                 {purchaseDetailBuyer.isDelivered ? 'Desmarcar' : 'Entregado'}
@@ -840,12 +948,13 @@ export default function BuyersList() {
             </div>
             <div className={styles.purchaseDetailFooter}>
               <button
-                className={`btn btn-primary ${purchaseDetailBuyer.isDelivered ? styles.btnDelivered : styles.btnUndelivered}`}
+                className="btn btn-primary"
                 onClick={() => {
                   setBuyers(prev => prev.map(b =>
                     b.id === purchaseDetailBuyer.id ? { ...b, isDelivered: !b.isDelivered } : b
                   ));
-                  setPurchaseDetailBuyer(prev => prev ? { ...prev, isDelivered: !prev.isDelivered } : null);
+                  setPurchaseDetailBuyer(null);
+                  deliverySnackbar.showSnackbar();
                 }}
               >
                 {purchaseDetailBuyer.isDelivered ? 'Desmarcar' : 'Entregado'}
@@ -853,6 +962,122 @@ export default function BuyersList() {
             </div>
           </div>
         </>
+      )}
+      {/* Modal Detalle de números — rifa (desktop) */}
+      {isDesktop && raffleDetailBuyer && (
+        <div className={styles.modalOverlay} onClick={() => setRaffleDetailBuyer(null)}>
+          <div className={styles.purchaseDetailModal} onClick={(e) => e.stopPropagation()}>
+            <div className={styles.purchaseDetailHeader}>
+              <div>
+                <h2 className={styles.purchaseDetailTitle}>Números asignados</h2>
+                <p className={styles.purchaseDetailBuyerName}>
+                  {raffleDetailBuyer.firstName} {raffleDetailBuyer.lastName}
+                </p>
+              </div>
+              <button className={styles.closeButton} onClick={() => setRaffleDetailBuyer(null)}>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+            <div className={styles.purchaseDetailContent}>
+              <p className={styles.raffleNumbersCount}>
+                {raffleDetailBuyer.assignedNumbers?.length ?? 0} número{(raffleDetailBuyer.assignedNumbers?.length ?? 0) !== 1 ? 's' : ''} · Vendedor: {raffleDetailBuyer.sellerName}
+              </p>
+              <div className={styles.raffleNumbersGrid}>
+                {(raffleDetailBuyer.assignedNumbers ?? []).map((num) => (
+                  <span key={num} className={styles.raffleNumberChip}>{num}</span>
+                ))}
+              </div>
+            </div>
+            <div className={styles.purchaseDetailFooter}>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  setBuyers(prev => prev.map(b =>
+                    b.id === raffleDetailBuyer.id ? { ...b, isPrinted: !raffleDetailBuyer.isPrinted } : b
+                  ));
+                  setRaffleDetailBuyer(null);
+                  raffleSnackbar.showSnackbar();
+                }}
+              >
+                {raffleDetailBuyer.isPrinted ? 'Desmarcar impreso' : 'Imprimir comprobante'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Bottom Sheet Detalle de números — rifa (mobile) */}
+      {!isDesktop && raffleDetailBuyer && (
+        <>
+          <div className={listStyles.sheetOverlay} onClick={() => setRaffleDetailBuyer(null)} aria-hidden="true" />
+          <div
+            className={`${listStyles.sheetPanel} ${styles.purchaseDetailSheetPanel}`}
+            role="dialog"
+            aria-label="Números asignados"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={listStyles.sheetHandle} aria-hidden="true" />
+            <div className={styles.purchaseDetailHeader}>
+              <div>
+                <h2 className={styles.purchaseDetailTitle}>Números asignados</h2>
+                <p className={styles.purchaseDetailBuyerName}>
+                  {raffleDetailBuyer.firstName} {raffleDetailBuyer.lastName}
+                </p>
+              </div>
+              <button className={styles.closeButton} onClick={() => setRaffleDetailBuyer(null)} aria-label="Cerrar">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+            <div className={styles.purchaseDetailContent}>
+              <p className={styles.raffleNumbersCount}>
+                {raffleDetailBuyer.assignedNumbers?.length ?? 0} número{(raffleDetailBuyer.assignedNumbers?.length ?? 0) !== 1 ? 's' : ''} · Vendedor: {raffleDetailBuyer.sellerName}
+              </p>
+              <div className={styles.raffleNumbersGrid}>
+                {(raffleDetailBuyer.assignedNumbers ?? []).map((num) => (
+                  <span key={num} className={styles.raffleNumberChip}>{num}</span>
+                ))}
+              </div>
+            </div>
+            <div className={styles.purchaseDetailFooter}>
+              <button
+                className="btn btn-primary"
+                onClick={() => {
+                  setBuyers(prev => prev.map(b =>
+                    b.id === raffleDetailBuyer.id ? { ...b, isPrinted: !raffleDetailBuyer.isPrinted } : b
+                  ));
+                  setRaffleDetailBuyer(null);
+                  raffleSnackbar.showSnackbar();
+                }}
+              >
+                {raffleDetailBuyer.isPrinted ? 'Desmarcar impreso' : 'Imprimir comprobante'}
+              </button>
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Snackbar de rifa */}
+      {raffleSnackbar.isVisible && (
+        <div className={`${styles.snackbar} ${raffleSnackbar.isClosing ? styles.snackbarClosing : ''}`}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Comprobante enviado a imprimir
+        </div>
+      )}
+
+      {/* Snackbar de entrega */}
+      {deliverySnackbar.isVisible && (
+        <div className={`${styles.snackbar} ${deliverySnackbar.isClosing ? styles.snackbarClosing : ''}`}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M22 4L12 14.01L9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          Estado de entrega actualizado
+        </div>
       )}
     </div>
   );
