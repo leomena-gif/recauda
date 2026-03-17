@@ -394,7 +394,7 @@ export default function SellersList() {
               className="btn btn-sm btn-primary"
               onClick={() => setAssignModalOpen(true)}
             >
-              Asignar a evento
+              Asignar a evento ({selectedSellers.length})
             </button>
           )}
         </div>
@@ -410,7 +410,7 @@ export default function SellersList() {
           className={listStyles.assignStickyPrimary}
           onClick={openAssignSheet}
         >
-          Asignar a evento
+          Asignar a evento ({selectedSellers.length})
         </button>
       </MobileStickyActionBar>
 

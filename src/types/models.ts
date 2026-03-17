@@ -70,7 +70,9 @@ export interface Buyer {
   totalBought: number;
   lastActivity: string;
   isDelivered?: boolean;
+  isPrinted?: boolean;
   foodPurchase?: FoodPurchaseItem[];
+  assignedNumbers?: number[];
 }
 
 export interface Event {
