@@ -354,13 +354,6 @@ export default function EventDetail() {
         <div className={styles.assignStickyBar}>
           <button
             type="button"
-            className={styles.assignStickyCancel}
-            onClick={() => setSelectedCollectedVendors([])}
-          >
-            Cancelar
-          </button>
-          <button
-            type="button"
             className={styles.assignStickyPrimary}
             onClick={handleAssignMoreNumbers}
           >
