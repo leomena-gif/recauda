@@ -1,0 +1,76 @@
+/* Card System - 3 variantes */
+
+/* === BASE === */
+.card {
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--radius-xl);
+  transition: all var(--transition-base);
+}
+
+/* === VARIANTES === */
+
+/* surface: contenedor principal (fondo oscuro secundario, sombra suave) */
+.surface {
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-card);
+  box-shadow: var(--shadow-card);
+}
+
+/* elevated: card interna dentro de un surface (un nivel de profundidad más) */
+.elevated {
+  background-color: var(--color-bg-tertiary);
+  border: 1px solid var(--color-border-card-inner);
+  border-radius: var(--radius-lg);
+}
+
+/* inset: sección dentro de un surface, sin borde ni sombra */
+.inset {
+  background-color: var(--color-bg-tertiary);
+  border-radius: var(--radius-lg);
+}
+
+/* === PADDING === */
+.padding-none { padding: 0; }
+.padding-sm   { padding: var(--space-sm); }
+.padding-md   { padding: var(--space-md); }
+.padding-lg   { padding: var(--space-lg); }
+.padding-xl   { padding: var(--space-xl); }
+
+/* === INTERACTIVO (clickeable) === */
+.interactive {
+  cursor: pointer;
+}
+
+.surface.interactive:hover {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border-card-hover);
+  box-shadow: var(--shadow-card-hover);
+  transform: translateY(-1px);
+}
+
+.surface.interactive:active {
+  transform: scale(0.98);
+  box-shadow: var(--shadow-card-active);
+}
+
+.elevated.interactive:hover,
+.inset.interactive:hover {
+  border-color: var(--color-border-card-hover);
+  background-color: rgba(255, 255, 255, 0.04);
+}
+
+.elevated.interactive:active,
+.inset.interactive:active {
+  transform: scale(0.99);
+}
+
+/* === FULL WIDTH === */
+.fullWidth {
+  width: 100%;
+}
+
+/* === RESPONSIVE PADDING === */
+@media (min-width: 768px) {
+  .padding-lg  { padding: var(--space-xl); }
+}
