@@ -33,8 +33,8 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
   return (
     <div className={styles.container}>
       {showBack && (
-        <button 
-          className={styles.backButton} 
+        <button
+          className={`btn btn-secondary ${styles.backButton}`}
           onClick={onBack}
           disabled={isLoading}
         >
@@ -45,7 +45,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
         </button>
       )}
       <button 
-        className={`${styles.continueButton} ${isLoading ? styles.loading : ''}`} 
+        className={`btn btn-primary ${styles.continueButton} ${isLoading ? styles.loading : ''}`}
         onClick={handleContinue}
         disabled={isLoading}
       >

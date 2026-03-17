@@ -48,7 +48,7 @@ export default function Home() {
         {/* Header - Desktop Only */}
         <div className={styles.header}>
           <div className={styles.titleSection}>
-            <h1 className={`pageTitle ${styles.pageTitle}`}>Mis Eventos</h1>
+            <h1 className={`pageTitle ${styles.pageTitle}`}>Mis eventos</h1>
           </div>
           <div className={styles.headerActions}>
             <button className="btn btn-secondary" onClick={() => setIsSaleWizardOpen(true)}>

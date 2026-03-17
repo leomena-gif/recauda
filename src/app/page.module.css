@@ -27,7 +27,7 @@
 /* Filter Pills - Dark Mode Mobile First */
 .filtersContainer {
   margin-bottom: var(--space-md);
-  margin-top: 40px;
+  margin-top: 0;
   overflow-x: auto;
   overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
@@ -97,7 +97,9 @@
 }
 
 .pillActive:hover {
-  opacity: 0.92;
+  background-color: var(--color-gray-900);
+  border-color: var(--color-gray-900);
+  color: var(--color-bg-primary);
 }
 
 /* Bottom Button Container */
@@ -122,7 +124,7 @@
   background-color: var(--color-white);
   color: var(--color-bg-primary);
   border: none;
-  border-radius: var(--radius-xl);
+  border-radius: 7px;
   font-weight: var(--font-weight-semibold);
   padding: var(--space-md) var(--space-lg);
   font-size: var(--font-size-base);

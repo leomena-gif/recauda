@@ -260,7 +260,7 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
 
     return (
       <div className={styles.container}>
-        <h1 className={styles.title}>Datos Generales</h1>
+        <h1 className={styles.title}>Datos generales</h1>
 
         <div className={styles.formCard}>
           {/* Event Name - Always visible */}

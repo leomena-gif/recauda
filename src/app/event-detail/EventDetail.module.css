@@ -230,7 +230,7 @@
   background-color: #E5E5EA;
   color: var(--color-bg-primary);
   border: none;
-  border-radius: var(--radius-xl);
+  border-radius: 7px;
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
@@ -350,8 +350,7 @@
 /* Search Container */
 .searchContainer {
   margin-bottom: 0;
-  margin-top: var(--space-lg);
-  /* Add spacing between tabs and search on mobile */
+  margin-top: 0;
   width: 100%;
   padding: 0;
 }
@@ -726,7 +725,7 @@
     background-color: var(--color-white);
     color: var(--color-bg-primary);
     border: none;
-    border-radius: var(--radius-md);
+    border-radius: 7px;
     padding: var(--space-sm) var(--space-lg);
     font-size: var(--font-size-base);
     font-weight: var(--font-weight-semibold);

@@ -3,7 +3,7 @@ import AccountForm from '@/components/AccountForm';
 import styles from './page.module.css';
 
 export const metadata = {
-  title: 'Recauda - Crear Cuenta',
+  title: 'Recauda - Crear cuenta',
   description: 'Completa los siguientes datos para crear tu cuenta',
 };
 

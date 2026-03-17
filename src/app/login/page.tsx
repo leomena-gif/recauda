@@ -3,7 +3,7 @@ import LoginForm from '@/components/LoginForm';
 import styles from './page.module.css';
 
 export const metadata = {
-  title: 'Recauda - Iniciar Sesión',
+  title: 'Recauda - Iniciar sesión',
   description: 'Inicia sesión en tu cuenta de Recauda',
 };
 

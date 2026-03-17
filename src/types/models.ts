@@ -50,6 +50,12 @@ export interface Seller {
   lastActivity: string;
 }
 
+export interface FoodPurchaseItem {
+  dishName: string;
+  quantity: number;
+  unitPrice: number;
+}
+
 export interface Buyer {
   id: string;
   firstName: string;
@@ -64,6 +70,7 @@ export interface Buyer {
   totalBought: number;
   lastActivity: string;
   isDelivered?: boolean;
+  foodPurchase?: FoodPurchaseItem[];
 }
 
 export interface Event {

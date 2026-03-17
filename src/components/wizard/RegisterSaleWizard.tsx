@@ -7,6 +7,10 @@
  * Owns all shared state and passes it down to the responsive
  * presentational components: RegisterSaleSheet (mobile) and
  * RegisterSaleModal (desktop).
+ *
+ * Flow:
+ *  Non-food: step 1 (event) → step 2 (quantity + buyer data)
+ *  Food:     step 1 (event) → step 2 (dishes) → step 3 (buyer data)
  */
 
 import React, { useState, useCallback } from 'react';
@@ -30,6 +34,7 @@ export interface SaleEvent {
     goal?: number;
     soldUnits?: number;
     totalUnits?: number;
+    ticketPrice?: number;
     dishes?: Dish[];
 }
 
@@ -41,8 +46,8 @@ interface RegisterSaleWizardProps {
 
 const RegisterSaleWizard: React.FC<RegisterSaleWizardProps> = ({ isOpen, onClose, events }) => {
     // ─── Wizard Step State ────────────────────────────────────────────────
-    const [mobileStep, setMobileStep] = useState<1 | 2>(1);
-    const [desktopStep, setDesktopStep] = useState<1 | 2>(1);
+    const [mobileStep, setMobileStep] = useState<1 | 2 | 3>(1);
+    const [desktopStep, setDesktopStep] = useState<1 | 2 | 3>(1);
     const [isSuccess, setIsSuccess] = useState(false);
 
     // ─── Form State ───────────────────────────────────────────────────────
@@ -86,6 +91,7 @@ const RegisterSaleWizard: React.FC<RegisterSaleWizardProps> = ({ isOpen, onClose
         setEventError(undefined);
     }, []);
 
+    // Step 1 → Step 2
     const handleContinue = useCallback(() => {
         const error = validateEventStep(selectedEventId);
         if (error) {
@@ -96,11 +102,28 @@ const RegisterSaleWizard: React.FC<RegisterSaleWizardProps> = ({ isOpen, onClose
         setDesktopStep(2);
     }, [selectedEventId]);
 
-    const handleBack = useCallback(() => {
-        setMobileStep(1);
-        setDesktopStep(1);
+    // Step 2 → Step 3 (food only: validates at least one dish selected)
+    const handleContinueDishes = useCallback(() => {
+        const hasDishes = Object.values(selectedDishes).some((qty) => qty > 0);
+        if (!hasDishes) {
+            setDetailErrors({ dishes: 'Seleccioná al menos un plato' });
+            return;
+        }
         setDetailErrors({});
-    }, []);
+        setMobileStep(3);
+        setDesktopStep(3);
+    }, [selectedDishes]);
+
+    const handleBack = useCallback(() => {
+        if (mobileStep === 3) {
+            setMobileStep(2);
+            setDesktopStep(2);
+        } else {
+            setMobileStep(1);
+            setDesktopStep(1);
+        }
+        setDetailErrors({});
+    }, [mobileStep]);
 
     const handleDishChange = useCallback((dishName: string, quantity: number) => {
         setSelectedDishes((prev) => ({ ...prev, [dishName]: quantity }));
@@ -147,6 +170,7 @@ const RegisterSaleWizard: React.FC<RegisterSaleWizardProps> = ({ isOpen, onClose
         onClose: handleClose,
         onSelectEvent: handleSelectEvent,
         onContinue: handleContinue,
+        onContinueDishes: handleContinueDishes,
         onBack: handleBack,
         onQuantityChange: setSaleQuantity,
         onBuyerNameChange: (val: string) => { setBuyerName(val); clearDetailError('buyerName'); },

@@ -3,6 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './FoodEventCard.module.css';
+import Card from './Card';
 
 interface FoodEventCardProps {
     id?: string;
@@ -33,7 +34,8 @@ const FoodEventCard: React.FC<FoodEventCardProps> = ({
 
 
     return (
-        <div className={styles.card} onClick={handleCardClick}>
+        <Card interactive onClick={handleCardClick}>
+        <div className={styles.content}>
             {/* Status Badge with Dot */}
             <div className={styles.statusContainer}>
                 <span className={styles.statusDot}></span>
@@ -83,6 +85,7 @@ const FoodEventCard: React.FC<FoodEventCardProps> = ({
                 </span>
             </div>
         </div>
+        </Card>
     );
 };
 

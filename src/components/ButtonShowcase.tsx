@@ -68,9 +68,9 @@ const ButtonShowcase: React.FC = () => {
               Los botones deben reflejar la importancia de cada acción.
             </p>
             <div className={styles.cardActions}>
-              <button className="btn btn-primary">Crear evento</button>
-              <button className="btn btn-tertiary">Ver detalles</button>
-              <button className="btn btn-secondary">Cancelar</button>
+              <button className="btn btn-primary btn-md">Crear evento</button>
+              <button className="btn btn-tertiary btn-md">Ver detalles</button>
+              <button className="btn btn-secondary btn-md">Cancelar</button>
             </div>
           </div>
         </div>

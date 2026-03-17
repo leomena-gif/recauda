@@ -91,32 +91,7 @@
 }
 
 .submitButton {
-  background-color: var(--color-white);
-  color: var(--color-bg-primary);
-  border: none;
-  padding: var(--space-md);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-semibold);
-  cursor: pointer;
-  transition: all var(--transition-base);
   margin-top: var(--space-xs);
-}
-
-.submitButton:hover {
-  background-color: var(--color-gray-900);
-  color: var(--color-bg-primary);
-}
-
-.submitButton:active {
-  background-color: var(--color-gray-800);
-  color: var(--color-bg-primary);
-  transform: translateY(1px);
-}
-
-.submitButton:focus-visible {
-  outline: 2px solid #fff;
-  outline-offset: 2px;
 }
 
 /* Divider */
@@ -142,32 +117,6 @@
   background-color: var(--color-border-light);
 }
 
-.backToLoginButton {
-  background-color: var(--color-bg-primary);
-  color: var(--color-white);
-  border: 1px solid var(--color-white);
-  padding: 16px;
-  border-radius: var(--radius-lg);
-  font-size: 18px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all var(--transition-base);
-  width: 100%;
-}
-
-.backToLoginButton:hover {
-  background-color: rgba(255, 255, 255, 0.08);
-}
-
-.backToLoginButton:active {
-  transform: translateY(1px);
-  background-color: rgba(255, 255, 255, 0.12);
-}
-
-.backToLoginButton:focus-visible {
-  outline: 2px solid var(--color-white);
-  outline-offset: 2px;
-}
 
 /* Responsive Design */
 @media (min-width: 768px) {

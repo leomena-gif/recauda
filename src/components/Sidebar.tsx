@@ -15,7 +15,7 @@ interface SidebarItem {
 const sidebarItems: SidebarItem[] = [
   {
     id: 'home',
-    label: 'Mis Eventos',
+    label: 'Mis eventos',
     path: '/',
     icon: 'home'
   },
@@ -33,6 +33,12 @@ const sidebarItems: SidebarItem[] = [
   }
 ];
 
+// TODO: Replace with real auth context
+const mockUser = {
+  name: 'Leonardo García',
+  institution: 'Club Deportivo San Martín'
+};
+
 const Sidebar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
@@ -44,13 +50,8 @@ const Sidebar: React.FC = () => {
       setIsWideScreen(window.innerWidth > 1600);
     };
 
-    // Check initial width
     checkScreenWidth();
-
-    // Add resize listener
     window.addEventListener('resize', checkScreenWidth);
-
-    // Cleanup
     return () => window.removeEventListener('resize', checkScreenWidth);
   }, []);
 
@@ -58,11 +59,12 @@ const Sidebar: React.FC = () => {
     router.push(path);
   };
 
-  const shouldExpand = isWideScreen || isHovered;
+  const handleLogout = () => {
+    router.push('/login');
+  };
 
   return (
     <>
-      {/* Overlay - appears when sidebar is expanded (but not on wide screens) */}
       <div
         className={`${styles.sidebarOverlay} ${isHovered && !isWideScreen ? styles.sidebarOverlayVisible : ''}`}
         onClick={() => setIsHovered(false)}
@@ -73,6 +75,7 @@ const Sidebar: React.FC = () => {
         onMouseEnter={() => !isWideScreen && setIsHovered(true)}
         onMouseLeave={() => !isWideScreen && setIsHovered(false)}
       >
+        {/* Logo */}
         <div className={styles.sidebarHeader}>
           <Image
             src="/images/logo-short.png"
@@ -92,13 +95,29 @@ const Sidebar: React.FC = () => {
           />
         </div>
 
+        {/* User profile */}
+        <div className={styles.userProfileSection}>
+          <div className={styles.userProfile}>
+            <div className={styles.userAvatar}>
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="8" r="4" fill="#111" />
+                <path d="M4 20C4 16.6863 7.58172 14 12 14C16.4183 14 20 16.6863 20 20" stroke="#111" strokeWidth="2.5" strokeLinecap="round" />
+              </svg>
+            </div>
+            <div className={styles.userInfo}>
+              <span className={styles.userName}>{mockUser.name}</span>
+              <span className={styles.userInstitution}>{mockUser.institution}</span>
+            </div>
+          </div>
+        </div>
+
+        {/* Navigation */}
         <nav className={styles.sidebarNav}>
           <ul className={styles.sidebarList}>
             {sidebarItems.map((item) => (
               <li key={item.id} className={styles.sidebarItem}>
                 <button
-                  className={`${styles.sidebarButton} ${pathname === item.path ? styles.sidebarButtonActive : ''
-                    }`}
+                  className={`${styles.sidebarButton} ${pathname === item.path ? styles.sidebarButtonActive : ''}`}
                   onClick={() => handleNavigation(item.path)}
                 >
                   <span className={styles.sidebarIcon}>
@@ -129,6 +148,23 @@ const Sidebar: React.FC = () => {
             ))}
           </ul>
         </nav>
+
+        {/* Footer: Logout */}
+        <div className={styles.sidebarFooter}>
+          <div className={styles.sidebarDivider} />
+
+          {/* Logout button */}
+          <button className={styles.logoutButton} onClick={handleLogout}>
+            <span className={styles.sidebarIcon}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M9 21H5C4 21 3 20 3 19V5C3 4 4 3 5 3H9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <polyline points="16 17 21 12 16 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                <line x1="21" y1="12" x2="9" y2="12" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              </svg>
+            </span>
+            <span className={styles.sidebarLabel}>Cerrar sesión</span>
+          </button>
+        </div>
       </aside>
     </>
   );
