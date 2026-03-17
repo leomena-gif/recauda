@@ -28,8 +28,8 @@ export type AppRoute = typeof ROUTES[keyof typeof ROUTES];
 
 export const STATUS_OPTIONS = [
   { value: 'all', label: 'Todos los estados' },
-  { value: 'active', label: 'HABILITADO' },
-  { value: 'inactive', label: 'DESHABILITADO' },
+  { value: 'active', label: 'Habilitado' },
+  { value: 'inactive', label: 'Deshabilitado' },
 ] as const;
 
 export const EVENT_FILTER_OPTIONS = [

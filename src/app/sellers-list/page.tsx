@@ -1,21 +1,25 @@
 'use client';
 
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Seller, Event, StatusFilter } from '@/types/models';
 import { STATUS_OPTIONS, SNACKBAR_DURATION } from '@/constants';
-import { validateName, validatePhone } from '@/utils/validation';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { MOCK_SELLERS, MOCK_EVENTS } from '@/mocks/data';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import CustomDropdown from '@/components/CustomDropdown';
+import MobileListRow from '@/components/MobileListRow';
+import MobileFilterSheet from '@/components/MobileFilterSheet';
+import MobileStickyActionBar from '@/components/MobileStickyActionBar';
+import EmptyState from '@/components/EmptyState';
+import listStyles from '@/styles/list.module.css';
 import styles from './SellersList.module.css';
 
 export default function SellersList() {
   const router = useRouter();
   // State
   const [sellers, setSellers] = useState<Seller[]>(MOCK_SELLERS);
-  const [events, setEvents] = useState<Event[]>(MOCK_EVENTS);
+  const [events] = useState<Event[]>(MOCK_EVENTS);
 
   const [selectedSellers, setSelectedSellers] = useState<string[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -60,10 +64,10 @@ export default function SellersList() {
   // Close mobile menu when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (mobileMenuOpen && !(event.target as Element).closest(`.${styles.mobileMenuContainer}`)) {
+      if (mobileMenuOpen && !(event.target as Element).closest(`.${listStyles.mobileMenuContainer}`)) {
         handleMobileMenuClose();
       }
-      if (desktopMenuOpen && !(event.target as Element).closest(`.${styles.desktopMenuContainer}`)) {
+      if (desktopMenuOpen && !(event.target as Element).closest(`.${listStyles.desktopMenuContainer}`)) {
         setDesktopMenuOpen(null);
       }
     };
@@ -84,7 +88,6 @@ export default function SellersList() {
         )) ||
         seller.phone.includes(searchTerm) ||
         seller.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        // Buscar por nombre de evento asignado
         (seller.assignedEvents.length > 0 && events.find(e =>
           e.id === seller.assignedEvents[0] &&
           e.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -93,6 +96,10 @@ export default function SellersList() {
       const matchesEvent =
         eventFilter === 'all'
           ? true
+          : eventFilter === 'no_event'
+          ? seller.assignedEvents.length === 0
+          : eventFilter === 'active_events'
+          ? seller.assignedEvents.some(eventId => events.find(e => e.id === eventId)?.status === 'active')
           : seller.assignedEvents.some(eventId => {
             const event = events.find(e => e.id === eventId);
             return event?.status === 'active' && event.id === eventFilter;
@@ -140,7 +147,6 @@ export default function SellersList() {
       prevSellers.map(seller => {
         if (seller.id === sellerId) {
           const newStatus = seller.status === 'active' ? 'inactive' : 'active';
-          // Si se desactiva, removerlo de la selección
           if (newStatus === 'inactive' && selectedSellers.includes(sellerId)) {
             setSelectedSellers(prev => prev.filter(id => id !== sellerId));
           }
@@ -149,51 +155,6 @@ export default function SellersList() {
         return seller;
       })
     );
-  };
-
-  const handleTooltipMouseEnter = (e: React.MouseEvent<HTMLDivElement>, sellerId: string) => {
-    const seller = sellers.find(s => s.id === sellerId);
-    if (!seller || seller.status === 'active') return;
-
-    const tooltip = e.currentTarget.querySelector('.checkboxTooltip') as HTMLElement;
-    if (tooltip) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const tooltipWidth = 280;
-      const tooltipHeight = 60;
-
-      // Calcular posición horizontal centrada en el checkbox
-      let left = rect.left + (rect.width / 2) - (tooltipWidth / 2);
-
-      // Ajustar límites considerando el sidebar (280px de ancho)
-      const sidebarWidth = 280;
-      const margin = 30;
-
-      // Asegurar que no se corte detrás del sidebar
-      if (left < sidebarWidth + margin) {
-        left = sidebarWidth + margin;
-      }
-
-      // Ajustar si se sale por la derecha
-      if (left + tooltipWidth > window.innerWidth - margin) {
-        left = window.innerWidth - tooltipWidth - margin;
-      }
-
-      // Posición vertical - arriba del checkbox con más espacio
-      const top = rect.top - tooltipHeight - 15;
-
-      tooltip.style.left = `${left}px`;
-      tooltip.style.top = `${top}px`;
-      tooltip.style.display = 'block';
-      tooltip.style.opacity = '1';
-      tooltip.style.visibility = 'visible';
-    }
-  };
-
-  const handleTooltipMouseLeave = (e: React.MouseEvent<HTMLDivElement>) => {
-    const tooltip = e.currentTarget.querySelector('.checkboxTooltip') as HTMLElement;
-    if (tooltip) {
-      tooltip.style.display = 'none';
-    }
   };
 
   const handleAssignToEvent = useCallback((eventId: string) => {
@@ -223,8 +184,6 @@ export default function SellersList() {
   ) => {
     const value = e.target.value;
     setEditFormData(prev => ({ ...prev, [field]: value }));
-
-    // Clear error when user starts typing
     if (editFormErrors[field]) {
       setEditFormErrors(prev => ({ ...prev, [field]: undefined }));
     }
@@ -247,11 +206,6 @@ export default function SellersList() {
 
     if (Object.keys(newErrors).length === 0 && editingSeller) {
       try {
-        // En una aplicación real, aquí iría la llamada a la API
-        // Simular un posible error del sistema (descomenta para probar)
-        // throw new Error('Error del sistema');
-
-        // Update seller data
         setSellers(prevSellers =>
           prevSellers.map(seller =>
             seller.id === editingSeller.id
@@ -329,14 +283,47 @@ export default function SellersList() {
     router.push('/add-seller');
   };
 
+  // SVG icons reused in menus
+  const IconAssign = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M19 8L21 10L25 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+  const IconEdit = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+  const IconDisable = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+  const IconEnable = () => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+      <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+  const IconDotsVertical = () => (
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <circle cx="12" cy="6" r="1.5" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.5" fill="currentColor" />
+      <circle cx="12" cy="18" r="1.5" fill="currentColor" />
+    </svg>
+  );
+
   return (
     <div className="pageContainer">
-      <div className={styles.stickyHeader}>
-        <div className={styles.header}>
-          <div className={styles.titleSection}>
+      <div className={listStyles.stickyHeader}>
+        <div className={listStyles.header}>
+          <div className={listStyles.titleSection}>
             <h1 className="pageTitle">Lista de vendedores</h1>
           </div>
-          <div className={styles.headerActions}>
+          <div className={listStyles.headerActions}>
             <button className="btn btn-primary" onClick={handleAddSeller}>
               Agregar vendedor
             </button>
@@ -344,10 +331,10 @@ export default function SellersList() {
         </div>
 
         {/* Action Bar */}
-        <div className={styles.actionBar}>
-          <div className={styles.leftSection}>
-            <div className={styles.searchContainer}>
-              <svg className={styles.searchIcon} width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <div className={listStyles.actionBar}>
+          <div className={listStyles.leftSection}>
+            <div className={listStyles.searchContainer}>
+              <svg className={listStyles.searchIcon} width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
                 <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
@@ -356,13 +343,13 @@ export default function SellersList() {
                 placeholder={isDesktop ? "Buscar por nombre, teléfono o evento" : "Buscar por teléfono o evento"}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={styles.searchInput}
+                className={listStyles.searchInput}
               />
             </div>
 
             {/* Desktop: dos filtros en línea */}
-            <div className={styles.filtersGroupDesktop}>
-              <div className={styles.statusFilter}>
+            <div className={listStyles.filtersGroupDesktop}>
+              <div className={listStyles.statusFilter}>
                 <CustomDropdown
                   options={STATUS_OPTIONS.map(opt => ({ value: opt.value, label: opt.label }))}
                   value={statusFilter}
@@ -370,11 +357,12 @@ export default function SellersList() {
                   placeholder="Filtrar por estado"
                 />
               </div>
-              <div className={styles.eventFilter}>
+              <div className={listStyles.eventFilter}>
                 <CustomDropdown
                   options={[
-                    { value: 'all', label: 'Todos los eventos activos' },
-                    ...activeEvents.map(event => ({ value: event.id, label: event.name }))
+                    { value: 'all', label: 'Todos los eventos' },
+                    ...activeEvents.map(event => ({ value: event.id, label: event.name })),
+                    { value: 'no_event', label: 'Sin evento asignado' },
                   ]}
                   value={eventFilter}
                   onChange={(value) => setEventFilter(value as string)}
@@ -385,99 +373,93 @@ export default function SellersList() {
             </div>
 
             {/* Mobile: botón Filtros abre sheet */}
-            <button
-              type="button"
-              className={styles.filtersTriggerMobile}
-              onClick={openFiltersSheet}
-              aria-label="Abrir filtros"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                <path d="M4 6h16M4 12h16M4 18h7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              <span>Filtros</span>
-            </button>
+            {!isDesktop && (
+              <button
+                type="button"
+                className={listStyles.filtersTriggerMobile}
+                onClick={openFiltersSheet}
+                aria-label="Abrir filtros"
+              >
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                  <path d="M4 6h16M4 12h16M4 18h7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                <span>Filtros</span>
+              </button>
+            )}
           </div>
 
+          {/* Botón Asignar a evento (Desktop, cuando hay selección) */}
+          {isDesktop && selectedSellers.length > 0 && (
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={() => setAssignModalOpen(true)}
+            >
+              Asignar a evento
+            </button>
+          )}
         </div>
       </div>
 
       {/* Mobile: sticky bottom bar Asignar (solo cuando hay selección) */}
-      {selectedSellers.length > 0 && (
-        <div className={styles.assignStickyBar}>
-          <button type="button" className={styles.assignStickyCancel} onClick={handleMobileAssignCancel}>
-            Cancelar
-          </button>
-          <button
-            type="button"
-            className={styles.assignStickyPrimary}
-            onClick={openAssignSheet}
-          >
-            Asignar {selectedSellers.length} vendedor{selectedSellers.length > 1 ? 'es' : ''}
-          </button>
-        </div>
-      )}
+      <MobileStickyActionBar
+        visible={!isDesktop && selectedSellers.length > 0}
+        onCancel={handleMobileAssignCancel}
+      >
+        <button
+          type="button"
+          className={listStyles.assignStickyPrimary}
+          onClick={openAssignSheet}
+        >
+          Asignar a evento
+        </button>
+      </MobileStickyActionBar>
 
       {/* Mobile: bottom sheet Filtros */}
-      {filtersSheetOpen && (
-        <div className={styles.sheetOverlay} onClick={closeFiltersSheet} aria-hidden="true" />
-      )}
-      {filtersSheetOpen && (
-        <div className={styles.sheetPanel} role="dialog" aria-label="Filtros" onClick={(e) => e.stopPropagation()}>
-          <div className={styles.sheetHandle} aria-hidden="true" />
-          <h2 className={styles.sheetTitle}>Filtros</h2>
-          <div className={styles.sheetFilters}>
-            <div className={styles.sheetFilterGroup}>
-              <span className={styles.sheetFilterLabel}>Estado</span>
-              <div className={styles.sheetFilterOptions}>
-                {STATUS_OPTIONS.map((opt) => (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    className={statusFilter === opt.value ? styles.sheetFilterOptionActive : styles.sheetFilterOption}
-                    onClick={() => setStatusFilter(opt.value as StatusFilter)}
-                  >
-                    {opt.label}
-                  </button>
-                ))}
-              </div>
-            </div>
-            <div className={styles.sheetFilterGroup}>
-              <span className={styles.sheetFilterLabel}>Evento</span>
-              <div className={styles.sheetFilterOptions}>
-                <button
-                  type="button"
-                  className={eventFilter === 'all' ? styles.sheetFilterOptionActive : styles.sheetFilterOption}
-                  onClick={() => setEventFilter('all')}
-                >
-                  Todos los eventos activos
-                </button>
-                {activeEvents.map((event) => (
-                  <button
-                    key={event.id}
-                    type="button"
-                    className={eventFilter === event.id ? styles.sheetFilterOptionActive : styles.sheetFilterOption}
-                    onClick={() => setEventFilter(event.id)}
-                  >
-                    {event.name}
-                  </button>
-                ))}
-              </div>
-            </div>
+      <MobileFilterSheet isOpen={!isDesktop && filtersSheetOpen} onClose={closeFiltersSheet}>
+        <div className={listStyles.sheetFilterGroup}>
+          <span className={listStyles.sheetFilterLabel}>Estado</span>
+          <div className={listStyles.sheetFilterOptions}>
+            {STATUS_OPTIONS.map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                className={statusFilter === opt.value ? listStyles.sheetFilterOptionActive : listStyles.sheetFilterOption}
+                onClick={() => setStatusFilter(opt.value as StatusFilter)}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
-          <button type="button" className={styles.sheetApply} onClick={closeFiltersSheet}>
-            Aplicar
-          </button>
         </div>
-      )}
+        <div className={listStyles.sheetFilterGroup}>
+          <span className={listStyles.sheetFilterLabel}>Evento</span>
+          <div className={listStyles.sheetFilterOptions}>
+            {[
+              { value: 'all', label: 'Todos los eventos' },
+              ...activeEvents.map(event => ({ value: event.id, label: event.name })),
+              { value: 'no_event', label: 'Sin evento asignado' },
+            ].map((opt) => (
+              <button
+                key={opt.value}
+                type="button"
+                className={eventFilter === opt.value ? listStyles.sheetFilterOptionActive : listStyles.sheetFilterOption}
+                onClick={() => setEventFilter(opt.value)}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </MobileFilterSheet>
 
       {/* Mobile: bottom sheet Asignar evento */}
-      {assignSheetOpen && (
-        <div className={styles.sheetOverlay} onClick={closeAssignSheet} aria-hidden="true" />
+      {!isDesktop && assignSheetOpen && (
+        <div className={listStyles.sheetOverlay} onClick={closeAssignSheet} aria-hidden="true" />
       )}
-      {assignSheetOpen && (
-        <div className={styles.sheetPanel} role="dialog" aria-label="Seleccionar evento" onClick={(e) => e.stopPropagation()}>
-          <div className={styles.sheetHandle} aria-hidden="true" />
-          <h2 className={styles.sheetTitle}>Asignar a evento</h2>
+      {!isDesktop && assignSheetOpen && (
+        <div className={listStyles.sheetPanel} role="dialog" aria-label="Seleccionar evento" onClick={(e) => e.stopPropagation()}>
+          <div className={listStyles.sheetHandle} aria-hidden="true" />
+          <h2 className={listStyles.sheetTitle}>Asignar a evento</h2>
           {activeEvents.length > 0 ? (
             <div className={styles.sheetEventList}>
               {activeEvents.map((event) => (
@@ -489,60 +471,63 @@ export default function SellersList() {
                 >
                   <div className={styles.sheetEventStatus}>
                     <span className={styles.sheetEventStatusDot}></span>
-                    <span className={styles.sheetEventStatusText}>ACTIVO</span>
+                    <span className={styles.sheetEventStatusText}>Activo</span>
                   </div>
                   <div className={styles.sheetEventName}>{event.name}</div>
                 </button>
               ))}
             </div>
           ) : (
-            <p className={styles.sheetNoEvents}>No hay eventos en estado ACTIVO</p>
+            <p className={styles.sheetNoEvents}>No hay eventos activos</p>
           )}
         </div>
       )}
 
       {/* Desktop Table View */}
-      <div className={styles.tableContainer}>
-        <table className={styles.table}>
+      <div className={listStyles.tableContainer}>
+        <table className={listStyles.table}>
           <thead>
             <tr>
-              <th className={styles.checkboxColumn}>
-                <input
-                  type="checkbox"
-                  checked={
-                    filteredSellers.filter(s => s.status === 'active').length > 0 &&
-                    selectedSellers.length === filteredSellers.filter(s => s.status === 'active').length
-                  }
-                  onChange={handleSelectAll}
-                  className={styles.checkbox}
-                  disabled={filteredSellers.filter(s => s.status === 'active').length === 0}
-                  title={filteredSellers.filter(s => s.status === 'active').length === 0 ? 'No hay vendedores activos para seleccionar' : 'Seleccionar todos los vendedores activos'}
-                />
+              <th className={listStyles.checkboxColumn}>
+                <div className={listStyles.checkboxWrapper}>
+                  <input
+                    type="checkbox"
+                    checked={
+                      filteredSellers.filter(s => s.status === 'active').length > 0 &&
+                      selectedSellers.length === filteredSellers.filter(s => s.status === 'active').length
+                    }
+                    onChange={handleSelectAll}
+                    className={listStyles.checkbox}
+                    disabled={filteredSellers.filter(s => s.status === 'active').length === 0}
+                    title={filteredSellers.filter(s => s.status === 'active').length === 0 ? 'No hay vendedores activos para seleccionar' : 'Seleccionar todos los vendedores activos'}
+                    aria-label={filteredSellers.filter(s => s.status === 'active').length === 0 ? 'No hay vendedores activos para seleccionar' : 'Seleccionar todos los vendedores activos'}
+                  />
+                </div>
               </th>
               <th>
-                <div className={styles.headerWithCounter}>
+                <div className={listStyles.headerWithCounter}>
                   <span>Vendedor</span>
-                  <span className={styles.headerCounter}>{filteredSellers.length}</span>
+                  <span className={listStyles.headerCounter}>{filteredSellers.length}</span>
                 </div>
               </th>
               <th>Evento Asignado</th>
-              <th className={styles.actionsColumn}></th>
+              <th className={listStyles.actionsColumn}></th>
             </tr>
           </thead>
           <tbody>
             {filteredSellers.map((seller) => (
               <tr
                 key={seller.id}
-                className={`${styles.tableRow} ${seller.status === 'inactive' ? styles.tableRowInactive : ''}`}
+                className={`${listStyles.tableRow} ${seller.status === 'inactive' ? listStyles.tableRowInactive : ''}`}
               >
-                <td className={styles.checkboxColumn}>
-                  <div className={styles.checkboxWrapper}>
+                <td className={listStyles.checkboxColumn}>
+                  <div className={listStyles.checkboxWrapper}>
                     <input
                       type="checkbox"
                       checked={selectedSellers.includes(seller.id)}
                       onChange={() => handleSelectSeller(seller.id)}
                       disabled={seller.status === 'inactive'}
-                      className={styles.checkbox}
+                      className={listStyles.checkbox}
                     />
                   </div>
                 </td>
@@ -555,89 +540,60 @@ export default function SellersList() {
                   </div>
                 </td>
                 <td>
-                  <div className={styles.eventInfo}>
+                  <div className={listStyles.eventInfo}>
                     {seller.assignedEvents.length > 0 ? (
-                      <div className={styles.eventName}>
+                      <div className={listStyles.eventName}>
                         {(() => {
                           const firstEvent = events.find(e => e.id === seller.assignedEvents[0]);
                           return firstEvent ? firstEvent.name : 'Sin evento';
                         })()}
                       </div>
                     ) : (
-                      <div className={styles.noEvent}>Sin evento asignado</div>
+                      <div className={listStyles.noEvent}>Sin evento asignado</div>
                     )}
                   </div>
                 </td>
-                <td className={styles.actionsColumn}>
-                  <div className={styles.desktopMenuContainer}>
+                <td className={listStyles.actionsColumn}>
+                  <div className={listStyles.desktopMenuContainer}>
                     <button
-                      className={styles.desktopMenuButton}
+                      className={listStyles.desktopMenuButton}
                       onClick={() => handleDesktopMenuToggle(seller.id)}
                       title="Más opciones"
                       aria-label="Menú de opciones"
                       aria-expanded={desktopMenuOpen === seller.id}
                       aria-haspopup="true"
                     >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                        <circle cx="12" cy="6" r="1.5" fill="currentColor" />
-                        <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-                        <circle cx="12" cy="18" r="1.5" fill="currentColor" />
-                      </svg>
+                      <IconDotsVertical />
                     </button>
                     {desktopMenuOpen === seller.id && (
-                      <div
-                        className={styles.desktopMenuDropdown}
-                        role="menu"
-                      >
+                      <div className={listStyles.desktopMenuDropdown} role="menu">
                         {seller.status === 'active' && (
                           <button
                             type="button"
                             role="menuitem"
-                            className={styles.desktopMenuItem}
+                            className={listStyles.desktopMenuItem}
                             onClick={() => handleDesktopAssignFromMenu(seller)}
                           >
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                              <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                              <path d="M19 8L21 10L25 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
+                            <IconAssign />
                             Asignar a evento
                           </button>
                         )}
                         <button
                           type="button"
                           role="menuitem"
-                          className={styles.desktopMenuItem}
+                          className={listStyles.desktopMenuItem}
                           onClick={() => handleDesktopEdit(seller)}
                         >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
+                          <IconEdit />
                           Editar datos
                         </button>
                         <button
                           type="button"
                           role="menuitem"
-                          className={styles.desktopMenuItem}
+                          className={listStyles.desktopMenuItem}
                           onClick={() => handleDesktopToggleStatus(seller.id)}
                         >
-                          {seller.status === 'active' ? (
-                            <>
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
-                              Deshabilitar
-                            </>
-                          ) : (
-                            <>
-                              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                                <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                              </svg>
-                              Habilitar
-                            </>
-                          )}
+                          {seller.status === 'active' ? <><IconDisable /> Deshabilitar</> : <><IconEnable /> Habilitar</>}
                         </button>
                       </div>
                     )}
@@ -649,132 +605,105 @@ export default function SellersList() {
         </table>
       </div>
 
-      {/* Mobile List View — lista de filas, sin tabla; UX optimizada */}
-      <div
-        className={`${styles.mobileListContainer} ${selectedSellers.length > 0 ? styles.hasStickyBar : ''}`}
-        role="list"
-      >
-        {filteredSellers.map((seller) => (
-          <article
-            key={seller.id}
-            role="listitem"
-            className={`${styles.mobileListRow} ${seller.status === 'inactive' ? styles.mobileRowInactive : ''} ${selectedSellers.includes(seller.id) ? styles.mobileRowSelected : ''}`}
-          >
-            <div className={styles.mobileRowCheckbox}>
-              <input
-                type="checkbox"
-                id={`seller-${seller.id}`}
-                checked={selectedSellers.includes(seller.id)}
-                onChange={() => handleSelectSeller(seller.id)}
-                disabled={seller.status === 'inactive'}
-                className={styles.mobileCheckbox}
-                aria-label={`Seleccionar ${seller.firstName} ${seller.lastName}`}
-              />
-            </div>
-            <div className={styles.mobileRowMain}>
-              <div className={styles.mobileRowTop}>
-                <h3 className={styles.mobileRowName}>
-                  {seller.firstName} {seller.lastName}
-                </h3>
-                <div className={styles.mobileMenuContainer}>
+      {/* Mobile List View */}
+      {!isDesktop && (
+        <div
+          className={`${listStyles.mobileListContainer} ${selectedSellers.length > 0 ? listStyles.hasStickyBar : ''}`}
+          role="list"
+        >
+          {filteredSellers.map((seller) => (
+            <MobileListRow
+              key={seller.id}
+              id={seller.id}
+              isInactive={seller.status === 'inactive'}
+              isSelected={selectedSellers.includes(seller.id)}
+              checkboxSlot={
+                <input
+                  type="checkbox"
+                  id={`seller-${seller.id}`}
+                  checked={selectedSellers.includes(seller.id)}
+                  onChange={() => handleSelectSeller(seller.id)}
+                  disabled={seller.status === 'inactive'}
+                  className={listStyles.mobileCheckbox}
+                  aria-label={`Seleccionar ${seller.firstName} ${seller.lastName}`}
+                />
+              }
+              name={`${seller.firstName} ${seller.lastName}`}
+              phone={seller.phone}
+              eventLine={
+                seller.assignedEvents.length > 0
+                  ? (() => {
+                    const firstEvent = events.find(e => e.id === seller.assignedEvents[0]);
+                    return firstEvent ? firstEvent.name : 'Sin evento';
+                  })()
+                  : 'Sin evento asignado'
+              }
+              menuSlot={
+                <div className={listStyles.mobileMenuContainer}>
                   <button
                     type="button"
-                    className={styles.mobileMenuButton}
+                    className={listStyles.mobileMenuButton}
                     onClick={() => handleMobileMenuToggle(seller.id)}
                     title="Más opciones"
                     aria-label="Menú de opciones"
                     aria-expanded={mobileMenuOpen === seller.id}
                     aria-haspopup="true"
                   >
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
-                      <circle cx="12" cy="6" r="1.5" fill="currentColor" />
-                      <circle cx="12" cy="12" r="1.5" fill="currentColor" />
-                      <circle cx="12" cy="18" r="1.5" fill="currentColor" />
-                    </svg>
+                    <IconDotsVertical />
                   </button>
                   {mobileMenuOpen === seller.id && (
-                    <div className={styles.mobileMenuDropdown} role="menu">
+                    <div className={listStyles.mobileMenuDropdown} role="menu">
                       {seller.status === 'active' && (
                         <button
                           type="button"
                           role="menuitem"
-                          className={styles.mobileMenuItem}
+                          className={listStyles.mobileMenuItem}
                           onClick={() => handleMobileAssignFromMenu(seller)}
                         >
-                          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            <circle cx="9" cy="7" r="4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            <path d="M19 8L21 10L25 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          </svg>
+                          <IconAssign />
                           Asignar a evento
                         </button>
                       )}
                       <button
                         type="button"
                         role="menuitem"
-                        className={styles.mobileMenuItem}
+                        className={listStyles.mobileMenuItem}
                         onClick={() => handleMobileEdit(seller)}
                       >
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                          <path d="M11 4H4C3.46957 4 2.96086 4.21071 2.58579 4.58579C2.21071 4.96086 2 5.46957 2 6V20C2 20.5304 2.21071 21.0391 2.58579 21.4142C2.96086 21.7893 3.46957 22 4 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                          <path d="M18.5 2.50001C18.8978 2.10219 19.4374 1.87869 20 1.87869C20.5626 1.87869 21.1022 2.10219 21.5 2.50001C21.8978 2.89784 22.1213 3.4374 22.1213 4.00001C22.1213 4.56262 21.8978 5.10219 21.5 5.50001L12 15L8 16L9 12L18.5 2.50001Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                        </svg>
+                        <IconEdit />
                         Editar datos
                       </button>
                       <button
                         type="button"
                         role="menuitem"
-                        className={styles.mobileMenuItem}
+                        className={listStyles.mobileMenuItem}
                         onClick={() => handleMobileToggleStatus(seller.id)}
                       >
-                        {seller.status === 'active' ? (
-                          <>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            Deshabilitar
-                          </>
-                        ) : (
-                          <>
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                              <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                              <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12 C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                            Habilitar
-                          </>
-                        )}
+                        {seller.status === 'active' ? <><IconDisable /> Deshabilitar</> : <><IconEnable /> Habilitar</>}
                       </button>
                     </div>
                   )}
                 </div>
-              </div>
-              <p className={styles.mobileRowPhone}>{seller.phone}</p>
-              <p className={styles.mobileRowEventLine}>
-                {seller.assignedEvents.length > 0
-                  ? (() => {
-                    const firstEvent = events.find(e => e.id === seller.assignedEvents[0]);
-                    return firstEvent ? firstEvent.name : 'Sin evento';
-                  })()
-                  : 'Sin evento asignado'}
-              </p>
-            </div>
-          </article>
-        ))}
-      </div>
-
-      {filteredSellers.length === 0 && (
-        <div className={styles.emptyState}>
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <circle cx="9" cy="7" r="4" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M23 21V19C23 18.1645 22.7155 17.3541 22.2094 16.6977C21.7033 16.0413 20.9999 15.5767 20.2 15.3778" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M16 3.37781C16.7999 3.57668 17.5033 4.04129 18.0094 4.6977C18.5155 5.35411 18.8 6.16449 18.8 7C18.8 7.83551 18.5155 8.64589 18.0094 9.3023C17.5033 9.95871 16.7999 10.4233 16 10.6222" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-          </svg>
-          <h3>No se encontraron vendedores</h3>
-          <p>Intenta ajustar los filtros de búsqueda</p>
+              }
+            />
+          ))}
         </div>
       )}
 
+      {filteredSellers.length === 0 && (
+        <EmptyState
+          icon={
+            <svg width="64" height="64" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M17 21V19C17 17.9391 16.5786 16.9217 15.8284 16.1716C15.0783 15.4214 14.0609 15 13 15H5C3.93913 15 2.92172 15.4214 2.17157 16.1716C1.42143 16.9217 1 17.9391 1 19V21" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <circle cx="9" cy="7" r="4" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M23 21V19C23 18.1645 22.7155 17.3541 22.2094 16.6977C21.7033 16.0413 20.9999 15.5767 20.2 15.3778" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M16 3.37781C16.7999 3.57668 17.5033 4.04129 18.0094 4.6977C18.5155 5.35411 18.8 6.16449 18.8 7C18.8 7.83551 18.5155 8.64589 18.0094 9.3023C17.5033 9.95871 16.7999 10.4233 16 10.6222" stroke="#9CA3AF" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          }
+          title="No se encontraron vendedores"
+          description="Intenta ajustar los filtros de búsqueda"
+        />
+      )}
 
       {/* Assign to Event Modal */}
       {assignModalOpen && (
@@ -800,14 +729,14 @@ export default function SellersList() {
                     <div className={styles.assignEventCardContent}>
                       <div className={styles.assignEventStatus}>
                         <span className={styles.assignStatusDot} />
-                        <span>ACTIVO</span>
+                        <span>Activo</span>
                       </div>
                       <div className={styles.assignEventTitle}>{event.name}</div>
                     </div>
                   </button>
                 ))
               ) : (
-                <p className={styles.assignNoEvents}>No hay eventos en estado ACTIVO</p>
+                <p className={styles.assignNoEvents}>No hay eventos activos</p>
               )}
             </div>
           </div>
@@ -820,16 +749,12 @@ export default function SellersList() {
           <div className={styles.editModal} onClick={(e) => e.stopPropagation()}>
             <div className={styles.modalHeader}>
               <h2>Editar vendedor</h2>
-              <button
-                className={styles.closeButton}
-                onClick={handleCancelEdit}
-              >
+              <button className={styles.closeButton} onClick={handleCancelEdit}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                 </svg>
               </button>
             </div>
-
             <div className={styles.editModalContent}>
               <div className={styles.editFormCard}>
                 <div className={`${styles.editFieldGroup} ${editFormErrors.firstName ? styles.editError : ''}`}>
@@ -845,7 +770,6 @@ export default function SellersList() {
                     <p className={styles.editErrorMessage}>{editFormErrors.firstName}</p>
                   )}
                 </div>
-
                 <div className={`${styles.editFieldGroup} ${editFormErrors.lastName ? styles.editError : ''}`}>
                   <label className={styles.editLabel}>Apellido</label>
                   <input
@@ -859,7 +783,6 @@ export default function SellersList() {
                     <p className={styles.editErrorMessage}>{editFormErrors.lastName}</p>
                   )}
                 </div>
-
                 <div className={`${styles.editFieldGroup} ${editFormErrors.phone ? styles.editError : ''}`}>
                   <label className={styles.editLabel}>Teléfono</label>
                   <input
@@ -877,18 +800,11 @@ export default function SellersList() {
                   )}
                 </div>
               </div>
-
               <div className={styles.editModalActions}>
-                <button
-                  className={styles.cancelButton}
-                  onClick={handleCancelEdit}
-                >
+                <button className={styles.cancelButton} onClick={handleCancelEdit}>
                   Cancelar
                 </button>
-                <button
-                  className={styles.saveButton}
-                  onClick={handleSaveEdit}
-                >
+                <button className={styles.saveButton} onClick={handleSaveEdit}>
                   Guardar Cambios
                 </button>
               </div>
@@ -919,7 +835,6 @@ export default function SellersList() {
           <span>Error al procesar la solicitud</span>
         </div>
       )}
-
     </div>
   );
 }

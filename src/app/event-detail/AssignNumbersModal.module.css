@@ -5,7 +5,7 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -14,8 +14,9 @@
 }
 
 .modalContent {
-    background-color: var(--color-bg-primary);
-    border-radius: var(--radius-lg);
+    background-color: var(--color-bg-secondary);
+    border-radius: var(--radius-xl);
+    border: 1px solid var(--color-border-light);
     max-width: 600px;
     width: 100%;
     max-height: 90vh;
@@ -60,7 +61,7 @@
 /* Vendor Info */
 .vendorInfo {
     padding: var(--space-md) var(--space-lg);
-    background-color: var(--color-bg-secondary);
+    background-color: var(--color-bg-tertiary);
     border-bottom: 1px solid var(--color-border-light);
 }
 
@@ -85,35 +86,6 @@
     border-top: 1px solid var(--color-border-light);
 }
 
-.cancelButton,
-.confirmButton {
-    padding: var(--space-sm) var(--space-lg);
-    border-radius: var(--radius-md);
-    font-size: var(--font-size-base);
-    font-weight: var(--font-weight-semibold);
-    cursor: pointer;
-    transition: all var(--transition-base);
-    border: none;
-}
-
-.cancelButton {
-    background-color: transparent;
-    color: var(--color-text-secondary);
-}
-
-.cancelButton:hover {
-    background-color: var(--color-bg-tertiary);
-    color: var(--color-text-primary);
-}
-
-.confirmButton {
-    background-color: var(--color-white);
-    color: var(--color-bg-primary);
-}
-
-.confirmButton:hover {
-    opacity: 0.9;
-}
 
 /* Mobile Responsiveness */
 @media (max-width: 768px) {

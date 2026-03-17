@@ -1,50 +1,43 @@
 /* Container */
 .dropdown {
   position: relative;
-  width: 100%;
+  width: auto;
 }
 
 /* Button (Select) - Dark Mode */
 .dropdownButton {
-  width: 100%;
-  padding: var(--space-md);
-  border: 1px solid var(--color-border-light);
-  border-radius: var(--radius-md);
-  font-size: var(--font-size-base);
+  width: auto;
+  padding: 4px 0;
+  border: none;
+  border-radius: 0;
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
-  background-color: var(--color-bg-tertiary);
+  background: transparent;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: color var(--transition-base);
   text-align: left;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-sm);
+  gap: var(--space-xs);
   box-sizing: border-box;
 }
 
 .dropdownButton:hover {
-  border-color: var(--color-border);
-  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-secondary);
 }
 
 .dropdownButton:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
-  background-color: var(--color-bg-tertiary);
 }
 
 .dropdownButtonActive {
-  border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .dropdownValue {
-  flex: 1;
   white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 /* Arrow Icon - Dark Mode */
@@ -122,11 +115,11 @@
 
 /* Dropdown Option - Dark Mode */
 .dropdownOption {
-  padding: var(--space-sm);
+  padding: 7px 10px;
   border-radius: var(--radius-sm);
   cursor: pointer;
   transition: all var(--transition-base);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-normal);
   color: var(--color-text-primary);
   display: flex;
@@ -173,7 +166,7 @@
   .dropdownButton {
     font-size: 16px;
     /* Prevent zoom on iOS */
-    padding: 14px;
+    padding: 4px 0;
   }
 
   .dropdownOption {
@@ -188,7 +181,7 @@
 
 @media (max-width: 480px) {
   .dropdownButton {
-    padding: 16px;
+    padding: 4px 0;
   }
 
   .dropdownOption {

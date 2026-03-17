@@ -66,10 +66,10 @@ const AssignNumbersModal: React.FC<AssignNumbersModalProps> = ({
                 </div>
 
                 <div className={styles.modalFooter}>
-                    <button className={styles.cancelButton} onClick={onClose}>
+                    <button className="btn btn-secondary" onClick={onClose}>
                         Cancelar
                     </button>
-                    <button className={styles.confirmButton} onClick={handleConfirm}>
+                    <button className="btn btn-primary" onClick={handleConfirm}>
                         Confirmar
                     </button>
                 </div>

@@ -173,11 +173,23 @@ const generateBuyers = (): Buyer[] => {
   }
 
   // 320 compradores para VENTA DE COMIDA (evento 2)
+  const foodDishes = [
+    { dishName: 'Milanesa con papas', unitPrice: 2500 },
+    { dishName: 'Empanadas (docena)', unitPrice: 3000 },
+  ];
   for (let i = 0; i < 320; i++) {
     const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
     const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     const phone = `3584${String(100000 + buyerId).padStart(6, '0')}`;
     const isActive = Math.random() > 0.1; // 90% activos
+
+    // Generar detalle de compra aleatorio
+    const foodPurchase = foodDishes
+      .filter(() => Math.random() > 0.3)
+      .map(dish => ({ ...dish, quantity: Math.floor(Math.random() * 4) + 1 }));
+    const finalPurchase = foodPurchase.length > 0
+      ? foodPurchase
+      : [{ ...foodDishes[Math.floor(Math.random() * foodDishes.length)], quantity: 1 }];
 
     const seller = pickSellerForEvent('2');
     buyers.push({
@@ -191,8 +203,9 @@ const generateBuyers = (): Buyer[] => {
       status: isActive ? 'active' : 'inactive',
       eventsAssigned: 1,
       assignedEvents: ['2'], // Venta de comida
-      totalBought: Math.floor(Math.random() * 50) + 1,
-      lastActivity: `2024-01-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`
+      totalBought: finalPurchase.reduce((sum, item) => sum + item.quantity * item.unitPrice, 0),
+      lastActivity: `2024-01-${String(Math.floor(Math.random() * 28) + 1).padStart(2, '0')}`,
+      foodPurchase: finalPurchase,
     });
     buyerId++;
   }
