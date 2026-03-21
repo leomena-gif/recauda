@@ -1,0 +1,179 @@
+/* ─── Card wrapper ───────────────────────────────────────────────────────── */
+
+.cardCancelled {
+  opacity: 0.55;
+  cursor: default;
+}
+
+/* ─── Inner layout ───────────────────────────────────────────────────────── */
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+/* ─── Status badge ───────────────────────────────────────────────────────── */
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: var(--radius-full);
+  align-self: flex-start;
+}
+
+.badge_active {
+  background: rgba(52, 199, 89, 0.12);
+}
+
+.badge_completed {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.badge_cancelled {
+  background: rgba(255, 59, 48, 0.1);
+}
+
+.badgeDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.badge_active .badgeDot {
+  background-color: var(--color-success);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.badge_completed .badgeDot {
+  background-color: var(--color-text-tertiary);
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.5; transform: scale(0.8); }
+}
+
+.badgeText {
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+}
+
+.badge_active    .badgeText { color: var(--color-success); }
+.badge_completed .badgeText { color: var(--color-text-secondary); }
+.badge_cancelled .badgeText { color: var(--color-error); }
+
+.badgeIcon {
+  font-size: 12px;
+  line-height: 1;
+  margin-left: 2px;
+}
+
+/* ─── Date ───────────────────────────────────────────────────────────────── */
+
+.date {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  margin: 0;
+}
+
+/* ─── Title ──────────────────────────────────────────────────────────────── */
+
+.title {
+  font-size: var(--font-size-lg);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1.3;
+  margin: 0;
+}
+
+@media (min-width: 768px) {
+  .title { font-size: var(--font-size-xl); }
+}
+
+/* ─── Progress ───────────────────────────────────────────────────────────── */
+
+.progressBlock {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: var(--space-xs) 0;
+}
+
+.progressTrack {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  transition: width var(--transition-slow);
+}
+
+.progressActive {
+  background: linear-gradient(90deg, var(--color-primary) 0%, #007AFF 100%);
+}
+
+.progressSuccess {
+  background: var(--color-success);
+}
+
+.progressMuted {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.progressCancelled {
+  display: none;
+}
+
+.progressMeta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+}
+
+.goalReached {
+  color: var(--color-success);
+  font-weight: var(--font-weight-semibold);
+}
+
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: var(--space-xs);
+  padding-top: var(--space-sm);
+  border-top: 1px solid var(--color-border-divider);
+  gap: var(--space-md);
+}
+
+.footerCancelled {
+  opacity: 0.6;
+}
+
+.footerLeft,
+.footerRight {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+}
+
+.footerRight {
+  text-align: right;
+}
+
+.footerSuccess {
+  color: var(--color-success);
+  font-weight: var(--font-weight-semibold);
+}
