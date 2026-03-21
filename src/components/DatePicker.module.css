@@ -9,14 +9,13 @@
 
 .input {
   width: 100%;
-  padding: 16px;
-  padding-right: 48px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: 16px;
-  background-color: var(--color-bg-tertiary);
+  padding: 14px 40px 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  font-size: 15px;
+  background: var(--color-bg-secondary);
   color: var(--color-text-primary);
-  transition: border-color 0.3s ease;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
   font-family: inherit;
   cursor: pointer;
@@ -24,13 +23,12 @@
 
 .input:focus {
   outline: none;
-  border: 1px solid var(--color-primary);
+  border-color: rgba(255, 255, 255, 0.35);
   box-shadow: none;
 }
 
 .input::placeholder {
   color: var(--color-text-tertiary);
-  font-size: 16px;
 }
 
 .input:disabled {
@@ -50,19 +48,19 @@
 
 .calendarIcon {
   position: absolute;
-  right: 12px;
+  right: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--color-text-tertiary);
   pointer-events: none;
+  width: 16px;
+  height: 16px;
 }
 
 /* Responsive */
 @media (max-width: 480px) {
   .input {
-    font-size: 15px;
-    padding: 10px 14px;
-    padding-right: 44px;
+    padding: 12px 40px 12px 14px;
   }
 }
 

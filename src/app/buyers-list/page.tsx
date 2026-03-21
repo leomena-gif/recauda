@@ -9,6 +9,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import CustomDropdown from '@/components/CustomDropdown';
 import MobileListRow from '@/components/MobileListRow';
 import MobileFilterSheet from '@/components/MobileFilterSheet';
+import BottomSheet from '@/components/BottomSheet';
 import MobileStickyActionBar from '@/components/MobileStickyActionBar';
 import EmptyState from '@/components/EmptyState';
 import listStyles from '@/styles/list.module.css';
@@ -562,6 +563,7 @@ export default function BuyersList() {
                 </div>
               </th>
               <th>Evento Asignado</th>
+              <th>Vendedor</th>
               <th className={listStyles.actionsColumn}></th>
             </tr>
           </thead>
@@ -641,6 +643,16 @@ export default function BuyersList() {
                         );
                       })()}
                     </div>
+                  </td>
+                  <td>
+                    {(() => {
+                      const seller = sellers.find(s => s.id === buyer.sellerId);
+                      return seller ? (
+                        <div className={listStyles.cellTruncate}>{seller.firstName} {seller.lastName}</div>
+                      ) : (
+                        <div className={listStyles.noEvent}>—</div>
+                      );
+                    })()}
                   </td>
                   <td className={listStyles.actionsColumn}>
                     <div className={listStyles.desktopMenuContainer}>
@@ -754,6 +766,7 @@ export default function BuyersList() {
               }
               phone={buyer.phone}
               eventLine={getDisplayEventName(buyer)}
+              sellerLine={(() => { const s = sellers.find(s => s.id === buyer.sellerId); return s ? `${s.firstName} ${s.lastName}` : undefined; })()}
               menuSlot={
                 <div className={listStyles.mobileMenuContainer}>
                   <button
@@ -823,146 +836,134 @@ export default function BuyersList() {
         />
       )}
 
-      {/* Modal Detalle de compra */}
-      {purchaseDetailBuyer && (
-        <div className={styles.modalOverlay} onClick={() => setPurchaseDetailBuyer(null)}>
-          <div className={styles.purchaseDetailModal} onClick={(e) => e.stopPropagation()}>
-            <div className={styles.purchaseDetailHeader}>
-              <div>
-                <h2 className={styles.purchaseDetailTitle}>Detalle de compra</h2>
-                <p className={styles.purchaseDetailBuyerName}>
-                  {purchaseDetailBuyer.firstName} {purchaseDetailBuyer.lastName}
-                </p>
-              </div>
-              <button className={styles.closeButton} onClick={() => setPurchaseDetailBuyer(null)}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            </div>
-            <div className={styles.purchaseDetailContent}>
-              <table className={styles.purchaseTable}>
-                <thead>
-                  <tr>
-                    <th>Plato</th>
-                    <th className={styles.purchaseTableNum}>Cant.</th>
-                    <th className={styles.purchaseTableNum}>Precio unit.</th>
-                    <th className={styles.purchaseTableNum}>Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(purchaseDetailBuyer.foodPurchase ?? []).map((item, idx) => (
-                    <tr key={idx}>
-                      <td>{item.dishName}</td>
-                      <td className={styles.purchaseTableNum}>{item.quantity}</td>
-                      <td className={styles.purchaseTableNum}>${item.unitPrice.toLocaleString('es-AR')}</td>
-                      <td className={styles.purchaseTableNum}>${(item.quantity * item.unitPrice).toLocaleString('es-AR')}</td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colSpan={3} className={styles.purchaseTotalLabel}>Total</td>
-                    <td className={styles.purchaseTotalValue}>
-                      ${(purchaseDetailBuyer.foodPurchase ?? [])
-                        .reduce((sum, item) => sum + item.quantity * item.unitPrice, 0)
-                        .toLocaleString('es-AR')}
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-            <div className={styles.purchaseDetailFooter}>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  setBuyers(prev => prev.map(b =>
-                    b.id === purchaseDetailBuyer.id ? { ...b, isDelivered: !b.isDelivered } : b
-                  ));
-                  setPurchaseDetailBuyer(null);
-                  deliverySnackbar.showSnackbar();
-                }}
-              >
-                {purchaseDetailBuyer.isDelivered ? 'Desmarcar' : 'Entregado'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+      {/* Modal Detalle de compra — desktop */}
+      {isDesktop && purchaseDetailBuyer && (() => {
+        const seller = sellers.find(s => s.id === purchaseDetailBuyer.sellerId);
+        const total = (purchaseDetailBuyer.foodPurchase ?? []).reduce((sum, i) => sum + i.quantity * i.unitPrice, 0);
+        return (
+          <div className={styles.modalOverlay} onClick={() => setPurchaseDetailBuyer(null)}>
+            <div className={styles.purchaseDetailModal} onClick={(e) => e.stopPropagation()}>
 
-      {/* Mobile: Bottom Sheet Detalle de compra */}
-      {!isDesktop && purchaseDetailBuyer && (
-        <>
-          <div className={listStyles.sheetOverlay} onClick={() => setPurchaseDetailBuyer(null)} aria-hidden="true" />
-          <div
-            className={`${listStyles.sheetPanel} ${styles.purchaseDetailSheetPanel}`}
-            role="dialog"
-            aria-label="Detalle de compra"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className={listStyles.sheetHandle} aria-hidden="true" />
-            <div className={styles.purchaseDetailHeader}>
-              <div>
-                <h2 className={styles.purchaseDetailTitle}>Detalle de compra</h2>
-                <p className={styles.purchaseDetailBuyerName}>
-                  {purchaseDetailBuyer.firstName} {purchaseDetailBuyer.lastName}
-                </p>
+              {/* Header: nombre + meta */}
+              <div className={styles.purchaseDetailHeader}>
+                <div>
+                  <h2 className={styles.purchaseDetailTitle}>
+                    {purchaseDetailBuyer.firstName} {purchaseDetailBuyer.lastName}
+                  </h2>
+                  <div className={styles.detailBuyerMeta}>
+                    <span>{purchaseDetailBuyer.phone}</span>
+                    {seller && (
+                      <>
+                        <span className={styles.detailMetaDot}>·</span>
+                        <span>{seller.firstName} {seller.lastName}</span>
+                      </>
+                    )}
+                  </div>
+                </div>
+                <button className={styles.closeButton} onClick={() => setPurchaseDetailBuyer(null)}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
               </div>
-              <button className={styles.closeButton} onClick={() => setPurchaseDetailBuyer(null)} aria-label="Cerrar">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            </div>
-            <div className={styles.purchaseDetailContent}>
-              <table className={styles.purchaseTable}>
-                <thead>
-                  <tr>
-                    <th>Plato</th>
-                    <th className={styles.purchaseTableNum}>Cant.</th>
-                    <th className={styles.purchaseTableNum}>Precio unit.</th>
-                    <th className={styles.purchaseTableNum}>Subtotal</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {(purchaseDetailBuyer.foodPurchase ?? []).map((item, idx) => (
-                    <tr key={idx}>
-                      <td>{item.dishName}</td>
-                      <td className={styles.purchaseTableNum}>{item.quantity}</td>
-                      <td className={styles.purchaseTableNum}>${item.unitPrice.toLocaleString('es-AR')}</td>
-                      <td className={styles.purchaseTableNum}>${(item.quantity * item.unitPrice).toLocaleString('es-AR')}</td>
-                    </tr>
-                  ))}
-                </tbody>
-                <tfoot>
-                  <tr>
-                    <td colSpan={3} className={styles.purchaseTotalLabel}>Total</td>
-                    <td className={styles.purchaseTotalValue}>
-                      ${(purchaseDetailBuyer.foodPurchase ?? [])
-                        .reduce((sum, item) => sum + item.quantity * item.unitPrice, 0)
-                        .toLocaleString('es-AR')}
-                    </td>
-                  </tr>
-                </tfoot>
-              </table>
-            </div>
-            <div className={styles.purchaseDetailFooter}>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  setBuyers(prev => prev.map(b =>
-                    b.id === purchaseDetailBuyer.id ? { ...b, isDelivered: !b.isDelivered } : b
-                  ));
-                  setPurchaseDetailBuyer(null);
-                  deliverySnackbar.showSnackbar();
-                }}
-              >
-                {purchaseDetailBuyer.isDelivered ? 'Desmarcar' : 'Entregado'}
-              </button>
+
+              {/* Estado */}
+              <div className={styles.detailStatusRow}>
+                <span className={`${styles.detailStatusBadge} ${purchaseDetailBuyer.isDelivered ? styles.detailStatusDelivered : styles.detailStatusPending}`}>
+                  <span className={styles.detailStatusDot} />
+                  {purchaseDetailBuyer.isDelivered ? 'Entregado' : 'Por entregar'}
+                </span>
+              </div>
+
+              <div className={styles.detailDivider} />
+
+              {/* Items */}
+              <div className={styles.detailItemList}>
+                {(purchaseDetailBuyer.foodPurchase ?? []).map((item, idx) => (
+                  <div key={idx} className={styles.detailItemRow}>
+                    <span className={styles.detailItemName}>{item.dishName}</span>
+                    <span className={styles.detailItemQty}>×{item.quantity}</span>
+                    <span className={styles.detailItemSubtotal}>${(item.quantity * item.unitPrice).toLocaleString('es-AR')}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className={styles.detailDivider} />
+
+              {/* Total */}
+              <div className={styles.detailTotalRow}>
+                <span className={styles.detailTotalLabel}>Total</span>
+                <span className={styles.detailTotalValue}>${total.toLocaleString('es-AR')}</span>
+              </div>
+
+              {/* Acción */}
+              <div className={styles.purchaseDetailFooter}>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => { setBuyers(prev => prev.map(b => b.id === purchaseDetailBuyer.id ? { ...b, isDelivered: !b.isDelivered } : b)); setPurchaseDetailBuyer(null); deliverySnackbar.showSnackbar(); }}
+                >
+                  {purchaseDetailBuyer.isDelivered ? 'Desmarcar entregado' : 'Marcar como entregado'}
+                </button>
+              </div>
+
             </div>
           </div>
-        </>
-      )}
+        );
+      })()}
+
+      {/* Bottom Sheet Detalle de compra — mobile */}
+      {(() => {
+        const seller = sellers.find(s => s.id === purchaseDetailBuyer?.sellerId);
+        const total = (purchaseDetailBuyer?.foodPurchase ?? []).reduce((sum, i) => sum + i.quantity * i.unitPrice, 0);
+        const sp = 'var(--space-lg)';
+        return (
+          <BottomSheet
+            isOpen={!isDesktop && !!purchaseDetailBuyer}
+            onClose={() => setPurchaseDetailBuyer(null)}
+            label="Detalle de compra"
+            title={purchaseDetailBuyer ? `${purchaseDetailBuyer.firstName} ${purchaseDetailBuyer.lastName}` : ''}
+            subtitle={[purchaseDetailBuyer?.phone, seller ? `${seller.firstName} ${seller.lastName}` : null].filter(Boolean).join(' · ')}
+            showCloseButton
+            footer={
+              <button
+                className="btn btn-primary btn-full"
+                onClick={() => { setBuyers(prev => prev.map(b => b.id === purchaseDetailBuyer!.id ? { ...b, isDelivered: !b.isDelivered } : b)); setPurchaseDetailBuyer(null); deliverySnackbar.showSnackbar(); }}
+              >
+                {purchaseDetailBuyer?.isDelivered ? 'Desmarcar entregado' : 'Marcar como entregado'}
+              </button>
+            }
+          >
+            {/* Estado */}
+            <div style={{ paddingBottom: 'var(--space-md)' }}>
+              <span className={`${styles.detailStatusBadge} ${purchaseDetailBuyer?.isDelivered ? styles.detailStatusDelivered : styles.detailStatusPending}`}>
+                <span className={styles.detailStatusDot} />
+                {purchaseDetailBuyer?.isDelivered ? 'Entregado' : 'Por entregar'}
+              </span>
+            </div>
+
+            <div className={styles.detailDivider} style={{ margin: `0 calc(-1 * ${sp})` }} />
+
+            {/* Items */}
+            <div style={{ padding: '4px 0 8px' }}>
+              {(purchaseDetailBuyer?.foodPurchase ?? []).map((item, idx) => (
+                <div key={idx} className={styles.detailItemRow}>
+                  <span className={styles.detailItemName}>{item.dishName}</span>
+                  <span className={styles.detailItemQty}>×{item.quantity}</span>
+                  <span className={styles.detailItemSubtotal}>${(item.quantity * item.unitPrice).toLocaleString('es-AR')}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className={styles.detailDivider} style={{ margin: `0 calc(-1 * ${sp})` }} />
+
+            {/* Total */}
+            <div className={styles.detailTotalRow} style={{ padding: 'var(--space-md) 0 0' }}>
+              <span className={styles.detailTotalLabel}>Total</span>
+              <span className={styles.detailTotalValue}>${total.toLocaleString('es-AR')}</span>
+            </div>
+          </BottomSheet>
+        );
+      })()}
       {/* Modal Detalle de números — rifa (desktop) */}
       {isDesktop && raffleDetailBuyer && (
         <div className={styles.modalOverlay} onClick={() => setRaffleDetailBuyer(null)}>
@@ -970,37 +971,18 @@ export default function BuyersList() {
             <div className={styles.purchaseDetailHeader}>
               <div>
                 <h2 className={styles.purchaseDetailTitle}>Números asignados</h2>
-                <p className={styles.purchaseDetailBuyerName}>
-                  {raffleDetailBuyer.firstName} {raffleDetailBuyer.lastName}
-                </p>
+                <p className={styles.purchaseDetailBuyerName}>{raffleDetailBuyer.firstName} {raffleDetailBuyer.lastName}</p>
               </div>
               <button className={styles.closeButton} onClick={() => setRaffleDetailBuyer(null)}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </button>
             </div>
             <div className={styles.purchaseDetailContent}>
-              <p className={styles.raffleNumbersCount}>
-                {raffleDetailBuyer.assignedNumbers?.length ?? 0} número{(raffleDetailBuyer.assignedNumbers?.length ?? 0) !== 1 ? 's' : ''} · Vendedor: {raffleDetailBuyer.sellerName}
-              </p>
-              <div className={styles.raffleNumbersGrid}>
-                {(raffleDetailBuyer.assignedNumbers ?? []).map((num) => (
-                  <span key={num} className={styles.raffleNumberChip}>{num}</span>
-                ))}
-              </div>
+              <p className={styles.raffleNumbersCount}>{raffleDetailBuyer.assignedNumbers?.length ?? 0} número{(raffleDetailBuyer.assignedNumbers?.length ?? 0) !== 1 ? 's' : ''} · Vendedor: {raffleDetailBuyer.sellerName}</p>
+              <div className={styles.raffleNumbersGrid}>{(raffleDetailBuyer.assignedNumbers ?? []).map((num) => <span key={num} className={styles.raffleNumberChip}>{num}</span>)}</div>
             </div>
             <div className={styles.purchaseDetailFooter}>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  setBuyers(prev => prev.map(b =>
-                    b.id === raffleDetailBuyer.id ? { ...b, isPrinted: !raffleDetailBuyer.isPrinted } : b
-                  ));
-                  setRaffleDetailBuyer(null);
-                  raffleSnackbar.showSnackbar();
-                }}
-              >
+              <button className="btn btn-primary" onClick={() => { setBuyers(prev => prev.map(b => b.id === raffleDetailBuyer.id ? { ...b, isPrinted: !raffleDetailBuyer.isPrinted } : b)); setRaffleDetailBuyer(null); raffleSnackbar.showSnackbar(); }}>
                 {raffleDetailBuyer.isPrinted ? 'Desmarcar impreso' : 'Imprimir comprobante'}
               </button>
             </div>
@@ -1009,56 +991,22 @@ export default function BuyersList() {
       )}
 
       {/* Bottom Sheet Detalle de números — rifa (mobile) */}
-      {!isDesktop && raffleDetailBuyer && (
-        <>
-          <div className={listStyles.sheetOverlay} onClick={() => setRaffleDetailBuyer(null)} aria-hidden="true" />
-          <div
-            className={`${listStyles.sheetPanel} ${styles.purchaseDetailSheetPanel}`}
-            role="dialog"
-            aria-label="Números asignados"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className={listStyles.sheetHandle} aria-hidden="true" />
-            <div className={styles.purchaseDetailHeader}>
-              <div>
-                <h2 className={styles.purchaseDetailTitle}>Números asignados</h2>
-                <p className={styles.purchaseDetailBuyerName}>
-                  {raffleDetailBuyer.firstName} {raffleDetailBuyer.lastName}
-                </p>
-              </div>
-              <button className={styles.closeButton} onClick={() => setRaffleDetailBuyer(null)} aria-label="Cerrar">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                </svg>
-              </button>
-            </div>
-            <div className={styles.purchaseDetailContent}>
-              <p className={styles.raffleNumbersCount}>
-                {raffleDetailBuyer.assignedNumbers?.length ?? 0} número{(raffleDetailBuyer.assignedNumbers?.length ?? 0) !== 1 ? 's' : ''} · Vendedor: {raffleDetailBuyer.sellerName}
-              </p>
-              <div className={styles.raffleNumbersGrid}>
-                {(raffleDetailBuyer.assignedNumbers ?? []).map((num) => (
-                  <span key={num} className={styles.raffleNumberChip}>{num}</span>
-                ))}
-              </div>
-            </div>
-            <div className={styles.purchaseDetailFooter}>
-              <button
-                className="btn btn-primary"
-                onClick={() => {
-                  setBuyers(prev => prev.map(b =>
-                    b.id === raffleDetailBuyer.id ? { ...b, isPrinted: !raffleDetailBuyer.isPrinted } : b
-                  ));
-                  setRaffleDetailBuyer(null);
-                  raffleSnackbar.showSnackbar();
-                }}
-              >
-                {raffleDetailBuyer.isPrinted ? 'Desmarcar impreso' : 'Imprimir comprobante'}
-              </button>
-            </div>
-          </div>
-        </>
-      )}
+      <BottomSheet
+        isOpen={!isDesktop && !!raffleDetailBuyer}
+        onClose={() => setRaffleDetailBuyer(null)}
+        label="Números asignados"
+        title="Números asignados"
+        subtitle={raffleDetailBuyer ? `${raffleDetailBuyer.firstName} ${raffleDetailBuyer.lastName}` : ''}
+        showCloseButton
+        footer={
+          <button className="btn btn-primary btn-full" onClick={() => { setBuyers(prev => prev.map(b => b.id === raffleDetailBuyer!.id ? { ...b, isPrinted: !raffleDetailBuyer!.isPrinted } : b)); setRaffleDetailBuyer(null); raffleSnackbar.showSnackbar(); }}>
+            {raffleDetailBuyer?.isPrinted ? 'Desmarcar impreso' : 'Imprimir comprobante'}
+          </button>
+        }
+      >
+        <p className={styles.raffleNumbersCount}>{raffleDetailBuyer?.assignedNumbers?.length ?? 0} número{(raffleDetailBuyer?.assignedNumbers?.length ?? 0) !== 1 ? 's' : ''} · Vendedor: {raffleDetailBuyer?.sellerName}</p>
+        <div className={styles.raffleNumbersGrid}>{(raffleDetailBuyer?.assignedNumbers ?? []).map((num) => <span key={num} className={styles.raffleNumberChip}>{num}</span>)}</div>
+      </BottomSheet>
 
       {/* Snackbar de rifa */}
       {raffleSnackbar.isVisible && (

@@ -1,267 +1,201 @@
 .container {
-  width: 100%;
-  margin: 0 auto;
-  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--color-text-primary);
-  margin-bottom: 24px;
-  text-align: left;
-}
-
-.formCard {
+/* Options card — same as EventDataStep */
+.optionsCard {
   background: var(--color-bg-secondary);
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--color-border);
-  padding: 24px;
-  width: 100%;
-  max-width: 100%;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.fieldGroup {
-  margin-bottom: 24px;
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
 }
 
-.fieldGroup:last-child {
-  margin-bottom: 0;
+.optionDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0 20px;
+}
+
+.optionIcon {
+  display: flex;
+  align-items: center;
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+  width: 20px;
+}
+
+.optionLabel {
+  flex: 1;
+  font-size: 15px;
+  color: var(--color-text-primary);
+  font-weight: 400;
+}
+
+/* Stepper */
+.stepper {
+  display: flex;
+  align-items: center;
+  background: var(--color-bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.stepperBtn {
+  width: 36px;
+  height: 36px;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  font-size: 18px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.stepperBtn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-primary);
+}
+
+.stepperBtn:active:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.stepperBtn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.stepperInput {
+  width: 52px;
+  height: 36px;
+  border: none;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  text-align: center;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  outline: none;
+  font-family: inherit;
+}
+
+.stepperInput::-webkit-outer-spin-button,
+.stepperInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+.stepperInput[type=number] {
+  -moz-appearance: textfield;
+}
+
+/* Segmented control — same as EventDataStep */
+.segmented {
+  display: flex;
+  background: var(--color-bg-tertiary);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  padding: 3px;
+  gap: 2px;
+}
+
+.segmentedBtn {
+  padding: 5px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-tertiary);
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.segmentedBtn:hover:not(.segmentedBtnActive) {
+  color: var(--color-text-secondary);
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.segmentedBtnActive {
+  background: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Range inputs */
+.rangeRow {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .label {
-  display: block;
-  font-size: 16px;
+  font-size: 11px;
   font-weight: 600;
-  color: var(--color-text-primary);
-  margin-bottom: 12px;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .input {
   width: 100%;
-  padding: 16px;
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  font-size: 16px;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  font-size: 15px;
+  background: var(--color-bg-secondary);
   color: var(--color-text-primary);
-  background: var(--color-bg-tertiary);
   transition: border-color 0.2s ease;
-}
-
-.input::placeholder {
-  color: var(--color-text-tertiary);
-  font-size: 16px;
+  box-sizing: border-box;
+  font-family: inherit;
 }
 
 .input:focus {
   outline: none;
-  border-color: var(--color-primary);
+  border-color: rgba(255, 255, 255, 0.35);
 }
 
-/* Quantity Selector */
-.quantitySelector {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  width: 100%;
-  border-radius: var(--radius-md);
-  transition: box-shadow 0.2s ease;
-}
-
-.quantitySelector:focus-within {
-  box-shadow: 0 0 0 2px var(--color-primary);
-}
-
-.quantityButton {
-  width: 52px;
-  height: 48px;
-  border: 1px solid var(--color-border);
-  background: var(--color-bg-tertiary);
-  color: var(--color-primary);
-  font-size: 22px;
-  font-weight: 400;
-  line-height: 1;
-  cursor: pointer;
-  transition: background-color 0.15s ease, transform 0.1s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  user-select: none;
-  -webkit-user-select: none;
-  flex-shrink: 0;
-}
-
-.quantityButton:first-child {
-  border-radius: 7px 0 0 7px;
-  border-right: none;
-}
-
-.quantityButton:last-child {
-  border-radius: 0 7px 7px 0;
-  border-left: none;
-}
-
-.quantityButton:hover:not(:disabled) {
-  background: var(--color-bg-secondary);
-}
-
-.quantityButton:active:not(:disabled) {
-  background: rgba(0, 122, 255, 0.15);
-  transform: scale(0.92);
-}
-
-.quantityButton:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: -2px;
-  z-index: 1;
-}
-
-.quantityButton:disabled {
+.input::placeholder {
   color: var(--color-text-tertiary);
-  cursor: not-allowed;
-  opacity: 0.4;
 }
 
-.quantityInput {
-  flex: 1;
-  height: 48px;
-  border: 1px solid var(--color-border);
-  border-left: none;
-  border-right: none;
-  background: var(--color-bg-tertiary);
-  text-align: center;
-  font-size: 18px;
-  font-weight: 600;
-  color: var(--color-text-primary);
-  outline: none;
-  transition: background-color 0.2s ease;
-  min-width: 0;
-}
-
-.quantityInput:focus {
-  background: var(--color-bg-secondary);
-}
-
-.quantityInput::-webkit-outer-spin-button,
-.quantityInput::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.quantityInput[type=number] {
-  -moz-appearance: textfield;
-}
-
-/* Toggle Switch */
-.toggleContainer {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.toggle {
-  position: relative;
-  display: inline-block;
-  width: 44px;
-  height: 26px;
-  cursor: pointer;
-}
-
-.toggleInput {
-  opacity: 0;
-  width: 0;
-  height: 0;
-}
-
-.toggleSlider {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-color: var(--color-bg-tertiary);
-  transition: 0.3s;
-  border-radius: 34px;
-}
-
-.toggleSlider:before {
-  position: absolute;
-  content: "";
-  height: 20px;
-  width: 20px;
-  left: 3px;
-  bottom: 3px;
-  background-color: var(--color-white);
-  transition: 0.3s;
-  border-radius: 50%;
-}
-
-.toggleInput:checked + .toggleSlider {
-  background-color: var(--color-primary);
-}
-
-.toggleInput:checked + .toggleSlider:before {
-  transform: translateX(18px);
-}
-
-.toggleLabel {
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-}
-
-/* Range Fields Layout */
-.rangeFields {
-  display: flex;
-  gap: 16px;
-}
-
-.rangeFields .fieldGroup {
-  flex: 1;
-}
-
-/* Error States */
-.error .input {
+.inputError {
   border-color: var(--color-error);
 }
 
-.error .label {
+.errorText {
+  font-size: 12px;
   color: var(--color-error);
 }
 
-/* Responsive */
-@media (min-width: 768px) {
-  .formCard {
-    max-width: 100%;
-    padding: 32px;
-  }
-  
-  .rangeFields {
-    gap: 24px;
-  }
-}
-
 @media (max-width: 480px) {
-  .formCard {
-    padding: 20px;
-  }
-  
-  .title {
-    font-size: 20px;
-  }
-  
-  .quantitySelector {
-    max-width: min(300px, calc(100% - 16px));
-  }
-  
-  .rangeFields {
-    flex-direction: column;
-    gap: 16px;
-  }
-}
-
-@media (max-width: 400px) {
-  .formCard {
-    padding: var(--space-md);
+  .rangeRow {
+    grid-template-columns: 1fr;
   }
 }

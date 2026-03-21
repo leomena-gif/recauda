@@ -10,6 +10,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 import CustomDropdown from '@/components/CustomDropdown';
 import MobileListRow from '@/components/MobileListRow';
 import MobileFilterSheet from '@/components/MobileFilterSheet';
+import BottomSheet from '@/components/BottomSheet';
 import MobileStickyActionBar from '@/components/MobileStickyActionBar';
 import EmptyState from '@/components/EmptyState';
 import listStyles from '@/styles/list.module.css';
@@ -134,7 +135,7 @@ export default function SellersList() {
   const handleMobileAssignFromMenu = (seller: Seller) => {
     setAssigningSellerId(seller.id);
     handleMobileMenuClose();
-    setAssignModalOpen(true);
+    setAssignSheetOpen(true);
   };
 
   const handleCloseAssignModal = () => {
@@ -247,7 +248,7 @@ export default function SellersList() {
   const openFiltersSheet = () => setFiltersSheetOpen(true);
   const closeFiltersSheet = () => setFiltersSheetOpen(false);
   const openAssignSheet = () => setAssignSheetOpen(true);
-  const closeAssignSheet = () => setAssignSheetOpen(false);
+  const closeAssignSheet = () => { setAssignSheetOpen(false); setAssigningSellerId(null); };
   const handleMobileAssignCancel = () => {
     setSelectedSellers([]);
     setAssigningSellerId(null);
@@ -453,35 +454,28 @@ export default function SellersList() {
       </MobileFilterSheet>
 
       {/* Mobile: bottom sheet Asignar evento */}
-      {!isDesktop && assignSheetOpen && (
-        <div className={listStyles.sheetOverlay} onClick={closeAssignSheet} aria-hidden="true" />
-      )}
-      {!isDesktop && assignSheetOpen && (
-        <div className={listStyles.sheetPanel} role="dialog" aria-label="Seleccionar evento" onClick={(e) => e.stopPropagation()}>
-          <div className={listStyles.sheetHandle} aria-hidden="true" />
-          <h2 className={listStyles.sheetTitle}>Asignar a evento</h2>
-          {activeEvents.length > 0 ? (
-            <div className={styles.sheetEventList}>
-              {activeEvents.map((event) => (
-                <button
-                  key={event.id}
-                  type="button"
-                  className={styles.sheetEventButton}
-                  onClick={() => handleAssignToEvent(event.id)}
-                >
-                  <div className={styles.sheetEventStatus}>
-                    <span className={styles.sheetEventStatusDot}></span>
-                    <span className={styles.sheetEventStatusText}>Activo</span>
-                  </div>
-                  <div className={styles.sheetEventName}>{event.name}</div>
-                </button>
-              ))}
-            </div>
-          ) : (
-            <p className={styles.sheetNoEvents}>No hay eventos activos</p>
-          )}
-        </div>
-      )}
+      <BottomSheet
+        isOpen={!isDesktop && assignSheetOpen}
+        onClose={closeAssignSheet}
+        label="Asignar a evento"
+        title="Asignar a evento"
+      >
+        {activeEvents.length > 0 ? (
+          <div className={styles.sheetEventList}>
+            {activeEvents.map((event) => (
+              <button key={event.id} type="button" className={styles.sheetEventButton} onClick={() => handleAssignToEvent(event.id)}>
+                <div className={styles.sheetEventStatus}>
+                  <span className={styles.sheetEventStatusDot}></span>
+                  <span className={styles.sheetEventStatusText}>Activo</span>
+                </div>
+                <div className={styles.sheetEventName}>{event.name}</div>
+              </button>
+            ))}
+          </div>
+        ) : (
+          <p className={styles.sheetNoEvents}>No hay eventos activos</p>
+        )}
+      </BottomSheet>
 
       {/* Desktop Table View */}
       <div className={listStyles.tableContainer}>
@@ -812,6 +806,39 @@ export default function SellersList() {
           </div>
         </div>
       )}
+
+      {/* Mobile: Bottom Sheet Editar vendedor */}
+      <BottomSheet
+        isOpen={!isDesktop && isEditModalOpen && !!editingSeller}
+        onClose={handleCancelEdit}
+        label="Editar vendedor"
+        title="Editar vendedor"
+        footer={
+          <div className={styles.editSheetActions}>
+            <button className={styles.saveButton} onClick={handleSaveEdit}>Guardar Cambios</button>
+            <button className={styles.cancelButton} onClick={handleCancelEdit}>Cancelar</button>
+          </div>
+        }
+      >
+        <div className={styles.editFormCard}>
+          <div className={`${styles.editFieldGroup} ${editFormErrors.firstName ? styles.editError : ''}`}>
+            <label className={styles.editLabel}>Nombre</label>
+            <input type="text" className={styles.editInput} value={editFormData.firstName} onChange={handleEditInputChange('firstName')} placeholder="Ej: Leonardo" />
+            {editFormErrors.firstName && <p className={styles.editErrorMessage}>{editFormErrors.firstName}</p>}
+          </div>
+          <div className={`${styles.editFieldGroup} ${editFormErrors.lastName ? styles.editError : ''}`}>
+            <label className={styles.editLabel}>Apellido</label>
+            <input type="text" className={styles.editInput} value={editFormData.lastName} onChange={handleEditInputChange('lastName')} placeholder="Ej: Mena" />
+            {editFormErrors.lastName && <p className={styles.editErrorMessage}>{editFormErrors.lastName}</p>}
+          </div>
+          <div className={`${styles.editFieldGroup} ${editFormErrors.phone ? styles.editError : ''}`}>
+            <label className={styles.editLabel}>Teléfono</label>
+            <input type="tel" className={styles.editInput} value={editFormData.phone} onChange={handleEditInputChange('phone')} placeholder="Ej: 3584129488" />
+            <p className={styles.editInstruction}>Escribe el número sin 0 y sin 15</p>
+            {editFormErrors.phone && <p className={styles.editErrorMessage}>{editFormErrors.phone}</p>}
+          </div>
+        </div>
+      </BottomSheet>
 
       {/* Success Snackbar */}
       {successSnackbar.isVisible && (

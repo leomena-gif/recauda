@@ -220,6 +220,12 @@
   font-size: var(--font-size-base);
 }
 
+@media (max-width: 768px) {
+  .modalOverlay {
+    display: none;
+  }
+}
+
 /* ─── Edit Seller Modal ──────────────────────────────────────────────────── */
 
 .editModal {
@@ -293,6 +299,30 @@
   display: flex;
   gap: var(--space-sm);
   justify-content: flex-end;
+}
+
+.editSheetContent {
+  padding: 0 var(--space-lg) var(--space-lg);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
+}
+
+.editSheetActions {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  padding-bottom: max(var(--space-md), env(safe-area-inset-bottom));
+}
+
+.editSheetActions .saveButton {
+  width: 100%;
+  min-height: 48px;
+}
+
+.editSheetActions .cancelButton {
+  width: 100%;
+  min-height: 44px;
 }
 
 .cancelButton {

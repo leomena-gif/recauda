@@ -24,7 +24,7 @@ const FoodEventCard: React.FC<FoodEventCardProps> = ({
     const router = useRouter();
 
     const handleCardClick = () => {
-        router.push('/event-detail');
+        router.push('/event-detail?id=' + id);
     };
 
     // Calculate totals

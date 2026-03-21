@@ -234,19 +234,12 @@ body {
   }
 
   .cardsContainer {
-    display: block;
-    columns: 2;
-    column-gap: var(--space-xl);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-items: start;
+    gap: var(--space-xl);
     padding: 0;
     width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .cardsContainer > * {
-    break-inside: avoid;
-    margin-bottom: var(--space-xl);
-    display: block;
   }
 }
 
@@ -266,7 +259,8 @@ body {
   }
 
   .cardsContainer {
-    columns: 3;
+    grid-template-columns: repeat(3, 1fr);
+    align-items: start;
   }
 }
 
@@ -279,12 +273,12 @@ body {
 
 /* Focus Visible - Accessibility */
 *:focus-visible {
-  outline: 2px solid var(--color-primary);
+  outline: 2px solid rgba(255, 255, 255, 0.5);
   outline-offset: 2px;
 }
 
 /* Selection Color */
 ::selection {
-  background-color: var(--color-primary);
-  color: var(--color-bg-primary);
+  background-color: rgba(255, 255, 255, 0.2);
+  color: var(--color-text-primary);
 }

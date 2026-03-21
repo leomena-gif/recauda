@@ -1,29 +1,6 @@
-.wizardContainer {
-  min-height: 100vh;
-  display: flex;
-  background-color: var(--color-bg-primary);
-}
-
 /* Navigation */
 .navigationContainer {
   margin-bottom: 12px;
-}
-
-/* Page Title */
-.pageTitle {
-  font-size: var(--font-size-3xl);
-  font-weight: var(--font-weight-bold);
-  color: var(--color-text-primary);
-  margin-bottom: var(--space-xl);
-  text-align: left;
-  margin-top: 0;
-}
-
-@media (max-width: 768px) {
-  .pageTitle {
-    font-size: var(--font-size-2xl);
-    margin-bottom: var(--space-lg);
-  }
 }
 
 .backButton {
@@ -57,39 +34,77 @@
   transform: translateX(-2px);
 }
 
-.mainContent {
-  flex: 1;
-  padding: 40px;
-  min-height: 100vh;
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  background-color: var(--color-bg-primary);
-  overflow-x: hidden;
+/* Page Title */
+.pageTitle {
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-xl);
+  margin-top: 0;
+  text-align: left;
 }
 
-.wizardContent {
-  width: 100%;
-  max-width: 100%;
-  margin: 0 auto;
-  padding-bottom: 120px;
+/* Two-column layout */
+.twoColumnLayout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+.leftColumn {
+  position: sticky;
+  top: 40px;
+}
+
+.rightColumn {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* Submit area */
+.submitArea {
+  margin-top: 24px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.loadingContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid transparent;
+  border-top: 2px solid var(--color-bg-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  flex-shrink: 0;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Responsive */
+@media (max-width: 900px) {
+  .twoColumnLayout {
+    grid-template-columns: 220px 1fr;
+    gap: 24px;
+  }
+}
+
 @media (max-width: 768px) {
-  .mainContent {
-    padding: var(--space-md) var(--space-md);
+  .twoColumnLayout {
+    grid-template-columns: 1fr;
+    gap: 20px;
   }
-}
 
-@media (max-width: 480px) {
-  .mainContent {
-    padding: var(--space-md) var(--space-sm);
-  }
-}
-
-@media (max-width: 400px) {
-  .mainContent {
-    padding: var(--space-md) var(--space-xs);
+  .leftColumn {
+    position: static;
   }
 }

@@ -30,6 +30,9 @@
   animation: slideUp 0.3s cubic-bezier(0.32, 0.72, 0, 1);
   box-sizing: border-box;
   border-top: 1px solid rgba(255, 255, 255, 0.07);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 @keyframes slideUp {
@@ -40,18 +43,18 @@
 .handle {
   width: 36px;
   height: 4px;
-  margin: 0 auto var(--space-md);
+  margin: 0 auto;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 2px;
+  flex-shrink: 0;
 }
 
 /* Header */
 .header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: var(--space-md);
-  margin-bottom: var(--space-xl);
 }
 
 .title {
@@ -85,38 +88,52 @@
   background: rgba(255, 255, 255, 0.12);
 }
 
+/* Sections */
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 0;
+}
+
 /* Event List */
 .eventList {
   display: flex;
   flex-direction: column;
-  gap: var(--space-sm);
-  margin-bottom: var(--space-lg);
+  gap: 8px;
 }
 
 .eventCard {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: var(--space-md);
+  gap: 12px;
   width: 100%;
-  padding: var(--space-md);
+  padding: 14px 16px;
   background: var(--color-bg-tertiary);
-  border: 1.5px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
   cursor: pointer;
-  transition: all var(--transition-base);
+  transition: border-color 0.2s ease, background 0.2s ease;
   text-align: left;
+  user-select: none;
   -webkit-tap-highlight-color: transparent;
 }
 
 .eventCard:hover {
   border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.04);
 }
 
 .eventCardSelected {
-  border-color: var(--color-primary);
-  background: var(--color-primary-light);
+  border-color: rgba(255, 255, 255, 0.35);
 }
 
 .eventCardContent {
@@ -140,10 +157,6 @@
   font-size: 11px;
   font-weight: var(--font-weight-semibold);
   color: var(--color-success);
-  background: rgba(52, 199, 89, 0.1);
-  padding: 3px 8px;
-  border-radius: var(--radius-full);
-  align-self: flex-start;
 }
 
 .statusDot {
@@ -153,90 +166,77 @@
   background-color: var(--color-success);
 }
 
-.checkIcon { color: var(--color-primary); }
-
-/* Form */
-.form {
+.radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
   display: flex;
-  flex-direction: column;
-  gap: var(--space-lg);
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+.radioSelected {
+  border-color: var(--color-text-primary);
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
 }
 
-.fieldError .input { border-color: var(--color-error); }
-
-.label {
-  font-size: 13px;
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-text-secondary);
-  letter-spacing: 0.1px;
-}
-
-.input {
-  width: 100%;
-  min-height: 48px;
-  padding: var(--space-md);
-  background: var(--color-bg-tertiary);
-  border: 1px solid rgba(255, 255, 255, 0.10);
-  border-radius: var(--radius-lg);
-  font-size: var(--font-size-base);
-  color: var(--color-text-primary);
-  transition: border-color var(--transition-base), box-shadow var(--transition-base);
-  box-sizing: border-box;
-}
-
-.input::placeholder { color: var(--color-text-tertiary); }
-
-.input:focus {
-  outline: none;
-  border-color: white;
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.3);
-}
-
-.error {
-  font-size: var(--font-size-xs);
-  color: var(--color-error);
-}
-
-.hint {
-  font-size: var(--font-size-xs);
-  color: var(--color-text-tertiary);
-}
-
-/* Dish Selector */
-.dishSelector {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-xs);
-  padding: var(--space-md);
+/* Options card */
+.optionsCard {
   background: var(--color-bg-tertiary);
   border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
-  margin-bottom: var(--space-xs);
+  border-radius: 10px;
+  overflow: hidden;
 }
 
-.dishHeader {
+.optionRow {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--space-xs);
+  justify-content: space-between;
+  gap: 14px;
+  padding: 16px 18px;
+}
+
+.optionLabel {
+  font-size: 15px;
+  color: var(--color-text-primary);
+  font-weight: 400;
+}
+
+.optionDivider {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.06);
+  margin: 0 18px;
+}
+
+/* Dish row */
+.dishRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 14px 18px;
+}
+
+.dishInfo {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
 }
 
 .dishName {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
+  font-size: 15px;
+  font-weight: 500;
   color: var(--color-text-primary);
 }
 
 .dishPrice {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
-  color: var(--color-primary);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
 }
 
 /* Total a cobrar */
@@ -244,32 +244,92 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-md);
+  padding: 14px 16px;
   background: var(--color-primary-light);
   border: 1px solid var(--color-primary);
-  border-radius: var(--radius-lg);
+  border-radius: 8px;
 }
 
 .totalLabel {
-  font-size: var(--font-size-base);
-  font-weight: var(--font-weight-semibold);
+  font-size: 14px;
+  font-weight: 500;
   color: var(--color-text-secondary);
 }
 
 .totalAmount {
-  font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+  font-size: 17px;
+  font-weight: 700;
   color: var(--color-primary);
+}
+
+/* Form */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Fields */
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.fieldLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.fieldError .input {
+  border-color: var(--color-error);
+}
+
+.input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  font-size: 15px;
+  background: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+  transition: border-color 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.input::placeholder { color: var(--color-text-tertiary); }
+
+.input:focus {
+  outline: none;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.error {
+  font-size: 12px;
+  color: var(--color-error);
+}
+
+.hint {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
 }
 
 /* Wizard Navigation */
 .wizardNav {
   display: flex;
   gap: var(--space-sm);
-  margin-top: var(--space-sm);
 }
 
-/* Layout: equal width for both nav buttons */
 .wizardNav > button {
   flex: 1;
 }
@@ -278,27 +338,34 @@
 .successScreen {
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: var(--space-lg) 0;
-  gap: var(--space-md);
+  align-items: flex-start;
+  gap: 0;
 }
 
-.successIcon {
-  color: var(--color-success);
-  margin-bottom: var(--space-xs);
+.successIconWrap {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-text-primary);
+  margin-bottom: 24px;
 }
 
 .successTitle {
-  margin: 0;
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
+  margin: 0 0 10px;
+  font-size: 28px;
+  font-weight: 700;
   color: var(--color-text-primary);
+  line-height: 1.2;
 }
 
 .successDesc {
-  margin: 0;
-  font-size: var(--font-size-base);
+  margin: 0 0 36px;
+  font-size: 15px;
   color: var(--color-text-secondary);
   line-height: 1.5;
 }
@@ -306,6 +373,13 @@
 .successDesc strong {
   color: var(--color-text-primary);
   font-weight: var(--font-weight-semibold);
+}
+
+.successActions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
 }
 
 /* Hidden on desktop */
