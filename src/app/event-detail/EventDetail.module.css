@@ -673,16 +673,17 @@
   padding-bottom: var(--space-3xl);
 }
 
-/* Circular Progress Dashboard */
-.progressDashboard {
-  display: flex;
-  align-items: center;
-  gap: var(--space-xl);
+/* ─── Metrics Panel ──────────────────────────────────────────────────────── */
+
+.metricPanel {
   background: var(--color-bg-secondary);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
   padding: var(--space-lg);
   margin-bottom: var(--space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-lg);
   position: relative;
 }
 
@@ -692,40 +693,163 @@
   right: var(--space-md);
 }
 
-.progressRing {
-  flex-shrink: 0;
+/* Progress bar */
+.metricProgressBlock {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+  padding-right: 120px; /* room for badge */
 }
 
-.dashboardStats {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--space-md) var(--space-lg);
-  flex: 1;
+.metricProgressHeader {
+  display: flex;
+  align-items: baseline;
+  gap: var(--space-sm);
 }
 
-.dashboardStat {
+.metricProgressValue {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  line-height: 1;
+}
+
+.metricProgressSub {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-tertiary);
+}
+
+.metricTrack {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.metricFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: linear-gradient(90deg, var(--color-primary) 0%, #007AFF 100%);
+  transition: width var(--transition-slow);
+}
+
+/* KPIs row */
+.metricKpis {
+  display: flex;
+  gap: 0;
+  border-top: 1px solid var(--color-border-divider);
+  padding-top: var(--space-md);
+}
+
+.metricKpi {
   display: flex;
   flex-direction: column;
   gap: 3px;
+  flex: 1;
+  padding-right: var(--space-md);
 }
 
-.dashboardStatValue {
+.metricKpi + .metricKpi {
+  padding-left: var(--space-md);
+  padding-right: var(--space-md);
+  border-left: 1px solid var(--color-border-divider);
+}
+
+.metricKpi:last-child {
+  padding-right: 0;
+}
+
+.metricKpiValue {
   font-size: var(--font-size-lg);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
   line-height: 1.1;
 }
 
-.dashboardStatValueWarning {
-  color: var(--color-warning);
-}
-
-.dashboardStatLabel {
-  font-size: var(--font-size-xs);
+.metricKpiLabel {
+  font-size: 11px;
+  font-weight: var(--font-weight-medium);
   color: var(--color-text-tertiary);
   text-transform: uppercase;
   letter-spacing: 0.4px;
-  font-weight: var(--font-weight-medium);
+}
+
+/* Dish breakdown — food_sale */
+.dishBreakdown {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+  border-top: 1px solid var(--color-border-divider);
+  padding-top: var(--space-md);
+}
+
+.dishBreakdownTitle {
+  font-size: 11px;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin: 0 0 var(--space-xs);
+}
+
+.dishRow {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.dishName {
+  font-size: var(--font-size-sm);
+  color: var(--color-text-secondary);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+.dishTrack {
+  width: 80px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.dishFill {
+  height: 100%;
+  border-radius: var(--radius-full);
+  background: var(--color-primary);
+  transition: width var(--transition-slow);
+}
+
+.dishStats {
+  font-size: var(--font-size-xs);
+  color: var(--color-text-tertiary);
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 52px;
+  text-align: right;
+}
+
+/* ─── Desktop ─────────────────────────────────────────────────────────────── */
+
+@media (min-width: 768px) {
+  .metricPanel {
+    padding: var(--space-xl);
+  }
+  .metricKpiValue {
+    font-size: var(--font-size-xl);
+  }
+  .dishTrack {
+    width: 120px;
+  }
+}
+
+/* Legacy — kept for other uses */
+.dashboardStatValueWarning {
+  color: var(--color-warning);
 }
 
 /* Alerts */
@@ -1154,13 +1278,8 @@
 
 /* Desktop responsive for new elements */
 @media (min-width: 768px) {
-  .progressDashboard {
-    padding: var(--space-xl);
-    gap: var(--space-2xl);
-  }
-  .dashboardStats {
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: var(--space-lg);
+  .legacyPlaceholder {
+    display: none;
   }
   .quickActionsRow {
     flex-wrap: nowrap;

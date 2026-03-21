@@ -64,47 +64,6 @@ function getDaysRemaining(endDate: string): number {
   return Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
-// ─── Circular Progress Ring ───────────────────────────────────────────────────
-function CircularProgress({ percentage }: { percentage: number }) {
-  const radius = 48;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (percentage / 100) * circumference;
-
-  return (
-    <svg width="140" height="140" viewBox="0 0 120 120" className={styles.progressRing}>
-      <circle
-        cx="60" cy="60" r={radius}
-        fill="none" stroke="var(--color-bg-tertiary)" strokeWidth="9"
-      />
-      <circle
-        cx="60" cy="60" r={radius}
-        fill="none" stroke="var(--color-primary)" strokeWidth="9"
-        strokeDasharray={circumference} strokeDashoffset={offset}
-        strokeLinecap="round"
-        transform="rotate(-90 60 60)"
-        style={{ transition: 'stroke-dashoffset 0.5s ease' }}
-      />
-      <text
-        x="60" y="53"
-        textAnchor="middle"
-        fill="var(--color-text-primary)"
-        fontSize="20" fontWeight="700"
-        fontFamily="inherit"
-      >
-        {percentage}%
-      </text>
-      <text
-        x="60" y="71"
-        textAnchor="middle"
-        fill="var(--color-text-tertiary)"
-        fontSize="10"
-        fontFamily="inherit"
-      >
-        vendido
-      </text>
-    </svg>
-  );
-}
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function EventDetail() {
@@ -416,44 +375,80 @@ function EventDetailContent() {
             </div>
           </div>
 
-          {/* Metrics card — always visible, above tabs */}
-          <div className={styles.progressDashboard}>
+          {/* Metrics panel */}
+          <div className={styles.metricPanel}>
+
+            {/* Status badge */}
             <div className={`${styles.statusBadge} ${statusBadgeClass} ${styles.statusBadgeInCard}`}>
               <span className={styles.statusDot} />
               <span className={styles.statusText}>{statusLabel}</span>
             </div>
-            <CircularProgress percentage={percentage} />
-            <div className={styles.dashboardStats}>
-              <div className={styles.dashboardStat}>
-                <span className={styles.dashboardStatValue}>
+
+            {/* Progress bar */}
+            <div className={styles.metricProgressBlock}>
+              <div className={styles.metricProgressHeader}>
+                <span className={styles.metricProgressValue}>{percentage}%</span>
+                <span className={styles.metricProgressSub}>vendido</span>
+              </div>
+              <div className={styles.metricTrack}>
+                <div className={styles.metricFill} style={{ width: `${Math.min(percentage, 100)}%` }} />
+              </div>
+            </div>
+
+            {/* KPIs */}
+            <div className={styles.metricKpis}>
+              <div className={styles.metricKpi}>
+                <span className={styles.metricKpiValue}>
                   ${(eventType === 'food_sale' ? foodSaleTotal : eventData.collected).toLocaleString('es-AR')}
                 </span>
-                <span className={styles.dashboardStatLabel}>Recaudado</span>
+                <span className={styles.metricKpiLabel}>Recaudado</span>
+              </div>
+              <div className={styles.metricKpi}>
+                <span className={styles.metricKpiValue}>
+                  ${(eventType === 'food_sale' ? foodSaleGoal : eventData.goal).toLocaleString('es-AR')}
+                </span>
+                <span className={styles.metricKpiLabel}>Objetivo</span>
               </div>
               {eventType === 'food_sale' ? (
-                <>
-                  <div className={styles.dashboardStat}>
-                    <span className={styles.dashboardStatValue}>${foodSaleGoal.toLocaleString('es-AR')}</span>
-                    <span className={styles.dashboardStatLabel}>Objetivo</span>
-                  </div>
-                  <div className={styles.dashboardStat}>
-                    <span className={styles.dashboardStatValue}>{eventBuyers.length}</span>
-                    <span className={styles.dashboardStatLabel}>Compradores</span>
-                  </div>
-                </>
+                <div className={styles.metricKpi}>
+                  <span className={styles.metricKpiValue}>{eventBuyers.length}</span>
+                  <span className={styles.metricKpiLabel}>Compradores</span>
+                </div>
               ) : (
                 <>
-                  <div className={styles.dashboardStat}>
-                    <span className={styles.dashboardStatValue}>${eventData.goal.toLocaleString('es-AR')}</span>
-                    <span className={styles.dashboardStatLabel}>Objetivo</span>
+                  <div className={styles.metricKpi}>
+                    <span className={styles.metricKpiValue}>{eventData.soldNumbers}/{eventData.totalNumbers}</span>
+                    <span className={styles.metricKpiLabel}>Vendidos</span>
                   </div>
-                  <div className={styles.dashboardStat}>
-                    <span className={styles.dashboardStatValue}>${eventData.ticketPrice.toLocaleString('es-AR')}</span>
-                    <span className={styles.dashboardStatLabel}>Por número</span>
+                  <div className={styles.metricKpi}>
+                    <span className={styles.metricKpiValue}>${eventData.ticketPrice.toLocaleString('es-AR')}</span>
+                    <span className={styles.metricKpiLabel}>Por número</span>
                   </div>
                 </>
               )}
             </div>
+
+            {/* Dish breakdown — food_sale only */}
+            {eventType === 'food_sale' && eventData.dishes && eventData.dishes.length > 0 && (
+              <div className={styles.dishBreakdown}>
+                <p className={styles.dishBreakdownTitle}>Platos</p>
+                {eventData.dishes.map((dish, i) => {
+                  const sold = dish.sold ?? 0;
+                  const total = dish.total ?? 0;
+                  const pct = total > 0 ? Math.min(Math.round((sold / total) * 100), 100) : 0;
+                  return (
+                    <div key={i} className={styles.dishRow}>
+                      <span className={styles.dishName}>{dish.name}</span>
+                      <div className={styles.dishTrack}>
+                        <div className={styles.dishFill} style={{ width: `${pct}%` }} />
+                      </div>
+                      <span className={styles.dishStats}>{sold}/{total}</span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+
           </div>
 
           {/* Top-level Tabs */}
