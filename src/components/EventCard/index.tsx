@@ -84,9 +84,8 @@ export default function EventCard({
 
   return (
     <Card
-      interactive={status !== 'cancelled'}
+      interactive
       onClick={() => router.push(`/event-detail?id=${id}`)}
-      className={status === 'cancelled' ? styles.cardCancelled : undefined}
     >
       <div className={styles.content}>
 
