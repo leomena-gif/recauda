@@ -13,41 +13,31 @@ interface NumberAssignment {
 interface AssignNumbersStepProps {
   initialData?: NumberAssignment;
   onNext: (data: NumberAssignment) => void;
-  onBack: () => void;
 }
 
 export interface AssignNumbersStepRef {
   validateAndNext: () => void;
 }
 
-const AssignNumbersStep = forwardRef<AssignNumbersStepRef, AssignNumbersStepProps>(({ initialData, onNext, onBack }, ref) => {
+const AssignNumbersStep = forwardRef<AssignNumbersStepRef, AssignNumbersStepProps>(({ initialData, onNext }, ref) => {
   const [formData, setFormData] = useState<NumberAssignment>(
-    initialData || {
-      quantity: 10,
-      autoAssign: true,
-      fromNumber: '',
-      toNumber: '',
-    }
+    initialData || { quantity: 10, autoAssign: true, fromNumber: '', toNumber: '' }
   );
+  const [errors, setErrors] = useState<Partial<Record<keyof NumberAssignment, string>>>({});
 
-  const [errors, setErrors] = useState<Partial<NumberAssignment>>({});
-
-  // Refs for long-press continuous increment/decrement
   const pressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const pressIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const isLongPressRef = useRef(false);
 
-  // Functional update avoids stale closure inside setInterval
-  const handleQuantityChange = (delta: number) => {
+  const changeQuantity = (delta: number) => {
     setFormData(prev => ({ ...prev, quantity: Math.max(1, prev.quantity + delta) }));
   };
 
-  // Start long-press: after 400ms hold, fire every 80ms
   const startPress = (delta: number) => {
     isLongPressRef.current = false;
     pressTimerRef.current = setTimeout(() => {
       isLongPressRef.current = true;
-      pressIntervalRef.current = setInterval(() => handleQuantityChange(delta), 80);
+      pressIntervalRef.current = setInterval(() => changeQuantity(delta), 80);
     }, 400);
   };
 
@@ -56,162 +46,139 @@ const AssignNumbersStep = forwardRef<AssignNumbersStepRef, AssignNumbersStepProp
     if (pressIntervalRef.current) clearInterval(pressIntervalRef.current);
   };
 
-  // Keyboard: ↑/+ increment, ↓/- decrement
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'ArrowUp' || e.key === '+') {
-      e.preventDefault();
-      handleQuantityChange(1);
-    } else if (e.key === 'ArrowDown' || e.key === '-') {
-      e.preventDefault();
-      handleQuantityChange(-1);
-    }
+  const handleQuantityKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowUp' || e.key === '+') { e.preventDefault(); changeQuantity(1); }
+    else if (e.key === 'ArrowDown' || e.key === '-') { e.preventDefault(); changeQuantity(-1); }
   };
 
-  const handleQuantityInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    if (value === '') {
-      setFormData(prev => ({ ...prev, quantity: 0 }));
-      return;
-    }
-    const numValue = parseInt(value, 10);
-    if (!isNaN(numValue) && numValue >= 1) {
-      setFormData(prev => ({ ...prev, quantity: numValue }));
-    }
+  const handleQuantityInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const n = parseInt(e.target.value, 10);
+    if (e.target.value === '') setFormData(prev => ({ ...prev, quantity: 0 }));
+    else if (!isNaN(n) && n >= 1) setFormData(prev => ({ ...prev, quantity: n }));
   };
 
-  const handleQuantityBlur = () => {
-    if (formData.quantity <= 0) {
-      setFormData(prev => ({ ...prev, quantity: 1 }));
-    }
-  };
-
-  const handleInputChange = (field: keyof NumberAssignment) => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.target.value;
-    setFormData(prev => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
-    }
-  };
-
-  const handleToggleChange = () => {
-    setFormData(prev => ({ ...prev, autoAssign: !prev.autoAssign }));
-  };
-
-  const handleNext = () => {
-    const newErrors: Partial<NumberAssignment> = {};
-
-    if (!formData.autoAssign) {
-      if (!formData.fromNumber.trim()) {
-        newErrors.fromNumber = 'El número inicial es requerido';
-      }
-      if (!formData.toNumber.trim()) {
-        newErrors.toNumber = 'El número final es requerido';
-      }
-    }
-
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length === 0) {
-      onNext(formData);
-    }
+  const handleRangeChange = (field: 'fromNumber' | 'toNumber') => (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData(prev => ({ ...prev, [field]: e.target.value }));
+    if (errors[field]) setErrors(prev => ({ ...prev, [field]: undefined }));
   };
 
   useImperativeHandle(ref, () => ({
-    validateAndNext: handleNext
+    validateAndNext: () => {
+      const newErrors: Partial<Record<keyof NumberAssignment, string>> = {};
+      if (!formData.autoAssign) {
+        if (!formData.fromNumber.trim()) newErrors.fromNumber = 'El número inicial es requerido';
+        if (!formData.toNumber.trim()) newErrors.toNumber = 'El número final es requerido';
+      }
+      setErrors(newErrors);
+      if (Object.keys(newErrors).length === 0) onNext(formData);
+    }
   }));
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Asignar números</h1>
+      <div className={styles.optionsCard}>
 
-      <div className={styles.formCard}>
-        <div className={styles.fieldGroup}>
-          <label className={styles.label}>Cantidad</label>
-          <div className={styles.quantitySelector}>
+        {/* Cantidad */}
+        <div className={styles.optionRow}>
+          <span className={styles.optionIcon}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+          </span>
+          <span className={styles.optionLabel}>Cantidad</span>
+          <div className={styles.stepper}>
             <button
-              className={styles.quantityButton}
+              type="button"
+              className={styles.stepperBtn}
               onMouseDown={() => startPress(-1)}
               onMouseUp={stopPress}
               onMouseLeave={stopPress}
               onTouchStart={(e) => { e.preventDefault(); startPress(-1); }}
               onTouchEnd={stopPress}
-              onClick={() => { if (!isLongPressRef.current) handleQuantityChange(-1); }}
+              onClick={() => { if (!isLongPressRef.current) changeQuantity(-1); }}
               disabled={formData.quantity <= 1}
               aria-label="Reducir cantidad"
-            >
-              −
-            </button>
+            >−</button>
             <input
               type="number"
-              className={styles.quantityInput}
+              className={styles.stepperInput}
               value={formData.quantity || ''}
-              onChange={handleQuantityInputChange}
-              onKeyDown={handleKeyDown}
-              onBlur={handleQuantityBlur}
+              onChange={handleQuantityInput}
+              onKeyDown={handleQuantityKeyDown}
+              onBlur={() => { if (formData.quantity <= 0) setFormData(prev => ({ ...prev, quantity: 1 })); }}
               min="1"
-              placeholder="1"
               aria-label="Cantidad"
             />
             <button
-              className={styles.quantityButton}
+              type="button"
+              className={styles.stepperBtn}
               onMouseDown={() => startPress(1)}
               onMouseUp={stopPress}
               onMouseLeave={stopPress}
               onTouchStart={(e) => { e.preventDefault(); startPress(1); }}
               onTouchEnd={stopPress}
-              onClick={() => { if (!isLongPressRef.current) handleQuantityChange(1); }}
+              onClick={() => { if (!isLongPressRef.current) changeQuantity(1); }}
               aria-label="Aumentar cantidad"
-            >
-              +
-            </button>
+            >+</button>
           </div>
         </div>
 
-        <div className={styles.fieldGroup}>
-          <div className={styles.toggleContainer}>
-            <label className={styles.toggle}>
-              <input
-                type="checkbox"
-                checked={formData.autoAssign}
-                onChange={handleToggleChange}
-                className={styles.toggleInput}
-              />
-              <span className={styles.toggleSlider}></span>
-            </label>
-            <span className={styles.toggleLabel}>Asignar automáticamente</span>
+        <div className={styles.optionDivider} />
+
+        {/* Asignación */}
+        <div className={styles.optionRow}>
+          <span className={styles.optionIcon}>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/>
+            </svg>
+          </span>
+          <span className={styles.optionLabel}>Asignación</span>
+          <div className={styles.segmented}>
+            <button
+              type="button"
+              className={`${styles.segmentedBtn} ${formData.autoAssign ? styles.segmentedBtnActive : ''}`}
+              onClick={() => setFormData(prev => ({ ...prev, autoAssign: true }))}
+            >Automática</button>
+            <button
+              type="button"
+              className={`${styles.segmentedBtn} ${!formData.autoAssign ? styles.segmentedBtnActive : ''}`}
+              onClick={() => setFormData(prev => ({ ...prev, autoAssign: false }))}
+            >Manual</button>
           </div>
         </div>
 
-        {!formData.autoAssign && (
-          <div className={styles.rangeFields}>
-            <div className={`${styles.fieldGroup} ${errors.fromNumber ? styles.error : ''}`}>
-              <label className={styles.label}>Desde</label>
-              <input
-                type="text"
-                className={styles.input}
-                value={formData.fromNumber}
-                onChange={handleInputChange('fromNumber')}
-                placeholder="Ej.: 001"
-              />
-            </div>
-
-            <div className={`${styles.fieldGroup} ${errors.toNumber ? styles.error : ''}`}>
-              <label className={styles.label}>Hasta</label>
-              <input
-                type="text"
-                className={styles.input}
-                value={formData.toNumber}
-                onChange={handleInputChange('toNumber')}
-                placeholder="Ej.:010"
-              />
-            </div>
-          </div>
-        )}
       </div>
+
+      {!formData.autoAssign && (
+        <div className={styles.rangeRow}>
+          <div className={styles.field}>
+            <span className={styles.label}>Desde</span>
+            <input
+              type="text"
+              className={`${styles.input} ${errors.fromNumber ? styles.inputError : ''}`}
+              value={formData.fromNumber}
+              onChange={handleRangeChange('fromNumber')}
+              placeholder="Ej: 001"
+            />
+            {errors.fromNumber && <span className={styles.errorText}>{errors.fromNumber}</span>}
+          </div>
+          <div className={styles.field}>
+            <span className={styles.label}>Hasta</span>
+            <input
+              type="text"
+              className={`${styles.input} ${errors.toNumber ? styles.inputError : ''}`}
+              value={formData.toNumber}
+              onChange={handleRangeChange('toNumber')}
+              placeholder="Ej: 010"
+            />
+            {errors.toNumber && <span className={styles.errorText}>{errors.toNumber}</span>}
+          </div>
+        </div>
+      )}
     </div>
   );
 });
 
 AssignNumbersStep.displayName = 'AssignNumbersStep';
-
 export default AssignNumbersStep;

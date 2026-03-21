@@ -10,6 +10,7 @@ interface MobileListRowProps {
   name: React.ReactNode;
   phone: string;
   eventLine: string;
+  sellerLine?: string;
   /** Full menu: button + dropdown (use mobileMenuContainer/mobileMenuButton/mobileMenuDropdown/mobileMenuItem from list.module.css) */
   menuSlot: React.ReactNode;
 }
@@ -22,6 +23,7 @@ export default function MobileListRow({
   name,
   phone,
   eventLine,
+  sellerLine,
   menuSlot,
 }: MobileListRowProps) {
   return (
@@ -41,6 +43,7 @@ export default function MobileListRow({
         </div>
         <p className={styles.mobileRowPhone}>{phone}</p>
         <p className={styles.mobileRowEventLine}>{eventLine}</p>
+        {sellerLine && <p className={styles.mobileRowEventLine}>{sellerLine}</p>}
       </div>
     </article>
   );

@@ -57,7 +57,6 @@ const AssignNumbersModal: React.FC<AssignNumbersModalProps> = ({
                 <AssignNumbersStep
                     ref={assignNumbersStepRef}
                     onNext={handleNext}
-                    onBack={onClose}
                 />
             </div>
         </BottomSheet>

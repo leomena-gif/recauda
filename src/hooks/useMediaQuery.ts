@@ -9,31 +9,15 @@ export function useMediaQuery(query: string): boolean {
   const [matches, setMatches] = useState(false);
 
   useEffect(() => {
-    // Avoid running on server-side
-    if (typeof window === 'undefined') {
-      return;
-    }
+    if (typeof window === 'undefined') return;
 
     const media = window.matchMedia(query);
-    
-    // Set initial value
-    if (media.matches !== matches) {
-      setMatches(media.matches);
-    }
+    setMatches(media.matches);
 
-    // Define listener
-    const listener = () => {
-      setMatches(media.matches);
-    };
-
-    // Add listener
+    const listener = (e: MediaQueryListEvent) => setMatches(e.matches);
     media.addEventListener('change', listener);
-    
-    // Clean up
-    return () => {
-      media.removeEventListener('change', listener);
-    };
-  }, [query, matches]);
+    return () => media.removeEventListener('change', listener);
+  }, [query]);
 
   return matches;
 }

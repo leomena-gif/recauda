@@ -13,7 +13,7 @@
  */
 
 import React from 'react';
-import { Check, CheckCircle, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import type { SaleEvent } from './RegisterSaleWizard';
 import type { SaleDetailsErrors } from '@/utils/registerSaleSchema';
 import QuantityStepper from './QuantityStepper';
@@ -83,17 +83,24 @@ const RegisterSaleSheet: React.FC<Props> = ({
                 {/* ── Success Screen ────────────────────────────────────────── */}
                 {isSuccess && (
                     <div className={styles.successScreen}>
-                        <div className={styles.successIcon}>
-                            <CheckCircle size={48} strokeWidth={1.5} />
+                        <div className={styles.successIconWrap}>
+                            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12"/>
+                            </svg>
                         </div>
-                        <h2 className={styles.successTitle}>¡Venta registrada!</h2>
+                        <h2 className={styles.successTitle}>Venta registrada</h2>
                         <p className={styles.successDesc}>
-                            La venta de <strong>{buyerName}</strong> fue registrada correctamente en{' '}
+                            La venta de <strong>{buyerName}</strong> fue registrada en{' '}
                             <strong>{currentEvent?.name}</strong>.
                         </p>
-                        <button type="button" className="btn btn-primary btn-full" onClick={onClose}>
-                            Listo
-                        </button>
+                        <div className={styles.successActions}>
+                            <button type="button" className="btn btn-primary btn-full" onClick={onClose}>
+                                Registrar otra
+                            </button>
+                            <button type="button" className="btn btn-secondary btn-full" onClick={onClose}>
+                                Listo
+                            </button>
+                        </div>
                     </div>
                 )}
 
@@ -101,33 +108,41 @@ const RegisterSaleSheet: React.FC<Props> = ({
                 {!isSuccess && step === 1 && (
                     <>
                         <div className={styles.header}>
-                            <h2 className={styles.title}>Seleccionar evento</h2>
+                            <h2 className={styles.title}>Registrar venta</h2>
                             <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Cerrar">
-                                <X size={24} />
+                                <X size={20} />
                             </button>
                         </div>
 
-                        <div className={styles.eventList}>
-                            {activeEvents.map((event) => (
-                                <button
-                                    key={event.id}
-                                    type="button"
-                                    className={`${styles.eventCard} ${selectedEventId === event.id ? styles.eventCardSelected : ''}`}
-                                    onClick={() => onSelectEvent(event.id)}
-                                >
-                                    <div className={styles.eventCardContent}>
-                                        <div className={styles.eventStatus}>
-                                            <span className={styles.statusDot} />
-                                            <span>ACTIVO</span>
+                        <div className={styles.section}>
+                            <p className={styles.sectionLabel}>Evento</p>
+                            <div className={styles.eventList}>
+                                {activeEvents.map((event) => (
+                                    <button
+                                        key={event.id}
+                                        type="button"
+                                        className={`${styles.eventCard} ${selectedEventId === event.id ? styles.eventCardSelected : ''}`}
+                                        onClick={() => onSelectEvent(event.id)}
+                                    >
+                                        <div className={styles.eventCardContent}>
+                                            <div className={styles.eventStatus}>
+                                                <span className={styles.statusDot} />
+                                                <span>ACTIVO</span>
+                                            </div>
+                                            <div className={styles.eventTitle}>{event.name}</div>
                                         </div>
-                                        <div className={styles.eventTitle}>{event.name}</div>
-                                    </div>
-                                    {selectedEventId === event.id && <Check size={24} className={styles.checkIcon} />}
-                                </button>
-                            ))}
+                                        <div className={`${styles.radio} ${selectedEventId === event.id ? styles.radioSelected : ''}`}>
+                                            {selectedEventId === event.id && (
+                                                <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                                    <polyline points="20 6 9 17 4 12"/>
+                                                </svg>
+                                            )}
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                            {eventError && <p className={styles.error}>{eventError}</p>}
                         </div>
-
-                        {eventError && <p className={styles.error}>{eventError}</p>}
 
                         <button
                             type="button"
@@ -146,40 +161,47 @@ const RegisterSaleSheet: React.FC<Props> = ({
                         <div className={styles.header}>
                             <h2 className={styles.title}>{currentEvent?.name}</h2>
                             <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Cerrar">
-                                <X size={24} />
+                                <X size={20} />
                             </button>
                         </div>
 
                         <form className={styles.form} noValidate>
-                            <div className={styles.field}>
-                                <label className={styles.label}>Seleccionar platos</label>
-                                {currentEvent?.dishes?.map((dish) => (
-                                    <div key={dish.name} className={styles.dishSelector}>
-                                        <div className={styles.dishHeader}>
-                                            <span className={styles.dishName}>{dish.name}</span>
-                                            <span className={styles.dishPrice}>${dish.price.toLocaleString()}</span>
-                                        </div>
-                                        <QuantityStepper
-                                            value={selectedDishes[dish.name] ?? 0}
-                                            onChange={(qty) => onDishChange(dish.name, qty)}
-                                            min={0}
-                                        />
-                                    </div>
-                                ))}
+                            <div className={styles.section}>
+                                <p className={styles.sectionLabel}>Platos</p>
+                                <div className={styles.optionsCard}>
+                                    {currentEvent?.dishes?.map((dish, i) => (
+                                        <React.Fragment key={dish.name}>
+                                            {i > 0 && <div className={styles.optionDivider} />}
+                                            <div className={styles.dishRow}>
+                                                <div className={styles.dishInfo}>
+                                                    <span className={styles.dishName}>{dish.name}</span>
+                                                    <span className={styles.dishPrice}>${dish.price.toLocaleString()}</span>
+                                                </div>
+                                                <QuantityStepper
+                                                    value={selectedDishes[dish.name] ?? 0}
+                                                    onChange={(qty) => onDishChange(dish.name, qty)}
+                                                    min={0}
+                                                />
+                                            </div>
+                                        </React.Fragment>
+                                    ))}
+                                    {(() => {
+                                        const total = currentEvent?.dishes?.reduce(
+                                            (acc, dish) => acc + dish.price * (selectedDishes[dish.name] ?? 0), 0
+                                        ) ?? 0;
+                                        return total > 0 ? (
+                                            <>
+                                                <div className={styles.optionDivider} />
+                                                <div className={styles.totalRow}>
+                                                    <span className={styles.totalLabel}>Total a cobrar</span>
+                                                    <span className={styles.totalAmount}>${total.toLocaleString()}</span>
+                                                </div>
+                                            </>
+                                        ) : null;
+                                    })()}
+                                </div>
                                 {detailErrors.dishes && <span className={styles.error}>{detailErrors.dishes}</span>}
                             </div>
-
-                            {(() => {
-                                const total = currentEvent?.dishes?.reduce(
-                                    (acc, dish) => acc + dish.price * (selectedDishes[dish.name] ?? 0), 0
-                                ) ?? 0;
-                                return total > 0 ? (
-                                    <div className={styles.totalRow}>
-                                        <span className={styles.totalLabel}>Total a cobrar</span>
-                                        <span className={styles.totalAmount}>${total.toLocaleString()}</span>
-                                    </div>
-                                ) : null;
-                            })()}
 
                             <div className={styles.wizardNav}>
                                 <button type="button" className="btn btn-secondary" onClick={onBack}>Atrás</button>
@@ -197,52 +219,61 @@ const RegisterSaleSheet: React.FC<Props> = ({
                         <div className={styles.header}>
                             <h2 className={styles.title}>{currentEvent?.name}</h2>
                             <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Cerrar">
-                                <X size={24} />
+                                <X size={20} />
                             </button>
                         </div>
 
                         <form onSubmit={onSubmit} className={styles.form} noValidate>
-                            <div className={styles.field}>
-                                <label className={styles.label}>Cantidad de números</label>
-                                <QuantityStepper
-                                    value={saleQuantity}
-                                    onChange={onQuantityChange}
-                                    min={1}
-                                />
-                            </div>
-
-                            {currentEvent?.ticketPrice && (
-                                <div className={styles.totalRow}>
-                                    <span className={styles.totalLabel}>Total a cobrar</span>
-                                    <span className={styles.totalAmount}>${(saleQuantity * currentEvent.ticketPrice).toLocaleString()}</span>
+                            <div className={styles.optionsCard}>
+                                <div className={styles.optionRow}>
+                                    <span className={styles.optionLabel}>Cantidad</span>
+                                    <QuantityStepper
+                                        value={saleQuantity}
+                                        onChange={onQuantityChange}
+                                        min={1}
+                                    />
                                 </div>
-                            )}
-
-                            <div className={`${styles.field} ${detailErrors.buyerName ? styles.fieldError : ''}`}>
-                                <label className={styles.label} htmlFor="sheet-buyer">Nombre del comprador</label>
-                                <input
-                                    id="sheet-buyer"
-                                    type="text"
-                                    value={buyerName}
-                                    onChange={(e) => onBuyerNameChange(e.target.value)}
-                                    placeholder="Ej: María González"
-                                    className={styles.input}
-                                />
-                                {detailErrors.buyerName && <span className={styles.error}>{detailErrors.buyerName}</span>}
+                                {currentEvent?.ticketPrice && (
+                                    <>
+                                        <div className={styles.optionDivider} />
+                                        <div className={styles.totalRow}>
+                                            <span className={styles.totalLabel}>Total a cobrar</span>
+                                            <span className={styles.totalAmount}>${(saleQuantity * currentEvent.ticketPrice).toLocaleString()}</span>
+                                        </div>
+                                    </>
+                                )}
                             </div>
 
-                            <div className={`${styles.field} ${detailErrors.phone ? styles.fieldError : ''}`}>
-                                <label className={styles.label} htmlFor="sheet-phone">Teléfono</label>
-                                <input
-                                    id="sheet-phone"
-                                    type="tel"
-                                    value={phone}
-                                    onChange={(e) => onPhoneChange(e.target.value)}
-                                    placeholder="Ej: 3584129488"
-                                    className={styles.input}
-                                />
-                                <span className={styles.hint}>Escribe el número sin 0 y sin 15</span>
-                                {detailErrors.phone && <span className={styles.error}>{detailErrors.phone}</span>}
+                            <div className={styles.section}>
+                                <p className={styles.sectionLabel}>Comprador</p>
+                                <div className={styles.fields}>
+                                    <div className={`${styles.field} ${detailErrors.buyerName ? styles.fieldError : ''}`}>
+                                        <span className={styles.fieldLabel}>Nombre</span>
+                                        <input
+                                            id="sheet-buyer"
+                                            type="text"
+                                            value={buyerName}
+                                            onChange={(e) => onBuyerNameChange(e.target.value)}
+                                            placeholder="Ej: María González"
+                                            className={styles.input}
+                                        />
+                                        {detailErrors.buyerName && <span className={styles.error}>{detailErrors.buyerName}</span>}
+                                    </div>
+
+                                    <div className={`${styles.field} ${detailErrors.phone ? styles.fieldError : ''}`}>
+                                        <span className={styles.fieldLabel}>Teléfono</span>
+                                        <input
+                                            id="sheet-phone"
+                                            type="tel"
+                                            value={phone}
+                                            onChange={(e) => onPhoneChange(e.target.value)}
+                                            placeholder="Ej: 3584129488"
+                                            className={styles.input}
+                                        />
+                                        <span className={styles.hint}>Sin 0 y sin 15</span>
+                                        {detailErrors.phone && <span className={styles.error}>{detailErrors.phone}</span>}
+                                    </div>
+                                </div>
                             </div>
 
                             <div className={styles.wizardNav}>
@@ -259,36 +290,41 @@ const RegisterSaleSheet: React.FC<Props> = ({
                         <div className={styles.header}>
                             <h2 className={styles.title}>{currentEvent?.name}</h2>
                             <button type="button" className={styles.closeBtn} onClick={onClose} aria-label="Cerrar">
-                                <X size={24} />
+                                <X size={20} />
                             </button>
                         </div>
 
                         <form onSubmit={onSubmit} className={styles.form} noValidate>
-                            <div className={`${styles.field} ${detailErrors.buyerName ? styles.fieldError : ''}`}>
-                                <label className={styles.label} htmlFor="sheet-buyer-food">Nombre del comprador</label>
-                                <input
-                                    id="sheet-buyer-food"
-                                    type="text"
-                                    value={buyerName}
-                                    onChange={(e) => onBuyerNameChange(e.target.value)}
-                                    placeholder="Ej: María González"
-                                    className={styles.input}
-                                />
-                                {detailErrors.buyerName && <span className={styles.error}>{detailErrors.buyerName}</span>}
-                            </div>
+                            <div className={styles.section}>
+                                <p className={styles.sectionLabel}>Comprador</p>
+                                <div className={styles.fields}>
+                                    <div className={`${styles.field} ${detailErrors.buyerName ? styles.fieldError : ''}`}>
+                                        <span className={styles.fieldLabel}>Nombre</span>
+                                        <input
+                                            id="sheet-buyer-food"
+                                            type="text"
+                                            value={buyerName}
+                                            onChange={(e) => onBuyerNameChange(e.target.value)}
+                                            placeholder="Ej: María González"
+                                            className={styles.input}
+                                        />
+                                        {detailErrors.buyerName && <span className={styles.error}>{detailErrors.buyerName}</span>}
+                                    </div>
 
-                            <div className={`${styles.field} ${detailErrors.phone ? styles.fieldError : ''}`}>
-                                <label className={styles.label} htmlFor="sheet-phone-food">Teléfono</label>
-                                <input
-                                    id="sheet-phone-food"
-                                    type="tel"
-                                    value={phone}
-                                    onChange={(e) => onPhoneChange(e.target.value)}
-                                    placeholder="Ej: 3584129488"
-                                    className={styles.input}
-                                />
-                                <span className={styles.hint}>Escribe el número sin 0 y sin 15</span>
-                                {detailErrors.phone && <span className={styles.error}>{detailErrors.phone}</span>}
+                                    <div className={`${styles.field} ${detailErrors.phone ? styles.fieldError : ''}`}>
+                                        <span className={styles.fieldLabel}>Teléfono</span>
+                                        <input
+                                            id="sheet-phone-food"
+                                            type="tel"
+                                            value={phone}
+                                            onChange={(e) => onPhoneChange(e.target.value)}
+                                            placeholder="Ej: 3584129488"
+                                            className={styles.input}
+                                        />
+                                        <span className={styles.hint}>Sin 0 y sin 15</span>
+                                        {detailErrors.phone && <span className={styles.error}>{detailErrors.phone}</span>}
+                                    </div>
+                                </div>
                             </div>
 
                             <div className={styles.wizardNav}>

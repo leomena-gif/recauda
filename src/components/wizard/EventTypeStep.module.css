@@ -1,131 +1,116 @@
 .container {
   width: 100%;
-  margin: 0 auto;
-  padding: 0;
 }
 
-.title {
-  font-size: 24px;
-  font-weight: bold;
-  color: var(--color-text-primary);
-  margin-bottom: 24px;
-  text-align: left;
+.sectionLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin: 0 0 12px 0;
 }
 
 .optionsGrid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   width: 100%;
 }
 
 .optionBox {
   background: var(--color-bg-secondary);
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: var(--radius-xl);
-  padding: 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 14px 16px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease, background 0.2s ease;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   align-items: center;
-  text-align: center;
-  min-height: 180px;
-  position: relative;
-  overflow: hidden;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  gap: 12px;
+  user-select: none;
 }
 
 .optionBox:hover {
-  border-color: rgba(90, 200, 250, 0.5);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(90, 200, 250, 0.18);
+  border-color: rgba(255, 255, 255, 0.18);
   background: var(--color-bg-tertiary);
 }
 
 .optionBox.selected {
-  border-color: rgba(90, 200, 250, 0.6);
-  background: linear-gradient(135deg, rgba(90, 200, 250, 0.15) 0%, rgba(0, 122, 255, 0.15) 100%);
-  color: var(--color-white);
-  transform: translateY(-2px);
-  box-shadow: 0 8px 28px rgba(90, 200, 250, 0.25);
+  border-color: rgba(255, 255, 255, 0.35);
+  background: var(--color-bg-tertiary);
 }
 
-.iconContainer {
-  margin-bottom: 16px;
+/* Icon */
+.iconWrap {
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.07);
   display: flex;
   align-items: center;
   justify-content: center;
-  flex: 1;
+  color: var(--color-text-tertiary);
+  flex-shrink: 0;
+  transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease;
 }
 
-.emojiIcon {
-  font-size: 90px;
-  line-height: 1;
-  transition: transform 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.optionBox:hover .emojiIcon {
-  transform: scale(1.1);
-}
-
-.optionBox.selected .emojiIcon {
-  transform: scale(1.15);
-  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
-}
-
-.optionText {
-  font-size: 16px;
-  font-weight: 600;
+.iconWrapSelected {
   color: var(--color-text-primary);
-  transition: color 0.3s ease;
+  background: rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.14);
+}
+
+/* Label */
+.optionText {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  transition: color 0.2s ease;
 }
 
 .optionBox.selected .optionText {
-  color: var(--color-primary);
+  color: var(--color-text-primary);
 }
 
-/* Responsive */
-@media (min-width: 768px) {
-  .optionsGrid {
-    gap: 24px;
-  }
-
-  .optionBox {
-    padding: 32px;
-    min-height: 200px;
-  }
+/* Radio indicator */
+.radio {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255, 255, 255, 0.2);
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.2s ease, background 0.2s ease;
 }
 
+.radioSelected {
+  border-color: var(--color-text-primary);
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
+}
+
+/* Mobile */
 @media (max-width: 768px) {
   .optionsGrid {
-    grid-template-columns: 1fr;
-    gap: 16px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
   }
 
   .optionBox {
-    min-height: 160px;
-  }
-}
-
-@media (max-width: 480px) {
-  .optionBox {
-    padding: 20px;
-    min-height: 140px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 16px;
   }
 
-  .title {
-    font-size: 20px;
-  }
-
-  .optionText {
-    font-size: 14px;
-  }
-
-  .emojiIcon {
-    font-size: 67px;
+  .radio {
+    display: none;
   }
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import BottomSheet from '@/components/BottomSheet';
 import styles from '@/styles/list.module.css';
 
 interface MobileFilterSheetProps {
@@ -15,24 +16,19 @@ export default function MobileFilterSheet({
   title = 'Filtros',
   children,
 }: MobileFilterSheetProps) {
-  if (!isOpen) return null;
-
   return (
-    <>
-      <div className={styles.sheetOverlay} onClick={onClose} aria-hidden="true" />
-      <div
-        className={styles.sheetPanel}
-        role="dialog"
-        aria-label={title}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className={styles.sheetHandle} aria-hidden="true" />
-        <h2 className={styles.sheetTitle}>{title}</h2>
-        <div className={styles.sheetFilters}>{children}</div>
+    <BottomSheet
+      isOpen={isOpen}
+      onClose={onClose}
+      label={title}
+      title={title}
+      footer={
         <button type="button" className={styles.sheetApply} onClick={onClose}>
           Aplicar
         </button>
-      </div>
-    </>
+      }
+    >
+      <div className={styles.sheetFilters}>{children}</div>
+    </BottomSheet>
   );
 }
