@@ -25,9 +25,9 @@ const EMPTY_STATE_CONFIG = {
   },
 };
 
-const EventsEmptyState: React.FC<EventsEmptyStateProps> = ({ filterType = 'all' }) => {
+const EventsEmptyState: React.FC<EventsEmptyStateProps> = ({ filterType = 'active' }) => {
   const router = useRouter();
-  const config = EMPTY_STATE_CONFIG[filterType as keyof typeof EMPTY_STATE_CONFIG] ?? EMPTY_STATE_CONFIG.all;
+  const config = EMPTY_STATE_CONFIG[filterType] ?? EMPTY_STATE_CONFIG.active;
 
   const handleCreateEvent = () => {
     router.push(ROUTES.CREATE_EVENT);
