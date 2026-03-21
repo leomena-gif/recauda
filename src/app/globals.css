@@ -206,12 +206,9 @@ body {
 }
 
 /* Desktop Layout */
-@media (min-width: 768px) {
+@media (min-width: 769px) {
   .mainContent {
-    padding-top: 0;
-    margin-left: 80px;
-    /* Collapsed sidebar width - expands on hover */
-    transition: margin-left var(--transition-base);
+    padding-top: var(--header-height);
   }
 
   .pageContainer {
@@ -219,7 +216,6 @@ body {
     margin: 0 auto;
     padding: 40px;
     padding-bottom: 110px;
-    /* Space for bottom button on desktop */
     box-sizing: border-box;
     width: 100%;
   }
@@ -243,19 +239,12 @@ body {
   }
 }
 
-/* Desktop Layout - Wide screens with expanded sidebar */
+/* Wide screens */
 @media (min-width: 1601px) {
-  .mainContent {
-    margin-left: 280px;
-    /* Expanded sidebar width on wide screens */
-  }
-
   .pageContainer {
     max-width: 1400px;
-    /* Wider max-width for large screens */
     margin-left: auto;
     margin-right: auto;
-    /* Center the content in the available space */
   }
 
   .cardsContainer {

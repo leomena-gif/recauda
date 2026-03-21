@@ -1,26 +1,28 @@
 'use client';
 
-import React, { useState, useMemo, Suspense } from 'react';
+import React, { useState, useMemo, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './EventDetail.module.css';
 import AssignNumbersModal from './AssignNumbersModal';
 import BottomSheet from '@/components/BottomSheet';
 import { MOCK_BUYERS, MOCK_EVENTS, MOCK_SELLERS, MOCK_HOME_EVENTS } from '@/mocks/data';
-import { Buyer, StatusFilter } from '@/types/models';
-import { STATUS_OPTIONS, SNACKBAR_DURATION } from '@/constants';
+import { Buyer } from '@/types/models';
+import { SNACKBAR_DURATION } from '@/constants';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
-import CustomDropdown from '@/components/CustomDropdown';
 import MobileListRow from '@/components/MobileListRow';
-import MobileFilterSheet from '@/components/MobileFilterSheet';
 import MobileStickyActionBar from '@/components/MobileStickyActionBar';
 import EmptyState from '@/components/EmptyState';
+import TabBar from '@/components/TabBar';
+import RegisterSaleWizard from '@/components/wizard/RegisterSaleWizard';
+import EventDataStep, { EventDataStepRef } from '@/components/wizard/EventDataStep';
 import listStyles from '@/styles/list.module.css';
-import buyerStyles from '../buyers-list/BuyersList.module.css';
+import buyerStyles from './BuyerDetail.module.css';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type TopTab = 'vendedores' | 'compradores' | 'configuracion';
 type VendorTab = 'collected' | 'pending';
+type BuyerTab = 'tab1' | 'tab2';
 
 // ─── Mock Event Data ──────────────────────────────────────────────────────────
 const EVENT_DETAIL = {
@@ -28,12 +30,12 @@ const EVENT_DETAIL = {
   name: 'Rifa día del niño del Grupo Scout General Deheza',
   status: 'active' as const,
   endDate: '2026-04-15',
-  totalNumbers: 300,
-  soldNumbers: 240,
+  totalNumbers: 800,
+  soldNumbers: 640,
   ticketPrice: 1000,
-  prizeDescription: 'Bicicleta BMX + consola de videojuegos',
-  goal: 300000,
-  collected: 240000,
+  prizeDescription: 'Auto 0km Toyota Etios',
+  goal: 800000,
+  collected: 640000,
 };
 
 // ─── Mock Vendor Data (Vendedores Tab) ────────────────────────────────────────
@@ -133,6 +135,8 @@ function EventDetailContent() {
       prizeDescription: EVENT_DETAIL.prizeDescription,
       goal: home?.goal ?? EVENT_DETAIL.goal,
       collected: home?.collected ?? EVENT_DETAIL.collected,
+      prizes: base?.prizes ?? [],
+      dishes: home?.dishes ?? base?.dishes ?? [],
     };
   }, [eventId]);
 
@@ -150,26 +154,32 @@ function EventDetailContent() {
 
   // Edit event state
   const [isConfigEditing, setIsConfigEditing] = useState(false);
-  const [editForm, setEditForm] = useState({
-    name: eventData.name,
-    endDate: eventData.endDate,
-    ticketPrice: String(eventData.ticketPrice),
-    prizeDescription: eventData.prizeDescription,
-  });
+  const eventDataStepRef = useRef<EventDataStepRef>(null);
+
+  // Closed dishes (food_sale events)
+  const [closedDishIndices, setClosedDishIndices] = useState<Set<number>>(new Set());
+
+  const handleDishCloseToggle = (index: number, closed: boolean) => {
+    setClosedDishIndices(prev => {
+      const next = new Set(prev);
+      closed ? next.add(index) : next.delete(index);
+      return next;
+    });
+  };
 
   // Close event confirmation
   const [isCloseEventOpen, setIsCloseEventOpen] = useState(false);
 
+  // Register sale wizard
+  const [isSaleWizardOpen, setIsSaleWizardOpen] = useState(false);
+
   // ── Buyers tab state ──────────────────────────────────────────────────────
   const [buyers, setBuyers] = useState<Buyer[]>(MOCK_BUYERS);
   const [buyerSearchTerm, setBuyerSearchTerm] = useState('');
-  const [buyerStatusFilter, setBuyerStatusFilter] = useState<StatusFilter>('all');
-  const [printFilter, setPrintFilter] = useState<'all' | 'printed' | 'pending'>('all');
-  const [deliveryFilter, setDeliveryFilter] = useState<'all' | 'delivered' | 'pending'>('all');
+  const [activeBuyerTab, setActiveBuyerTab] = useState<BuyerTab>('tab1');
   const [selectedBuyers, setSelectedBuyers] = useState<string[]>([]);
   const [buyerMobileMenuOpen, setBuyerMobileMenuOpen] = useState<string | null>(null);
   const [buyerDesktopMenuOpen, setBuyerDesktopMenuOpen] = useState<string | null>(null);
-  const [buyerFiltersSheetOpen, setBuyerFiltersSheetOpen] = useState(false);
   const [purchaseDetailBuyer, setPurchaseDetailBuyer] = useState<Buyer | null>(null);
   const [raffleDetailBuyer, setRaffleDetailBuyer] = useState<Buyer | null>(null);
 
@@ -181,9 +191,6 @@ function EventDetailContent() {
     () => MOCK_EVENTS.find(e => e.id === eventId)?.type ?? 'raffle',
     [eventId]
   );
-  const showDeliveryFilter = eventType === 'food_sale';
-  const showPrintFilter = eventType === 'raffle';
-
   const eventBuyers = useMemo(
     () => buyers.filter(b => b.assignedEvents.includes(eventId)),
     [buyers, eventId]
@@ -217,18 +224,12 @@ function EventDetailContent() {
             seller.lastName.toLowerCase().includes(buyerSearchTerm.toLowerCase())
           );
         })();
-      const matchesStatus = buyerStatusFilter === 'all' || buyer.status === buyerStatusFilter;
-      const matchesDelivery =
-        !showDeliveryFilter || deliveryFilter === 'all'
-          ? true
-          : deliveryFilter === 'delivered' ? buyer.isDelivered === true : buyer.isDelivered !== true;
-      const matchesPrint =
-        !showPrintFilter || printFilter === 'all'
-          ? true
-          : printFilter === 'printed' ? buyer.isPrinted === true : buyer.isPrinted !== true;
-      return matchesSearch && matchesStatus && matchesDelivery && matchesPrint;
+      const matchesTab = eventType === 'food_sale'
+        ? activeBuyerTab === 'tab1' ? buyer.isDelivered === true : buyer.isDelivered !== true
+        : activeBuyerTab === 'tab1' ? buyer.isPrinted === true : buyer.isPrinted !== true;
+      return matchesSearch && matchesTab;
     });
-  }, [eventBuyers, buyerSearchTerm, buyerStatusFilter, deliveryFilter, showDeliveryFilter, printFilter, showPrintFilter]);
+  }, [eventBuyers, buyerSearchTerm, activeBuyerTab, eventType]);
 
   const selectionType = useMemo(() => {
     if (selectedBuyers.length === 0) return null;
@@ -244,6 +245,14 @@ function EventDetailContent() {
     () => selectedBuyers.length > 0 && selectedBuyers.every(id => buyers.find(b => b.id === id)?.isPrinted),
     [selectedBuyers, buyers]
   );
+
+  // ── Business rules ────────────────────────────────────────────────────────
+  const prizesLocked = eventType === 'raffle' && eventData.soldNumbers > 0;
+
+  const eventsForWizard = useMemo(() => MOCK_HOME_EVENTS.map(e => {
+    if (e.id !== eventId || closedDishIndices.size === 0) return e;
+    return { ...e, dishes: e.dishes?.filter((_, i) => !closedDishIndices.has(i)) };
+  }), [eventId, closedDishIndices]);
 
   const currentVendorData = activeVendorTab === 'collected' ? collectedData : pendingData;
   const filteredVendorData = currentVendorData.filter(item =>
@@ -389,29 +398,30 @@ function EventDetailContent() {
       <div className={`pageContainer ${styles.eventDetailContainer}`}>
         <div className={`contentContainer ${styles.eventDetailContent}`}>
 
-          {/* Back Navigation */}
-          <div className={styles.navigationContainer}>
-            <button className={styles.backButton} onClick={() => router.push('/')}>
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Volver a Mis eventos
-            </button>
-          </div>
-
           {/* Page Header */}
           <div className={styles.pageHeader}>
-            <div className={styles.metaRow}>
-              <div className={`${styles.statusBadge} ${statusBadgeClass}`}>
-                <span className={styles.statusDot} />
-                <span className={styles.statusText}>{statusLabel}</span>
+            <button className={styles.breadcrumb} onClick={() => router.push('/')}>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
+                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+              Mis eventos
+            </button>
+            <div className={styles.titleRow}>
+              <div className={styles.titleGroup}>
+                <h1 className={styles.eventTitle}>{eventData.name}</h1>
               </div>
+              <button className="btn btn-primary" onClick={() => setIsSaleWizardOpen(true)}>
+                Registrar venta
+              </button>
             </div>
-            <h1 className={styles.eventTitle}>{eventData.name}</h1>
           </div>
 
           {/* Metrics card — always visible, above tabs */}
           <div className={styles.progressDashboard}>
+            <div className={`${styles.statusBadge} ${statusBadgeClass} ${styles.statusBadgeInCard}`}>
+              <span className={styles.statusDot} />
+              <span className={styles.statusText}>{statusLabel}</span>
+            </div>
             <CircularProgress percentage={percentage} />
             <div className={styles.dashboardStats}>
               <div className={styles.dashboardStat}>
@@ -447,21 +457,15 @@ function EventDetailContent() {
           </div>
 
           {/* Top-level Tabs */}
-          <div className={styles.topTabsContainer}>
-            {([
-              { id: 'vendedores', label: 'Vendedores' },
-              { id: 'compradores', label: 'Compradores' },
-              { id: 'configuracion', label: 'Configuración' },
-            ] as { id: TopTab; label: string }[]).map(tab => (
-              <button
-                key={tab.id}
-                className={`${styles.topTab} ${activeTopTab === tab.id ? styles.topTabActive : ''}`}
-                onClick={() => setActiveTopTab(tab.id)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          <TabBar
+            tabs={[
+              { value: 'vendedores', label: 'Vendedores' },
+              { value: 'compradores', label: 'Compradores' },
+              { value: 'configuracion', label: 'Detalle' },
+            ]}
+            activeTab={activeTopTab}
+            onChange={(value) => setActiveTopTab(value as TopTab)}
+          />
 
           {/* ── VENDEDORES ───────────────────────────────────────────────── */}
           {activeTopTab === 'vendedores' && (
@@ -586,139 +590,54 @@ function EventDetailContent() {
           {activeTopTab === 'compradores' && (
             <div className={styles.compradoresTab}>
 
-              {/* Stats summary */}
-              <div className={styles.compradoresStats}>
-                <div className={styles.compradorStat}>
-                  <span className={styles.compradorStatValue}>{eventBuyers.length}</span>
-                  <span className={styles.compradorStatLabel}>Compradores</span>
-                </div>
-                <div className={styles.compradorStatDivider} />
-                {eventType === 'food_sale' ? (
-                  <>
-                    <div className={styles.compradorStat}>
-                      <span className={styles.compradorStatValue}>${foodSaleTotal.toLocaleString('es-AR')}</span>
-                      <span className={styles.compradorStatLabel}>Total recaudado</span>
-                    </div>
-                    <div className={styles.compradorStatDivider} />
-                    <div className={styles.compradorStat}>
-                      <span className={styles.compradorStatValue}>
-                        {eventBuyers.length > 0
-                          ? `$${Math.round(foodSaleTotal / eventBuyers.length).toLocaleString('es-AR')}`
-                          : '—'}
-                      </span>
-                      <span className={styles.compradorStatLabel}>Promedio x comprador</span>
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div className={styles.compradorStat}>
-                      <span className={styles.compradorStatValue}>{eventData.soldNumbers}</span>
-                      <span className={styles.compradorStatLabel}>Números vendidos</span>
-                    </div>
-                    <div className={styles.compradorStatDivider} />
-                    <div className={styles.compradorStat}>
-                      <span className={styles.compradorStatValue}>
-                        {eventBuyers.length > 0
-                          ? (eventData.soldNumbers / eventBuyers.length).toFixed(1)
-                          : '—'}
-                      </span>
-                      <span className={styles.compradorStatLabel}>Núm. promedio</span>
-                    </div>
-                  </>
-                )}
+              {/* Card: tabs + buscador + lista */}
+              <div className={styles.tableContainer}>
+
+              {/* Sub-tabs */}
+              <div className={styles.tabsContainer}>
+                <button
+                  className={`${styles.tab} ${activeBuyerTab === 'tab1' ? styles.activeTab : ''}`}
+                  onClick={() => setActiveBuyerTab('tab1')}
+                >
+                  {eventType === 'food_sale' ? 'Entregado' : 'Impresos'}
+                </button>
+                <button
+                  className={`${styles.tab} ${activeBuyerTab === 'tab2' ? styles.activeTab : ''}`}
+                  onClick={() => setActiveBuyerTab('tab2')}
+                >
+                  {eventType === 'food_sale' ? 'Por entregar' : 'Sin imprimir'}
+                </button>
               </div>
 
-              {/* Search + filters */}
-              <div className={listStyles.actionBar}>
-                <div className={listStyles.leftSection}>
-                  <div className={listStyles.searchContainer}>
-                    <svg className={listStyles.searchIcon} width="16" height="16" viewBox="0 0 24 24" fill="none">
-                      <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
-                      <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-                    </svg>
-                    <input
-                      type="text"
-                      placeholder="Buscar por nombre, teléfono o vendedor"
-                      value={buyerSearchTerm}
-                      onChange={e => setBuyerSearchTerm(e.target.value)}
-                      className={listStyles.searchInput}
-                    />
-                  </div>
-
-                  {/* Desktop filters */}
-                  <div className={listStyles.filtersGroupDesktop}>
-                    <div className={listStyles.statusFilter}>
-                      <CustomDropdown
-                        options={STATUS_OPTIONS.map(opt => ({ value: opt.value, label: opt.label }))}
-                        value={buyerStatusFilter}
-                        onChange={value => setBuyerStatusFilter(value as StatusFilter)}
-                        placeholder="Filtrar por estado"
-                      />
-                    </div>
-                    {showPrintFilter && (
-                      <div className={listStyles.eventFilter}>
-                        <CustomDropdown
-                          options={[
-                            { value: 'all', label: 'Toda impresión' },
-                            { value: 'printed', label: 'Impreso' },
-                            { value: 'pending', label: 'Sin imprimir' },
-                          ]}
-                          value={printFilter}
-                          onChange={value => setPrintFilter(value as 'all' | 'printed' | 'pending')}
-                          placeholder="Filtrar por impresión"
-                          alignRight={true}
-                        />
-                      </div>
-                    )}
-                    {showDeliveryFilter && (
-                      <div className={listStyles.eventFilter}>
-                        <CustomDropdown
-                          options={[
-                            { value: 'all', label: 'Toda entrega' },
-                            { value: 'delivered', label: 'Entregado' },
-                            { value: 'pending', label: 'Por entregar' },
-                          ]}
-                          value={deliveryFilter}
-                          onChange={value => setDeliveryFilter(value as 'all' | 'delivered' | 'pending')}
-                          placeholder="Filtrar por entrega"
-                          alignRight={true}
-                        />
-                      </div>
-                    )}
-                  </div>
-
-                  {/* Mobile filter button */}
-                  {!isDesktop && (
-                    <button
-                      type="button"
-                      className={listStyles.filtersTriggerMobile}
-                      onClick={() => setBuyerFiltersSheetOpen(true)}
-                      aria-label="Abrir filtros"
-                    >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-                        <path d="M4 6h16M4 12h16M4 18h7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      </svg>
-                      <span>Filtros</span>
-                    </button>
-                  )}
+              {/* Search + bulk actions */}
+              <div className={styles.searchContainer}>
+                <div className={styles.searchBar}>
+                  <svg className={styles.searchIcon} width="20" height="20" viewBox="0 0 24 24" fill="none">
+                    <circle cx="11" cy="11" r="8" stroke="currentColor" strokeWidth="2" />
+                    <path d="M21 21L16.65 16.65" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+                  </svg>
+                  <input
+                    type="text"
+                    placeholder="Buscar por nombre, teléfono o vendedor"
+                    value={buyerSearchTerm}
+                    onChange={e => setBuyerSearchTerm(e.target.value)}
+                    className={styles.searchInput}
+                  />
                 </div>
-
-                {/* Desktop bulk actions */}
                 {isDesktop && selectedBuyers.length > 0 && selectionType === 'raffle' && (
-                  <button onClick={() => handlePrintReceipts(!areAllSelectedPrinted)} className="btn btn-sm btn-primary">
+                  <button onClick={() => handlePrintReceipts(!areAllSelectedPrinted)} className={styles.markAsPaidButton}>
                     {areAllSelectedPrinted ? 'Desmarcar impreso' : 'Imprimir comprobantes'} ({selectedBuyers.length})
                   </button>
                 )}
                 {isDesktop && selectedBuyers.length > 0 && selectionType === 'food_sale' && (
-                  <button onClick={() => handleSetDeliveredStatus(!areAllSelectedDelivered)} className="btn btn-sm btn-primary">
+                  <button onClick={() => handleSetDeliveredStatus(!areAllSelectedDelivered)} className={styles.markAsPaidButton}>
                     {areAllSelectedDelivered ? 'Desmarcar' : 'Entregado'} ({selectedBuyers.length})
                   </button>
                 )}
               </div>
 
               {/* Desktop table */}
-              <div className={listStyles.tableContainer}>
-                <table className={listStyles.table}>
+              {isDesktop && <table className={listStyles.table}>
                   <thead>
                     <tr>
                       <th className={listStyles.checkboxColumn}>
@@ -742,7 +661,6 @@ function EventDetailContent() {
                         </div>
                       </th>
                       <th>Vendedor</th>
-                      {eventType === 'food_sale' && <th>Estado</th>}
                       <th className={listStyles.actionsColumn}></th>
                     </tr>
                   </thead>
@@ -774,22 +692,6 @@ function EventDetailContent() {
                                 style={{ cursor: 'pointer' }}
                               >
                                 {buyer.firstName} {buyer.lastName}
-                                {buyer.isDelivered && (
-                                  <span className={buyerStyles.deliveredPill}>
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-label="Entregado">
-                                      <path d="M20 6L9 17L4 12" stroke="#000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                  </span>
-                                )}
-                                {buyer.isPrinted && (
-                                  <span className={buyerStyles.printedPill} aria-label="Comprobante impreso">
-                                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                                      <path d="M6 9V2H18V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                                      <path d="M6 18H4C3.46957 18 2.96086 17.7893 2.58579 17.4142C2.21071 17.0391 2 16.5304 2 16V11C2 10.4696 2.21071 9.96086 2.58579 9.58579C2.96086 9.21071 3.46957 9 4 9H20C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V16C22 16.5304 21.7893 17.0391 21.4142 17.4142C21.0391 17.7893 20.5304 18 20 18H18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                                      <path d="M6 14H18V22H6V14Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                                    </svg>
-                                  </span>
-                                )}
                               </div>
                               <div className={buyerStyles.buyerPhone}>{buyer.phone}</div>
                             </div>
@@ -801,14 +703,6 @@ function EventDetailContent() {
                               <div className={listStyles.noEvent}>—</div>
                             )}
                           </td>
-                          {eventType === 'food_sale' && (
-                            <td>
-                              <span className={`${buyerStyles.detailStatusBadge} ${buyer.isDelivered ? buyerStyles.detailStatusDelivered : buyerStyles.detailStatusPending}`}>
-                                <span className={buyerStyles.detailStatusDot} />
-                                {buyer.isDelivered ? 'Entregado' : 'Por entregar'}
-                              </span>
-                            </td>
-                          )}
                           <td className={listStyles.actionsColumn}>
                             <div className={listStyles.desktopMenuContainer}>
                               <button
@@ -846,8 +740,7 @@ function EventDetailContent() {
                       );
                     })}
                   </tbody>
-                </table>
-              </div>
+                </table>}
 
               {/* Mobile list */}
               {!isDesktop && (
@@ -880,22 +773,6 @@ function EventDetailContent() {
                             style={{ cursor: 'pointer' }}
                           >
                             {buyer.firstName} {buyer.lastName}
-                            {buyer.isDelivered && (
-                              <span className={buyerStyles.deliveredPill}>
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-label="Entregado">
-                                  <path d="M20 6L9 17L4 12" stroke="#000" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                              </span>
-                            )}
-                            {buyer.isPrinted && (
-                              <span className={buyerStyles.printedPill} aria-label="Comprobante impreso">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none">
-                                  <path d="M6 9V2H18V9" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                                  <path d="M6 18H4C3.46957 18 2.96086 17.7893 2.58579 17.4142C2.21071 17.0391 2 16.5304 2 16V11C2 10.4696 2.21071 9.96086 2.58579 9.58579C2.96086 9.21071 3.46957 9 4 9H20C20.5304 9 21.0391 9.21071 21.4142 9.58579C21.7893 9.96086 22 10.4696 22 11V16C22 16.5304 21.7893 17.0391 21.4142 17.4142C21.0391 17.7893 20.5304 18 20 18H18" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                                  <path d="M6 14H18V22H6V14Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-                                </svg>
-                              </span>
-                            )}
                           </span>
                         }
                         phone={buyer.phone}
@@ -960,76 +837,62 @@ function EventDetailContent() {
                 />
               )}
 
+              </div>{/* end tableContainer */}
             </div>
           )}
 
           {/* ── CONFIGURACIÓN ────────────────────────────────────────────── */}
           {activeTopTab === 'configuracion' && (
             <div className={styles.configTab}>
-              <div className={styles.configFormHeader}>
-                <h3 className={styles.configSectionTitle}>Datos del evento</h3>
+              <div className={styles.configSection}>
+                <EventDataStep
+                  key={eventData.id}
+                  ref={eventDataStepRef}
+                  readOnly={!isConfigEditing}
+                  prizesLocked={prizesLocked}
+                  allowDishClose={eventType === 'food_sale'}
+                  onDishCloseToggle={handleDishCloseToggle}
+                  initialData={{
+                    type: eventType,
+                    name: eventData.name,
+                    endDate: new Date(eventData.endDate),
+                    numberValue: String(eventData.ticketPrice),
+                    totalNumbers: String(eventData.totalNumbers),
+                    autoAdjust: false,
+                    prizes: [...(eventData.prizes ?? [])].sort((a, b) => a.position - b.position).map(p => p.description),
+                    foodItems: (eventData.dishes ?? []).map(d => ({ name: d.name, price: String(d.price), sold: d.sold, total: d.total })),
+                  }}
+                  onNext={() => setIsConfigEditing(false)}
+                  onBack={() => {}}
+                />
+              </div>
+
+              <div className={styles.configActions}>
                 {!isConfigEditing ? (
-                  <button className={styles.editHeaderBtn} onClick={() => setIsConfigEditing(true)}>
-                    <svg width="15" height="15" viewBox="0 0 24 24" fill="none">
-                      <path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                      <path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                    </svg>
-                    Editar
+                  <button className="btn btn-secondary btn-sm" onClick={() => setIsConfigEditing(true)}>
+                    Editar datos
                   </button>
                 ) : (
-                  <button className={styles.configSaveBtnInline} onClick={() => setIsConfigEditing(false)}>
-                    Guardar
-                  </button>
+                  <>
+                    <button className="btn btn-primary btn-sm" onClick={() => eventDataStepRef.current?.validateAndNext()}>
+                      Guardar cambios
+                    </button>
+                    <button className="btn btn-secondary btn-sm" onClick={() => setIsConfigEditing(false)}>
+                      Cancelar
+                    </button>
+                  </>
                 )}
-              </div>
-              <div className={styles.configForm}>
-                <div className={styles.configFormGroup}>
-                  <label className={styles.configLabel}>Nombre del evento</label>
-                  <input
-                    className={`${styles.configInput} ${!isConfigEditing ? styles.configInputReadonly : ''}`}
-                    value={editForm.name}
-                    readOnly={!isConfigEditing}
-                    onChange={e => setEditForm(f => ({ ...f, name: e.target.value }))}
-                  />
-                </div>
-                <div className={styles.configFormGroup}>
-                  <label className={styles.configLabel}>Fecha de cierre</label>
-                  <input
-                    type={isConfigEditing ? 'date' : 'text'}
-                    className={`${styles.configInput} ${!isConfigEditing ? styles.configInputReadonly : ''}`}
-                    value={editForm.endDate}
-                    readOnly={!isConfigEditing}
-                    onChange={e => setEditForm(f => ({ ...f, endDate: e.target.value }))}
-                  />
-                </div>
-                <div className={styles.configFormGroup}>
-                  <label className={styles.configLabel}>Precio por número</label>
-                  <input
-                    type={isConfigEditing ? 'number' : 'text'}
-                    className={`${styles.configInput} ${!isConfigEditing ? styles.configInputReadonly : ''}`}
-                    value={editForm.ticketPrice}
-                    readOnly={!isConfigEditing}
-                    onChange={e => setEditForm(f => ({ ...f, ticketPrice: e.target.value }))}
-                  />
-                </div>
-                <div className={styles.configFormGroup}>
-                  <label className={styles.configLabel}>Premio</label>
-                  <input
-                    className={`${styles.configInput} ${!isConfigEditing ? styles.configInputReadonly : ''}`}
-                    value={editForm.prizeDescription}
-                    readOnly={!isConfigEditing}
-                    onChange={e => setEditForm(f => ({ ...f, prizeDescription: e.target.value }))}
-                  />
-                </div>
               </div>
 
               <div className={styles.dangerZone}>
-                <h3 className={styles.dangerZoneTitle}>Zona de peligro</h3>
-                <p className={styles.dangerZoneDesc}>
-                  Cerrar el evento finaliza la recaudación. Esta acción no se puede deshacer.
-                </p>
+                <div className={styles.dangerZoneText}>
+                  <h3 className={styles.dangerZoneTitle}>Cancelar evento</h3>
+                  <p className={styles.dangerZoneDesc}>
+                    Cancelá el evento si no puede llevarse a cabo. Se registrará como cancelado y no se podrán agregar nuevas ventas.
+                  </p>
+                </div>
                 <button className={styles.dangerBtn} onClick={() => setIsCloseEventOpen(true)}>
-                  Cerrar evento
+                  Cancelar
                 </button>
               </div>
             </div>
@@ -1055,66 +918,6 @@ function EventDetailContent() {
         )}
       </MobileStickyActionBar>
 
-      {/* Compradores: Mobile filters sheet */}
-      <MobileFilterSheet isOpen={!isDesktop && buyerFiltersSheetOpen} onClose={() => setBuyerFiltersSheetOpen(false)}>
-        <div className={listStyles.sheetFilterGroup}>
-          <span className={listStyles.sheetFilterLabel}>Estado</span>
-          <div className={listStyles.sheetFilterOptions}>
-            {STATUS_OPTIONS.map(opt => (
-              <button
-                key={opt.value}
-                type="button"
-                className={buyerStatusFilter === opt.value ? listStyles.sheetFilterOptionActive : listStyles.sheetFilterOption}
-                onClick={() => setBuyerStatusFilter(opt.value as StatusFilter)}
-              >
-                {opt.label}
-              </button>
-            ))}
-          </div>
-        </div>
-        {showPrintFilter && (
-          <div className={listStyles.sheetFilterGroup}>
-            <span className={listStyles.sheetFilterLabel}>Impresión</span>
-            <div className={listStyles.sheetFilterOptions}>
-              {([
-                { value: 'all', label: 'Toda impresión' },
-                { value: 'printed', label: 'Impreso' },
-                { value: 'pending', label: 'Sin imprimir' },
-              ] as const).map(opt => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  className={printFilter === opt.value ? listStyles.sheetFilterOptionActive : listStyles.sheetFilterOption}
-                  onClick={() => setPrintFilter(opt.value)}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-        {showDeliveryFilter && (
-          <div className={listStyles.sheetFilterGroup}>
-            <span className={listStyles.sheetFilterLabel}>Entrega</span>
-            <div className={listStyles.sheetFilterOptions}>
-              {([
-                { value: 'all', label: 'Toda entrega' },
-                { value: 'delivered', label: 'Entregado' },
-                { value: 'pending', label: 'Por entregar' },
-              ] as const).map(opt => (
-                <button
-                  key={opt.value}
-                  type="button"
-                  className={deliveryFilter === opt.value ? listStyles.sheetFilterOptionActive : listStyles.sheetFilterOption}
-                  onClick={() => setDeliveryFilter(opt.value)}
-                >
-                  {opt.label}
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-      </MobileFilterSheet>
 
       {/* Compradores: Modal detalle de números — rifa (desktop) */}
       {isDesktop && raffleDetailBuyer && (
@@ -1330,6 +1133,21 @@ function EventDetailContent() {
         vendorNames={collectedData.filter(v => selectedCollectedVendors.includes(v.id)).map(v => v.name)}
         onClose={() => setIsAssignModalOpen(false)}
         onConfirm={handleModalConfirm}
+      />
+
+      {/* Register Sale — mobile bottom button */}
+      <div className={styles.registerSaleBottomBar}>
+        <button className="btn btn-primary btn-full" onClick={() => setIsSaleWizardOpen(true)}>
+          Registrar venta
+        </button>
+      </div>
+
+      {/* Register Sale Wizard */}
+      <RegisterSaleWizard
+        isOpen={isSaleWizardOpen}
+        onClose={() => setIsSaleWizardOpen(false)}
+        events={eventsForWizard}
+        preselectedEventId={eventId}
       />
 
       {/* Close Event Confirmation Sheet */}

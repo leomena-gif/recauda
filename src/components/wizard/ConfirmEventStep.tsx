@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import type { FoodItem } from './CreateEventWizard';
+import type { FoodItem } from './CreateEventForm';
 import styles from './ConfirmEventStep.module.css';
 
 interface EventData {

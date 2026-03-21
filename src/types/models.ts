@@ -33,7 +33,7 @@ export type BuyerStatus = typeof BUYER_STATUS[keyof typeof BUYER_STATUS];
 export type EventType = typeof EVENT_TYPE[keyof typeof EVENT_TYPE];
 export type EventStatus = typeof EVENT_STATUS[keyof typeof EVENT_STATUS];
 export type StatusFilter = 'all' | SellerStatus;
-export type EventStatusFilter = 'all' | EventStatus;
+export type EventStatusFilter = 'active' | 'past';
 
 // ─── Interfaces ─────────────────────────────────────────────────────────────
 
@@ -75,6 +75,20 @@ export interface Buyer {
   assignedNumbers?: number[];
 }
 
+export interface Prize {
+  position: number;
+  description: string;
+  value?: number;
+}
+
+export interface EventDish {
+  name: string;
+  price: number;
+  sold?: number;
+  total?: number;
+  closed?: boolean;
+}
+
 export interface Event {
   id: string;
   name: string;
@@ -83,4 +97,6 @@ export interface Event {
   endDate: string;
   totalNumbers: number;
   soldNumbers: number;
+  prizes?: Prize[];
+  dishes?: EventDish[];
 }

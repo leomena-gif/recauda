@@ -1,36 +1,37 @@
 /* Navigation */
 .navigationContainer {
-  margin-bottom: 12px;
+  margin-bottom: var(--space-md);
 }
 
 .backButton {
   background: none;
   border: none;
-  color: var(--color-text-primary);
-  font-size: var(--font-size-base);
+  color: var(--color-text-tertiary);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-medium);
   cursor: pointer;
-  padding: var(--space-xs) 0;
-  transition: all var(--transition-base);
+  padding: 0;
   display: flex;
   align-items: center;
-  gap: var(--space-xs);
+  gap: 4px;
   width: fit-content;
+  transition: color var(--transition-base);
 }
 
-.backButton:hover { opacity: 0.7; }
-.backButton:active { transform: scale(0.98); }
+.backButton:hover { color: var(--color-text-secondary); }
 
 .chevronIcon { transition: transform var(--transition-base); }
 .backButton:hover .chevronIcon { transform: translateX(-2px); }
 
 /* Page Title */
 .pageTitle {
+  font-size: var(--font-size-xl);
   font-weight: var(--font-weight-bold);
   color: var(--color-text-primary);
-  margin-bottom: var(--space-xl);
-  margin-top: 0;
+  letter-spacing: -0.3px;
+  margin: 0 0 var(--space-xl) 0;
   text-align: left;
+  line-height: 1.3;
 }
 
 /* Single column form */
@@ -308,7 +309,7 @@
   color: var(--color-text-tertiary);
 }
 
-/* Submit area — right-aligned, same as CreateEventWizard */
+/* Submit area — right-aligned, same as CreateEventForm */
 .submitArea {
   display: flex;
   justify-content: flex-end;

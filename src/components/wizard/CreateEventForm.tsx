@@ -5,11 +5,14 @@ import { useRouter } from 'next/navigation';
 import EventTypeStep from './EventTypeStep';
 import EventDataStep, { EventDataStepRef } from './EventDataStep';
 import EventSuccessScreen from './EventSuccessScreen';
-import styles from './CreateEventWizard.module.css';
+import styles from './CreateEventForm.module.css';
 
 export interface FoodItem {
   name: string;
   price: string;
+  closed?: boolean;
+  sold?: number;
+  total?: number;
 }
 
 interface EventData {
@@ -24,7 +27,7 @@ interface EventData {
   endDate: Date | null;
 }
 
-const CreateEventWizard: React.FC = () => {
+const CreateEventForm: React.FC = () => {
   const router = useRouter();
   const [selectedType, setSelectedType] = useState<'raffle' | 'food_sale'>('raffle');
   const [isCreating, setIsCreating] = useState(false);
@@ -76,10 +79,10 @@ const CreateEventWizard: React.FC = () => {
 
       <div className={styles.navigationContainer}>
         <button className={styles.backButton} onClick={handleBackToEvents}>
-          <svg className={styles.chevronIcon} width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <svg className={styles.chevronIcon} width="14" height="14" viewBox="0 0 24 24" fill="none">
             <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          Volver a Mis eventos
+          Mis eventos
         </button>
       </div>
 
@@ -125,4 +128,4 @@ const CreateEventWizard: React.FC = () => {
   );
 };
 
-export default CreateEventWizard;
+export default CreateEventForm;

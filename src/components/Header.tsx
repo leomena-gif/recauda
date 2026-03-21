@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import { Home, Plus, Users, ClipboardCheck, X, Menu } from 'lucide-react';
+import { Home, Plus, Users, X, Menu } from 'lucide-react';
 import { ROUTES } from '@/constants';
 import styles from './Header.module.css';
 
@@ -17,14 +17,12 @@ const headerItems: HeaderItem[] = [
   { id: 'home', label: 'Mis Eventos', path: ROUTES.HOME, icon: <Home size={20} /> },
   { id: 'create-event', label: 'Crear evento', path: ROUTES.CREATE_EVENT, icon: <Plus size={20} /> },
   { id: 'sellers-list', label: 'Lista de vendedores', path: ROUTES.SELLERS_LIST, icon: <Users size={20} /> },
-  { id: 'buyers-list', label: 'Lista de compradores', path: ROUTES.BUYERS_LIST, icon: <ClipboardCheck size={20} /> },
 ];
 
 const ROUTE_TITLES: Record<string, string> = {
   [ROUTES.HOME]: 'Mis Eventos',
   [ROUTES.CREATE_EVENT]: 'Crear evento',
   [ROUTES.SELLERS_LIST]: 'Lista de vendedores',
-  [ROUTES.BUYERS_LIST]: 'Lista de compradores',
   [ROUTES.ADD_SELLER]: 'Agregar vendedor',
   [ROUTES.EVENT_DETAIL]: 'Detalle del evento',
 };

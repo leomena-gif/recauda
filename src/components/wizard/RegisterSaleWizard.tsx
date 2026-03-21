@@ -42,16 +42,19 @@ interface RegisterSaleWizardProps {
     isOpen: boolean;
     onClose: () => void;
     events: SaleEvent[];
+    preselectedEventId?: string;
 }
 
-const RegisterSaleWizard: React.FC<RegisterSaleWizardProps> = ({ isOpen, onClose, events }) => {
+const RegisterSaleWizard: React.FC<RegisterSaleWizardProps> = ({ isOpen, onClose, events, preselectedEventId }) => {
+    const initialStep = preselectedEventId ? 2 : 1;
+
     // ─── Wizard Step State ────────────────────────────────────────────────
-    const [mobileStep, setMobileStep] = useState<1 | 2 | 3>(1);
-    const [desktopStep, setDesktopStep] = useState<1 | 2 | 3>(1);
+    const [mobileStep, setMobileStep] = useState<1 | 2 | 3>(initialStep);
+    const [desktopStep, setDesktopStep] = useState<1 | 2 | 3>(initialStep);
     const [isSuccess, setIsSuccess] = useState(false);
 
     // ─── Form State ───────────────────────────────────────────────────────
-    const [selectedEventId, setSelectedEventId] = useState('');
+    const [selectedEventId, setSelectedEventId] = useState(preselectedEventId ?? '');
     const [saleQuantity, setSaleQuantity] = useState(1);
     const [buyerName, setBuyerName] = useState('');
     const [phone, setPhone] = useState('');
@@ -69,9 +72,9 @@ const RegisterSaleWizard: React.FC<RegisterSaleWizardProps> = ({ isOpen, onClose
     // ─── Handlers ─────────────────────────────────────────────────────────
 
     const resetState = useCallback(() => {
-        setMobileStep(1);
-        setDesktopStep(1);
-        setSelectedEventId('');
+        setMobileStep(initialStep);
+        setDesktopStep(initialStep);
+        setSelectedEventId(preselectedEventId ?? '');
         setSaleQuantity(1);
         setBuyerName('');
         setPhone('');
@@ -119,11 +122,11 @@ const RegisterSaleWizard: React.FC<RegisterSaleWizardProps> = ({ isOpen, onClose
             setMobileStep(2);
             setDesktopStep(2);
         } else {
-            setMobileStep(1);
-            setDesktopStep(1);
+            setMobileStep(initialStep);
+            setDesktopStep(initialStep);
         }
         setDetailErrors({});
-    }, [mobileStep]);
+    }, [mobileStep, initialStep]);
 
     const handleDishChange = useCallback((dishName: string, quantity: number) => {
         setSelectedDishes((prev) => ({ ...prev, [dishName]: quantity }));

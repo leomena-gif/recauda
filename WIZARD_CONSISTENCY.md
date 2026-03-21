@@ -1,6 +1,6 @@
 # Consistencia entre Wizards
 
-## Cambios realizados para generar consistencia entre CreateEventWizard y AddSellerWizard
+## Cambios realizados para generar consistencia entre CreateEventForm y AddSellerForm
 
 ### 1. Success Screen (SuccessScreen.tsx)
 
@@ -31,11 +31,11 @@ Ambos wizards ya tienen:
 
 ### 3. Jerarquía de Botones
 
-**CreateEventWizard Success:**
+**CreateEventForm Success:**
 - Primario: "Agregar vendedores"
 - Secundario: "Volver a Mis eventos"
 
-**AddSellerWizard Success:**
+**AddSellerForm Success:**
 - Primario: "Agregar otro vendedor"
 - Secundario: "Continuar luego"
 

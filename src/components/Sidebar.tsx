@@ -25,12 +25,6 @@ const sidebarItems: SidebarItem[] = [
     path: '/sellers-list',
     icon: 'people'
   },
-  {
-    id: 'buyers-list',
-    label: 'Lista de compradores',
-    path: '/buyers-list',
-    icon: 'shopping'
-  }
 ];
 
 // TODO: Replace with real auth context
