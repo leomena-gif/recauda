@@ -8,29 +8,6 @@ import styles from './EventCard.module.css';
 type EventStatus = 'active' | 'completed' | 'cancelled';
 type EventType = 'raffle' | 'food_sale';
 
-const RaffleIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M20 12V22H4V12"/>
-    <path d="M22 7H2v5h20V7z"/>
-    <path d="M12 22V7"/>
-    <path d="M12 7H7.5a2.5 2.5 0 0 1 0-5C11 2 12 7 12 7z"/>
-    <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
-  </svg>
-);
-
-const FoodIcon = () => (
-  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/>
-    <path d="M7 2v20"/>
-    <path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3zm0 0v7"/>
-  </svg>
-);
-
-const TYPE_ICON_COMPONENT: Record<EventType, React.FC> = {
-  raffle: RaffleIcon,
-  food_sale: FoodIcon,
-};
-
 interface EventCardProps {
   id: string;
   name: string;
@@ -113,17 +90,12 @@ export default function EventCard({
     >
       <div className={styles.content}>
 
-        {/* Type icon + Status badge */}
-        <div className={styles.header}>
-          <div className={styles.typeIcon}>
-            {React.createElement(TYPE_ICON_COMPONENT[type])}
-          </div>
-          <div className={`${styles.badge} ${styles[`badge_${status}`]}`}>
-            {status !== 'cancelled' && <span className={styles.badgeDot} />}
-            <span className={styles.badgeText}>
-              {status === 'active' ? 'ACTIVO' : status === 'completed' ? 'FINALIZADO' : 'CANCELADO'}
-            </span>
-          </div>
+        {/* Status badge */}
+        <div className={`${styles.badge} ${styles[`badge_${status}`]}`}>
+          {status !== 'cancelled' && <span className={styles.badgeDot} />}
+          <span className={styles.badgeText}>
+            {status === 'active' ? 'ACTIVO' : status === 'completed' ? 'FINALIZADO' : 'CANCELADO'}
+          </span>
         </div>
 
         {/* Date */}
