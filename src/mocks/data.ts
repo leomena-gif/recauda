@@ -3,7 +3,7 @@
  * TODO: Replace with API calls in production
  */
 
-import { Seller, Event, Buyer } from '@/types/models';
+import { Seller, Event, Buyer, Prize, EventDish } from '@/types/models';
 import type { SaleEvent } from '@/components/wizard/RegisterSaleWizard';
 
 
@@ -88,18 +88,34 @@ export const MOCK_EVENTS: Event[] = [
     name: 'Rifa día del niño del G.S. General Deheza',
     type: 'raffle',
     status: 'active',
-    endDate: '2024-12-25',
+    endDate: '2026-04-15',
     totalNumbers: 800,
-    soldNumbers: 640
+    soldNumbers: 640,
+    prizes: [
+      { position: 1, description: 'Auto 0km Toyota Etios', value: 8000000 },
+      { position: 2, description: 'Moto Zanella ZB 110cc', value: 1200000 },
+      { position: 3, description: 'Heladera Drean con freezer', value: 450000 },
+      { position: 4, description: 'Smart TV 50" Samsung 4K', value: 380000 },
+      { position: 5, description: 'Tablet Samsung + auriculares Bluetooth', value: 180000 },
+      { position: 6, description: 'Bicicleta rodado 26 montaña', value: 120000 },
+    ],
   },
   {
     id: '2',
     name: 'Venta de comida - Fiesta de fin de año',
     type: 'food_sale',
     status: 'active',
-    endDate: '2024-12-31',
+    endDate: '2026-12-31',
     totalNumbers: 500,
-    soldNumbers: 320
+    soldNumbers: 320,
+    dishes: [
+      { name: 'Milanesa napolitana con papas fritas', price: 2500, sold: 45, total: 100 },
+      { name: 'Empanadas (docena)', price: 3000, sold: 30, total: 80 },
+      { name: 'Asado con ensalada mixta', price: 4500, sold: 18, total: 50 },
+      { name: 'Pollo al horno con guarnición', price: 3200, sold: 22, total: 60 },
+      { name: 'Choripán completo', price: 1500, sold: 55, total: 120 },
+      { name: 'Torta casera (porción)', price: 800, sold: 40, total: 80 },
+    ],
   },
   {
     id: '3',
@@ -243,10 +259,14 @@ export const MOCK_HOME_EVENTS: SaleEvent[] = [
     id: '2',
     status: 'active',
     type: 'food_sale',
-    name: 'Venta de comida - Platos especiales',
+    name: 'Venta de comida - Fiesta de fin de año',
     dishes: [
-      { name: 'Milanesa con papas', price: 2500, sold: 45, total: 100 },
+      { name: 'Milanesa napolitana con papas fritas', price: 2500, sold: 45, total: 100 },
       { name: 'Empanadas (docena)', price: 3000, sold: 30, total: 80 },
+      { name: 'Asado con ensalada mixta', price: 4500, sold: 18, total: 50 },
+      { name: 'Pollo al horno con guarnición', price: 3200, sold: 22, total: 60 },
+      { name: 'Choripán completo', price: 1500, sold: 55, total: 120 },
+      { name: 'Torta casera (porción)', price: 800, sold: 40, total: 80 },
     ],
   },
   { id: '3', status: 'cancelled', type: 'raffle', name: 'Rifa cancelada', collected: 80000, goal: 300000, soldUnits: 80, totalUnits: 300 },

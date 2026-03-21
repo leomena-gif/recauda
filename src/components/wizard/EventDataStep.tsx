@@ -3,7 +3,7 @@
 import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import { Trash2 } from 'lucide-react';
 import DatePicker from '@/components/DatePicker';
-import type { FoodItem } from './CreateEventWizard';
+import type { FoodItem } from './CreateEventForm';
 import styles from './EventDataStep.module.css';
 
 export interface EventDataStepRef {
@@ -22,6 +22,10 @@ interface EventDataStepProps {
     prizes?: string[];
     foodItems?: FoodItem[];
   };
+  readOnly?: boolean;
+  prizesLocked?: boolean;
+  allowDishClose?: boolean;
+  onDishCloseToggle?: (index: number, closed: boolean) => void;
   onNext: (data: {
     name: string;
     numberValue?: string;
@@ -50,16 +54,17 @@ const getPrizePlaceholder = (index: number): string => {
 };
 
 const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
-  ({ initialData, onNext }, ref) => {
+  ({ initialData, readOnly = false, prizesLocked = false, allowDishClose = false, onDishCloseToggle, onNext }, ref) => {
     const eventType = initialData?.type || 'raffle';
     const isFoodSale = eventType === 'food_sale';
+    const creationDate: Date = (initialData?.startDate instanceof Date ? initialData.startDate : new Date());
 
     const [formData, setFormData] = useState({
       name: initialData?.name || '',
       numberValue: initialData?.numberValue || '',
       totalNumbers: initialData?.totalNumbers || '',
       autoAdjust: initialData?.autoAdjust ?? true,
-      startDate: (initialData?.startDate instanceof Date ? initialData.startDate : null),
+      startDate: creationDate,
       endDate: (initialData?.endDate instanceof Date ? initialData.endDate : null),
       prizes: initialData?.prizes && initialData.prizes.length > 0 ? initialData.prizes : [''],
       foodItems: initialData?.foodItems && initialData.foodItems.length > 0 ? initialData.foodItems : [{ name: '', price: '' }],
@@ -72,7 +77,6 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
         const newErrors: Record<string, string> = {};
 
         if (!formData.name.trim()) newErrors.name = 'El nombre del evento es requerido';
-        if (!formData.startDate) newErrors.startDate = 'La fecha de inicio es requerida';
         if (!formData.endDate) newErrors.endDate = 'La fecha de finalización es requerida';
 
         if (isFoodSale) {
@@ -109,6 +113,7 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
     }));
 
     const handleInputChange = (field: string, value: string | boolean | Date | null) => {
+      if (readOnly) return;
       setFormData(prev => ({ ...prev, [field]: value }));
       if (errors[field]) setErrors(prev => ({ ...prev, [field]: '' }));
     };
@@ -152,47 +157,56 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
       if (formData.foodItems.length > 1) setFormData(prev => ({ ...prev, foodItems: prev.foodItems.filter((_, i) => i !== index) }));
     };
 
-    return (
-      <div className={styles.container}>
+    const handleDishCloseToggle = (index: number) => {
+      const newClosed = !formData.foodItems[index].closed;
+      setFormData(prev => ({
+        ...prev,
+        foodItems: prev.foodItems.map((item, i) => i === index ? { ...item, closed: newClosed } : item),
+      }));
+      onDishCloseToggle?.(index, newClosed);
+    };
 
-        {/* Event Name — heading input */}
-        <div className={styles.nameSection}>
+    return (
+      <div className={`${styles.container} ${readOnly ? styles.containerReadOnly : styles.containerEditing}`}>
+
+        {/* Event Name */}
+        <div className={styles.fieldGroup}>
+          <label className={styles.fieldLabel}>
+            {isFoodSale ? 'Nombre de la venta' : 'Nombre del evento'}
+          </label>
           <input
             type="text"
             value={formData.name}
             onChange={(e) => handleInputChange('name', e.target.value)}
-            className={`${styles.nameInput} ${errors.name ? styles.nameInputError : ''}`}
-            placeholder={isFoodSale ? 'Nombre de la venta' : 'Nombre del evento'}
+            className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
+            placeholder={isFoodSale ? 'Ej: Venta de comida - Fiesta de fin de año' : 'Ej: Rifa día del niño'}
+            disabled={readOnly}
           />
-          {errors.name && <span className={styles.nameError}>{errors.name}</span>}
+          {errors.name && <span className={styles.errorText}>{errors.name}</span>}
         </div>
 
-        {/* Dates — two-column compact card */}
+        {/* Dates */}
         <div className={styles.datesCard}>
-          <div className={styles.dateCol}>
-            <span className={styles.dateLabel}>Fecha de inicio</span>
-            <DatePicker
-              selected={formData.startDate}
-              onChange={(date) => handleInputChange('startDate', date)}
-              placeholder="dd/mm/aa"
-              error={!!errors.startDate}
-            />
-            {errors.startDate && <span className={styles.errorText}>{errors.startDate}</span>}
+          <div className={styles.fieldGroup}>
+            <label className={styles.fieldLabel}>Fecha de inicio</label>
+            <div className={styles.startDateDisplay}>
+              {formData.startDate.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+            </div>
           </div>
-          <div className={styles.dateSeparator} />
-          <div className={styles.dateCol}>
-            <span className={styles.dateLabel}>Fecha de fin</span>
+          <div className={styles.fieldGroup}>
+            <label className={styles.fieldLabel}>Fecha de fin</label>
             <DatePicker
               selected={formData.endDate}
               onChange={(date) => handleInputChange('endDate', date)}
               placeholder="dd/mm/aa"
               error={!!errors.endDate}
+              disabled={readOnly}
             />
             {errors.endDate && <span className={styles.errorText}>{errors.endDate}</span>}
           </div>
         </div>
 
-        {/* Raffle options — Luma event options style */}
+        {/* Raffle options */}
         {!isFoodSale && (
           <div className={styles.optionsCard}>
             <div className={styles.optionRow}>
@@ -207,6 +221,7 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
                   onChange={(e) => handleInputChange('numberValue', e.target.value)}
                   className={`${styles.inlineInput} ${errors.numberValue ? styles.inlineInputError : ''}`}
                   placeholder="Ej: $500"
+                  disabled={readOnly}
                 />
                 {errors.numberValue && <span className={styles.inlineError}>{errors.numberValue}</span>}
               </div>
@@ -225,6 +240,7 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
                     type="button"
                     className={`${styles.segmentedBtn} ${formData.autoAdjust ? styles.segmentedBtnActive : ''}`}
                     onClick={() => handleInputChange('autoAdjust', true)}
+                    disabled={readOnly}
                   >
                     Automático
                   </button>
@@ -232,6 +248,7 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
                     type="button"
                     className={`${styles.segmentedBtn} ${!formData.autoAdjust ? styles.segmentedBtnActive : ''}`}
                     onClick={() => handleInputChange('autoAdjust', false)}
+                    disabled={readOnly}
                   >
                     Manual
                   </button>
@@ -243,7 +260,7 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
                     onChange={(e) => handleInputChange('totalNumbers', e.target.value)}
                     className={`${styles.inlineInput} ${errors.totalNumbers ? styles.inlineInputError : ''}`}
                     placeholder="Ej: 1000"
-                    autoFocus
+                    disabled={readOnly}
                   />
                 )}
                 {errors.totalNumbers && <span className={styles.inlineError}>{errors.totalNumbers}</span>}
@@ -267,28 +284,36 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
                     className={`${styles.input} ${errors[`prize_${index}`] ? styles.inputError : ''}`}
                     placeholder={getPrizePlaceholder(index)}
                     aria-label={getPrizeLabel(index)}
+                    disabled={readOnly}
                   />
                   {errors[`prize_${index}`] && <span className={styles.errorText}>{errors[`prize_${index}`]}</span>}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemovePrize(index)}
-                  className={styles.removeBtn}
-                  disabled={index === 0}
-                  aria-label="Eliminar premio"
-                >
-                  <Trash2 size={15} />
-                </button>
+                {!readOnly && !prizesLocked && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemovePrize(index)}
+                    className={styles.removeBtn}
+                    disabled={index === 0}
+                    aria-label="Eliminar premio"
+                  >
+                    <Trash2 size={15} />
+                  </button>
+                )}
               </div>
             ))}
-            <button
-              type="button"
-              onClick={handleAddPrize}
-              className={styles.addBtn}
-              disabled={formData.prizes.length >= 10}
-            >
-              + Agregar premio
-            </button>
+            {!readOnly && !prizesLocked && (
+              <button
+                type="button"
+                onClick={handleAddPrize}
+                className={styles.addBtn}
+                disabled={formData.prizes.length >= 10}
+              >
+                + Agregar premio
+              </button>
+            )}
+            {prizesLocked && (
+              <p className={styles.prizesLockedNote}>Los premios no se pueden modificar mientras el evento está en curso.</p>
+            )}
           </div>
         )}
 
@@ -297,48 +322,67 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
           <div className={styles.listSection}>
             <h3 className={styles.listTitle}>Menú</h3>
             {formData.foodItems.map((item, index) => (
-              <div key={index} className={styles.foodRow}>
-                <div className={styles.foodRowFields}>
-                  <div className={styles.foodNameField}>
-                    <input
-                      type="text"
-                      value={item.name}
-                      onChange={(e) => handleFoodItemChange(index, 'name', e.target.value)}
-                      className={`${styles.input} ${errors[`foodItem_${index}_name`] ? styles.inputError : ''}`}
-                      placeholder={index === 0 ? 'Ej: Pollo asado con papas' : 'Nombre del plato'}
-                    />
-                    {errors[`foodItem_${index}_name`] && <span className={styles.errorText}>{errors[`foodItem_${index}_name`]}</span>}
+              <div key={index} className={`${styles.foodRow} ${item.closed ? styles.foodRowClosed : ''}`}>
+                {readOnly ? (
+                  /* Vista de solo lectura */
+                  <div className={styles.foodRowReadOnly}>
+                    <span className={styles.foodRowName}>{item.name}</span>
+                    <span className={styles.foodRowMeta}>
+                      <span className={styles.foodRowPrice}>${Number(item.price).toLocaleString('es-AR')}</span>
+                      {(item.sold != null || item.total != null) && (
+                        <>
+                          <span className={styles.foodRowMetaDot}>·</span>
+                          <span className={styles.foodRowStats}>{item.sold ?? 0} de {item.total ?? '—'} vendidos</span>
+                        </>
+                      )}
+                    </span>
                   </div>
-                  <div className={styles.foodPriceField}>
-                    <input
-                      type="text"
-                      value={item.price}
-                      onChange={(e) => handleFoodItemChange(index, 'price', e.target.value)}
-                      className={`${styles.input} ${errors[`foodItem_${index}_price`] ? styles.inputError : ''}`}
-                      placeholder="$0"
-                    />
-                    {errors[`foodItem_${index}_price`] && <span className={styles.errorText}>{errors[`foodItem_${index}_price`]}</span>}
+                ) : (
+                  /* Vista de edición: inputs */
+                  <div className={styles.foodRowFields}>
+                    <div className={styles.foodNameField}>
+                      <input
+                        type="text"
+                        value={item.name}
+                        onChange={(e) => handleFoodItemChange(index, 'name', e.target.value)}
+                        className={`${styles.input} ${errors[`foodItem_${index}_name`] ? styles.inputError : ''}`}
+                        placeholder={index === 0 ? 'Ej: Pollo asado con papas' : 'Nombre del plato'}
+                      />
+                      {errors[`foodItem_${index}_name`] && <span className={styles.errorText}>{errors[`foodItem_${index}_name`]}</span>}
+                    </div>
+                    <div className={styles.foodPriceField}>
+                      <input
+                        type="text"
+                        value={item.price}
+                        onChange={(e) => handleFoodItemChange(index, 'price', e.target.value)}
+                        className={`${styles.input} ${errors[`foodItem_${index}_price`] ? styles.inputError : ''}`}
+                        placeholder="$0"
+                      />
+                      {errors[`foodItem_${index}_price`] && <span className={styles.errorText}>{errors[`foodItem_${index}_price`]}</span>}
+                    </div>
                   </div>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveFoodItem(index)}
-                  className={styles.removeBtn}
-                  disabled={formData.foodItems.length === 1}
-                  aria-label="Eliminar plato"
-                >
-                  <Trash2 size={15} />
-                </button>
+                )}
+                {allowDishClose && (
+                  <button
+                    type="button"
+                    onClick={() => handleDishCloseToggle(index)}
+                    className={`${styles.dishCloseBtn} ${item.closed ? styles.dishCloseBtnActive : ''}`}
+                  >
+                    {item.closed ? 'Reabrir' : 'Agotado'}
+                  </button>
+                )}
               </div>
             ))}
-            <button
-              type="button"
-              onClick={handleAddFoodItem}
-              className={styles.addBtn}
-              disabled={formData.foodItems.length >= 20}
-            >
-              + Agregar plato
-            </button>
+            {!readOnly && (
+              <button
+                type="button"
+                onClick={handleAddFoodItem}
+                className={styles.addBtn}
+                disabled={formData.foodItems.length >= 20}
+              >
+                + Agregar plato
+              </button>
+            )}
           </div>
         )}
 

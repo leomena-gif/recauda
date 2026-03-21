@@ -6,16 +6,34 @@
 src/
 ├── app/                      # Next.js App Router
 │   ├── layout.tsx           # Root layout
-│   ├── page.tsx             # Home page
+│   ├── page.tsx             # Home page (dashboard)
 │   ├── sellers-list/        # Sellers management
 │   ├── create-event/        # Event creation
 │   ├── add-seller/          # Add new seller
-│   └── ...
+│   ├── event-detail/        # Event detail with buyers/sellers tabs
+│   ├── login/               # Login page
+│   └── create-account/      # Account creation
 ├── components/              # Reusable components
-│   ├── Header.tsx
-│   ├── Sidebar.tsx
+│   ├── Header.tsx           # Page header with dynamic titles
+│   ├── Sidebar.tsx          # Desktop navigation sidebar
+│   ├── Topbar.tsx           # Global top navigation bar
+│   ├── TabBar/              # Mobile bottom tab navigation
+│   ├── SegmentedControl/    # Tab/segment control
+│   ├── BottomSheet/         # Generic bottom sheet (mobile)
+│   ├── MobileListRow/       # Mobile table row rendering
+│   ├── MobileFilterSheet/   # Mobile filters bottom sheet
+│   ├── MobileStickyActionBar/ # Sticky action bar for bulk operations
 │   ├── ConditionalLayout.tsx
-│   └── wizard/              # Wizard components
+│   └── wizard/              # Wizard step components
+│       ├── CreateEventForm.tsx  # Event creation form wrapper
+│       ├── AddSellerForm.tsx    # Add seller form wrapper
+│       ├── EventTypeStep.tsx
+│       ├── EventDataStep.tsx
+│       ├── ConfirmEventStep.tsx
+│       ├── AssignNumbersStep.tsx
+│       ├── RegisterSaleWizard.tsx
+│       ├── RegisterSaleModal.tsx   # Desktop modal for sales
+│       └── RegisterSaleSheet.tsx  # Mobile bottom sheet for sales
 ├── types/                   # TypeScript type definitions
 │   └── models.ts            # Core data models
 ├── constants/               # Application constants
@@ -23,9 +41,10 @@ src/
 ├── utils/                   # Utility functions
 │   └── validation.ts        # Validation helpers
 ├── hooks/                   # Custom React hooks
-│   └── useSnackbar.ts       # Snackbar notification hook
+│   ├── useSnackbar.ts       # Snackbar notification hook
+│   └── useMediaQuery.ts     # Responsive breakpoint hook
 └── mocks/                   # Mock data for development
-    └── data.ts              # Mock sellers and events
+    └── data.ts              # Mock sellers, events and buyers
 ```
 
 ## 🎯 Principios de Diseño
@@ -80,10 +99,17 @@ Hook personalizado para notificaciones:
 - Animaciones de entrada/salida
 - Temporizadores automáticos
 
+### `src/hooks/useMediaQuery.ts`
+Hook para detectar breakpoints responsive:
+- Retorna `true/false` según el media query activo
+- Usado para alternar entre UI mobile y desktop
+
 ### `src/mocks/data.ts`
 Datos mock para desarrollo:
 - `MOCK_SELLERS`: Lista de vendedores de prueba
 - `MOCK_EVENTS`: Lista de eventos de prueba
+- `MOCK_BUYERS`: Lista de compradores de prueba
+- `MOCK_HOME_EVENTS`: Lista de eventos para el dashboard
 
 ## 🔄 Flujo de Datos
 

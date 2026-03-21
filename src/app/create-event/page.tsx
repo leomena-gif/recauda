@@ -1,5 +1,5 @@
 import React from 'react';
-import CreateEventWizard from '@/components/wizard/CreateEventWizard';
+import CreateEventForm from '@/components/wizard/CreateEventForm';
 
 export const metadata = {
   title: 'Recauda - Crear evento',
@@ -7,5 +7,5 @@ export const metadata = {
 };
 
 export default function CreateEventPage() {
-  return <CreateEventWizard />;
+  return <CreateEventForm />;
 }

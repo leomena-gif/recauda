@@ -16,7 +16,6 @@ export const ROUTES = {
   HOME: '/',
   CREATE_EVENT: '/create-event',
   SELLERS_LIST: '/sellers-list',
-  BUYERS_LIST: '/buyers-list',
   ADD_SELLER: '/add-seller',
   EVENT_DETAIL: '/event-detail',
   LOGIN: '/login',
@@ -33,10 +32,8 @@ export const STATUS_OPTIONS = [
 ] as const;
 
 export const EVENT_FILTER_OPTIONS = [
-  { value: 'active', label: 'ACTIVOS' },
-  { value: 'completed', label: 'FINALIZADOS' },
-  { value: 'cancelled', label: 'CANCELADOS' },
-  { value: 'all', label: 'TODOS' },
+  { value: 'active', label: 'Activos' },
+  { value: 'past', label: 'Pasados' },
 ] as const;
 
 // ─── Validation ─────────────────────────────────────────────────────────────

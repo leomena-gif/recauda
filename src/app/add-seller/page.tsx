@@ -1,5 +1,5 @@
 import React from 'react';
-import AddSellerWizard from '@/components/wizard/AddSellerWizard';
+import AddSellerForm from '@/components/wizard/AddSellerForm';
 
 export const metadata = {
   title: 'Recauda - Agregar vendedor',
@@ -7,6 +7,6 @@ export const metadata = {
 };
 
 export default function AddSellerPage() {
-  return <AddSellerWizard />;
+  return <AddSellerForm />;
 }
 

@@ -5,44 +5,100 @@
   gap: 28px;
 }
 
-/* ── Event Name ─────────────────────────────── */
-.nameSection {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+/* ── Estados del contenedor ──────────────────── */
+
+/* Solo lectura: ficha de datos, sin bordes de input */
+.containerReadOnly .fieldLabel {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--color-text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
 }
 
-.nameInput {
-  width: 100%;
+.containerReadOnly .input {
   background: transparent;
   border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
   border-radius: 0;
-  padding: 10px 0 18px;
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--color-text-primary);
-  line-height: 1.2;
-  transition: border-color 0.2s ease;
-  box-sizing: border-box;
+  padding: 10px 0;
+  cursor: default;
 }
 
-.nameInput::placeholder {
-  color: rgba(255, 255, 255, 0.2);
+.containerReadOnly .input:focus {
+  border-bottom-color: rgba(255, 255, 255, 0.07);
+  box-shadow: none;
 }
 
-.nameInput:focus {
-  outline: none;
-  border-bottom-color: rgba(255, 255, 255, 0.35);
+.containerReadOnly .startDateDisplay {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0;
+  padding: 10px 0;
 }
 
-.nameInputError {
-  border-bottom-color: var(--color-error) !important;
+.containerReadOnly .inlineInput {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-radius: 0;
+  padding: 8px 0;
+  width: auto;
 }
 
-.nameError {
+.containerReadOnly .optionsCard {
+  background: transparent;
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 0;
+}
+
+.containerReadOnly .optionDivider {
+  margin: 0;
+}
+
+.containerReadOnly .optionRow {
+  padding: 16px 0;
+}
+
+/* Edición: formulario activo con campos claramente interactivos */
+.containerEditing .fieldLabel {
   font-size: 13px;
-  color: var(--color-error);
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.1px;
+}
+
+.containerEditing .input {
+  border-color: rgba(255, 255, 255, 0.18);
+}
+
+.containerEditing .input:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+.containerEditing .input:focus {
+  border-color: rgba(255, 255, 255, 0.5);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.05);
+}
+
+.containerEditing .inlineInput:hover:not(:disabled) {
+  border-color: rgba(255, 255, 255, 0.28);
+}
+
+/* ── Field group (label + input) ────────────── */
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.fieldLabel {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.1px;
 }
 
 /* ── Dates ──────────────────────────────────── */
@@ -52,23 +108,16 @@
   gap: 16px;
 }
 
-.dateCol {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  min-width: 0;
-}
-
-.dateSeparator {
-  display: none;
-}
-
-.dateLabel {
-  font-size: 11px;
-  font-weight: 600;
+.startDateDisplay {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  border-radius: 8px;
+  font-size: 15px;
+  background: var(--color-bg-secondary);
   color: var(--color-text-tertiary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  box-sizing: border-box;
+  cursor: default;
 }
 
 /* ── Options Card (Luma-style rows) ─────────── */
@@ -286,8 +335,22 @@
 /* Food rows */
 .foodRow {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.foodRow:last-of-type {
+  border-bottom: none;
+}
+
+.foodRowClosed {
+  opacity: 0.5;
+}
+
+.foodRowClosed .foodRowFields {
+  opacity: 0.4;
 }
 
 .foodRowFields {
@@ -302,6 +365,103 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+}
+
+/* Food row — vista solo lectura */
+.foodRowReadOnly {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.foodRowName {
+  font-size: 15px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  line-height: 1.3;
+}
+
+.foodRowClosed .foodRowName {
+  text-decoration: line-through;
+  color: var(--color-text-tertiary);
+}
+
+.foodRowMeta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.foodRowPrice {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.foodRowMetaDot {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+}
+
+.foodRowStats {
+  font-size: 13px;
+  color: var(--color-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Dish close/reopen button — btn-sm del design system */
+.dishCloseBtn {
+  /* btn-sm dimensions */
+  padding: 8px 14px;
+  min-height: 36px;
+  font-size: 14px;
+  font-weight: 600;
+  border-radius: 5px;
+  /* btn-secondary del design system */
+  background-color: var(--color-bg-primary);
+  color: var(--color-white);
+  border: 1px solid var(--color-white);
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background var(--transition-fast);
+  font-family: inherit;
+  flex-shrink: 0;
+}
+
+.dishCloseBtn:hover {
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+.dishCloseBtn:active {
+  background-color: rgba(255, 255, 255, 0.12);
+  transform: translateY(1px);
+}
+
+/* Estado "activo" = producto agotado, botón para reabrir (muted) */
+.dishCloseBtnActive {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-secondary);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.dishCloseBtnActive:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--color-text-primary);
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+/* Prizes locked note */
+.prizesLockedNote {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  margin: 0;
+  padding: 10px 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 7px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 /* ── Shared inputs ──────────────────────────── */
@@ -325,6 +485,20 @@
 
 .input::placeholder {
   color: var(--color-text-tertiary);
+}
+
+.containerReadOnly .input:disabled {
+  opacity: 1;
+  cursor: default;
+}
+
+.containerEditing .input:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.inlineInput:disabled {
+  cursor: default;
 }
 
 .inputError {
@@ -395,11 +569,6 @@
 
 /* ── Responsive ─────────────────────────────── */
 @media (max-width: 768px) {
-  .nameInput {
-    font-size: 22px;
-    padding-bottom: 12px;
-  }
-
   .datesCard {
     grid-template-columns: 1fr;
   }

@@ -42,8 +42,8 @@ export default function MobileListRow({
           {menuSlot}
         </div>
         <p className={styles.mobileRowPhone}>{phone}</p>
-        <p className={styles.mobileRowEventLine}>{eventLine}</p>
         {sellerLine && <p className={styles.mobileRowEventLine}>{sellerLine}</p>}
+        <p className={styles.mobileRowEventLine}>{eventLine}</p>
       </div>
     </article>
   );

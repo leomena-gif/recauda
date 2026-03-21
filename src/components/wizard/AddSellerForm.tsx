@@ -3,7 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import SuccessScreen from './SuccessScreen';
-import styles from './AddSellerWizard.module.css';
+import styles from './AddSellerForm.module.css';
 
 interface FormData {
   firstName: string;
@@ -17,7 +17,7 @@ interface FormData {
 
 type FormErrors = Partial<Record<keyof FormData, string>>;
 
-const AddSellerWizard: React.FC = () => {
+const AddSellerForm: React.FC = () => {
   const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     firstName: '',
@@ -111,10 +111,10 @@ const AddSellerWizard: React.FC = () => {
 
       <div className={styles.navigationContainer}>
         <button className={styles.backButton} onClick={() => router.push('/sellers-list')}>
-          <svg className={styles.chevronIcon} width="20" height="20" viewBox="0 0 24 24" fill="none">
+          <svg className={styles.chevronIcon} width="14" height="14" viewBox="0 0 24 24" fill="none">
             <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          Volver a vendedores
+          Lista de vendedores
         </button>
       </div>
 
@@ -294,4 +294,4 @@ const AddSellerWizard: React.FC = () => {
   );
 };
 
-export default AddSellerWizard;
+export default AddSellerForm;

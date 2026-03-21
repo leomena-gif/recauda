@@ -13,24 +13,14 @@ interface EventsEmptyStateProps {
 }
 
 const EMPTY_STATE_CONFIG = {
-  all: {
-    emoji: '🏁',
-    message: 'Comencemos creando tu primer evento',
-    showButton: true,
-  },
   active: {
     emoji: '✅',
-    message: 'No tienes eventos en estado ACTIVO',
+    message: 'No tienes eventos activos',
     showButton: true,
   },
-  completed: {
+  past: {
     emoji: '🏁',
-    message: 'No tienes eventos en estado FINALIZADO',
-    showButton: false,
-  },
-  cancelled: {
-    emoji: '🚫',
-    message: 'No tienes eventos en estado CANCELADO',
+    message: 'No tienes eventos pasados',
     showButton: false,
   },
 };

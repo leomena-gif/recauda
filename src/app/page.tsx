@@ -11,7 +11,7 @@ import FoodEventCard from '@/components/FoodEventCard';
 import CompletedEventCard from '@/components/CompletedEventCard';
 import CardEmptyState from '@/components/CardEmptyState';
 import EventsEmptyState from '@/components/EventsEmptyState';
-import RegisterSaleWizard from '@/components/wizard/RegisterSaleWizard';
+import SegmentedControl from '@/components/SegmentedControl';
 import styles from './page.module.css';
 
 // Map event status to the correct card component
@@ -30,10 +30,11 @@ const getEventCardKey = (status: string, type: string): string => {
 export default function Home() {
   const router = useRouter();
   const [selectedFilter, setSelectedFilter] = useState<EventStatusFilter>('active');
-  const [isSaleWizardOpen, setIsSaleWizardOpen] = useState(false);
 
   const filteredEvents = useMemo(() => {
-    if (selectedFilter === 'all') return MOCK_HOME_EVENTS;
+    if (selectedFilter === 'past') {
+      return MOCK_HOME_EVENTS.filter((event) => event.status === 'completed' || event.status === 'cancelled');
+    }
     return MOCK_HOME_EVENTS.filter((event) => event.status === selectedFilter);
   }, [selectedFilter]);
 
@@ -51,30 +52,19 @@ export default function Home() {
             <h1 className={`pageTitle ${styles.pageTitle}`}>Mis eventos</h1>
           </div>
           <div className={styles.headerActions}>
-            <button className="btn btn-secondary" onClick={() => setIsSaleWizardOpen(true)}>
-              Registrar venta
-            </button>
             <button className="btn btn-primary" onClick={handleCreateEvent}>
               Crear evento
             </button>
           </div>
         </div>
 
-        {/* Filter Pills */}
+        {/* Filter */}
         {hasEvents && (
-          <div className={styles.filtersContainer}>
-            <div className={styles.pillsGroup}>
-              {EVENT_FILTER_OPTIONS.map((option) => (
-                <button
-                  key={option.value}
-                  className={`${styles.pill} ${selectedFilter === option.value ? styles.pillActive : ''}`}
-                  onClick={() => setSelectedFilter(option.value as EventStatusFilter)}
-                >
-                  <span className={styles.pillText}>{option.label}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+          <SegmentedControl
+            options={EVENT_FILTER_OPTIONS}
+            value={selectedFilter}
+            onChange={(value) => setSelectedFilter(value as EventStatusFilter)}
+          />
         )}
 
         {/* Events Grid */}
@@ -98,22 +88,6 @@ export default function Home() {
         )}
       </div>
 
-      {/* Register Sale Button - Fixed at bottom (mobile only) */}
-      <div className={styles.bottomButtonContainer}>
-        <button
-          className={`${styles.registerSaleButton} btn btn-full`}
-          onClick={() => setIsSaleWizardOpen(true)}
-        >
-          Registrar venta
-        </button>
-      </div>
-
-      {/* Register Sale Wizard — responsive (Sheet on mobile, Modal on desktop) */}
-      <RegisterSaleWizard
-        isOpen={isSaleWizardOpen}
-        onClose={() => setIsSaleWizardOpen(false)}
-        events={MOCK_HOME_EVENTS}
-      />
     </>
   );
 }

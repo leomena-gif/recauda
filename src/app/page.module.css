@@ -25,82 +25,6 @@
 }
 
 /* Filter Pills - Dark Mode Mobile First */
-.filtersContainer {
-  margin-bottom: var(--space-md);
-  margin-top: 0;
-  overflow-x: auto;
-  overflow-y: hidden;
-  -webkit-overflow-scrolling: touch;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-  max-width: 100%;
-  padding: 0;
-  width: 100%;
-}
-
-.filtersContainer::-webkit-scrollbar {
-  display: none;
-}
-
-.pillsGroup {
-  display: flex;
-  gap: var(--space-xs);
-  align-items: center;
-  min-width: fit-content;
-}
-
-.pill {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--space-xs);
-  padding: 8px 18px;
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: var(--radius-full);
-  font-size: var(--font-size-sm);
-  font-weight: var(--font-weight-medium);
-  color: var(--color-text-secondary);
-  cursor: pointer;
-  transition: all var(--transition-base);
-  white-space: nowrap;
-  position: relative;
-  flex-shrink: 0;
-  letter-spacing: 0.1px;
-}
-
-.pillText {
-  position: relative;
-  z-index: 1;
-}
-
-.pillBadge {
-  display: none;
-  /* Hide badges in mobile design */
-}
-
-.pill:hover {
-  border-color: rgba(255, 255, 255, 0.28);
-  color: var(--color-text-primary);
-}
-
-.pill:active {
-  transform: scale(0.97);
-}
-
-.pillActive {
-  background-color: var(--color-white);
-  border-color: var(--color-white);
-  color: var(--color-bg-primary);
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: 0px;
-}
-
-.pillActive:hover {
-  background-color: var(--color-gray-900);
-  border-color: var(--color-gray-900);
-  color: var(--color-bg-primary);
-}
 
 /* Bottom Button Container */
 .bottomButtonContainer {
@@ -711,14 +635,6 @@
   .pageTitle {
     display: block;
     margin: 0;
-  }
-
-  .filtersContainer {
-    margin-bottom: 32px;
-  }
-
-  .pill {
-    padding: 10px 20px;
   }
 
   .bottomButtonContainer {

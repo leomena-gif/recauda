@@ -2,8 +2,7 @@
 
 import React from 'react';
 import { usePathname } from 'next/navigation';
-import Header from '@/components/Header';
-import Sidebar from '@/components/Sidebar';
+import Topbar from '@/components/Topbar';
 
 interface ConditionalLayoutProps {
   children: React.ReactNode;
@@ -11,22 +10,20 @@ interface ConditionalLayoutProps {
 
 const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({ children }) => {
   const pathname = usePathname();
-  
-  // Pages that should not show the global header and sidebar
-  const noHeaderPages: string[] = [];
-  
-  const shouldShowHeader = !noHeaderPages.includes(pathname);
-  const shouldShowSidebar = !noHeaderPages.includes(pathname);
 
-  if (!shouldShowHeader && !shouldShowSidebar) {
+  // Pages that should not show the global topbar
+  const noTopbarPages: string[] = [];
+
+  const shouldShowTopbar = !noTopbarPages.includes(pathname);
+
+  if (!shouldShowTopbar) {
     return <>{children}</>;
   }
 
   return (
     <>
-      {shouldShowHeader && <Header />}
+      <Topbar />
       <div className="appLayout">
-        {shouldShowSidebar && <Sidebar />}
         <div className="mainContent">
           {children}
         </div>
