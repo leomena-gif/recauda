@@ -3,7 +3,6 @@
 import React, { useState, useMemo, useRef, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import styles from './EventDetail.module.css';
-import AssignNumbersModal from './AssignNumbersModal';
 import BottomSheet from '@/components/BottomSheet';
 import { MOCK_BUYERS, MOCK_EVENTS, MOCK_SELLERS, MOCK_HOME_EVENTS } from '@/mocks/data';
 import { Buyer } from '@/types/models';
@@ -11,7 +10,6 @@ import { SNACKBAR_DURATION } from '@/constants';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import MobileListRow from '@/components/MobileListRow';
-import MobileStickyActionBar from '@/components/MobileStickyActionBar';
 import EmptyState from '@/components/EmptyState';
 import TabBar from '@/components/TabBar';
 import RegisterSaleWizard from '@/components/wizard/RegisterSaleWizard';
@@ -64,6 +62,34 @@ function getDaysRemaining(endDate: string): number {
   return Math.ceil((end.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
 }
 
+// ─── Circular Progress Ring ───────────────────────────────────────────────────
+function CircularProgress({ percentage }: { percentage: number }) {
+  const radius = 54;
+  const circumference = 2 * Math.PI * radius;
+  const strokeDashoffset = circumference - (percentage / 100) * circumference;
+  return (
+    <svg width="140" height="140" viewBox="0 0 140 140" className={styles.progressRing}>
+      <circle cx="70" cy="70" r={radius} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" />
+      <circle
+        cx="70" cy="70" r={radius} fill="none"
+        stroke="#5AC8FA" strokeWidth="10"
+        strokeLinecap="round"
+        strokeDasharray={circumference}
+        strokeDashoffset={strokeDashoffset}
+        transform="rotate(-90 70 70)"
+        style={{ transition: 'stroke-dashoffset 0.6s ease' }}
+      />
+      <text x="70" y="65" textAnchor="middle" dominantBaseline="middle"
+        fill="white" fontSize="22" fontWeight="700" fontFamily="inherit">
+        {percentage}%
+      </text>
+      <text x="70" y="83" textAnchor="middle" dominantBaseline="middle"
+        fill="rgba(255,255,255,0.5)" fontSize="11" fontFamily="inherit">
+        vendido
+      </text>
+    </svg>
+  );
+}
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function EventDetail() {
@@ -105,9 +131,7 @@ function EventDetailContent() {
   // Vendors tab state
   const [activeVendorTab, setActiveVendorTab] = useState<VendorTab>('collected');
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedVendors, setSelectedVendors] = useState<number[]>([]);
-  const [selectedCollectedVendors, setSelectedCollectedVendors] = useState<number[]>([]);
-  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [vendorDetailItem, setVendorDetailItem] = useState<(typeof INITIAL_COLLECTED)[0] | null>(null);
   const [collectedData, setCollectedData] = useState(INITIAL_COLLECTED);
   const [pendingData, setPendingData] = useState(INITIAL_PENDING);
 
@@ -136,9 +160,7 @@ function EventDetailContent() {
   const [buyers, setBuyers] = useState<Buyer[]>(MOCK_BUYERS);
   const [buyerSearchTerm, setBuyerSearchTerm] = useState('');
   const [activeBuyerTab, setActiveBuyerTab] = useState<BuyerTab>('tab1');
-  const [selectedBuyers, setSelectedBuyers] = useState<string[]>([]);
   const [buyerMobileMenuOpen, setBuyerMobileMenuOpen] = useState<string | null>(null);
-  const [buyerDesktopMenuOpen, setBuyerDesktopMenuOpen] = useState<string | null>(null);
   const [purchaseDetailBuyer, setPurchaseDetailBuyer] = useState<Buyer | null>(null);
   const [raffleDetailBuyer, setRaffleDetailBuyer] = useState<Buyer | null>(null);
 
@@ -190,21 +212,6 @@ function EventDetailContent() {
     });
   }, [eventBuyers, buyerSearchTerm, activeBuyerTab, eventType]);
 
-  const selectionType = useMemo(() => {
-    if (selectedBuyers.length === 0) return null;
-    return eventType;
-  }, [selectedBuyers, eventType]);
-
-  const areAllSelectedDelivered = useMemo(
-    () => selectedBuyers.length > 0 && selectedBuyers.every(id => buyers.find(b => b.id === id)?.isDelivered),
-    [selectedBuyers, buyers]
-  );
-
-  const areAllSelectedPrinted = useMemo(
-    () => selectedBuyers.length > 0 && selectedBuyers.every(id => buyers.find(b => b.id === id)?.isPrinted),
-    [selectedBuyers, buyers]
-  );
-
   // ── Business rules ────────────────────────────────────────────────────────
   const prizesLocked = eventType === 'raffle' && eventData.soldNumbers > 0;
 
@@ -225,10 +232,7 @@ function EventDetailContent() {
 
   // ── Status ───────────────────────────────────────────────────────────────
   const statusLabel =
-    daysRemaining <= 0 ? 'FINALIZADO' :
-    daysRemaining === 1 ? 'ACTIVO — Finaliza mañana' :
-    daysRemaining <= 5 ? `ACTIVO — ${daysRemaining} días restantes` :
-    `ACTIVO — ${daysRemaining} días restantes`;
+    daysRemaining <= 0 ? 'FINALIZADO' : 'ACTIVO';
 
   const statusBadgeClass =
     daysRemaining <= 0 ? styles.statusBadgeCompleted :
@@ -236,55 +240,34 @@ function EventDetailContent() {
     styles.statusBadgeActive;
 
   // ── Vendor actions ───────────────────────────────────────────────────────
-  const handleMarkAsPaid = () => {
-    if (!selectedVendors.length) return;
-    const toMove = pendingData.filter(v => selectedVendors.includes(v.id));
-    setCollectedData(p => [...p, ...toMove]);
-    setPendingData(p => p.filter(v => !selectedVendors.includes(v.id)));
-    setSelectedVendors([]);
-  };
-
-  const handleAssignMoreNumbers = () => {
-    if (selectedCollectedVendors.length > 0) setIsAssignModalOpen(true);
-  };
-
-  const handleModalConfirm = (data: { quantity: number; autoAssign: boolean; fromNumber: string; toNumber: string }) => {
-    const toMove = collectedData.filter(v => selectedCollectedVendors.includes(v.id));
-    const updated = toMove.map(v => ({
-      ...v, total: v.total + data.quantity, sold: 0, amount: 0, percentage: 0,
-    }));
-    setCollectedData(p => p.filter(v => !selectedCollectedVendors.includes(v.id)));
-    setPendingData(p => [...p, ...updated]);
-    setIsAssignModalOpen(false);
-    setSelectedCollectedVendors([]);
-    setActiveVendorTab('pending');
-  };
-
-  const toggleVendorSelect = (id: number, tab: VendorTab) => {
-    if (tab === 'pending') {
-      setSelectedVendors(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
+  const handleToggleVendorCobrado = (item: (typeof INITIAL_COLLECTED)[0]) => {
+    const isCollected = collectedData.some(v => v.id === item.id);
+    if (isCollected) {
+      setCollectedData(p => p.filter(v => v.id !== item.id));
+      setPendingData(p => [...p, item]);
     } else {
-      setSelectedCollectedVendors(p => p.includes(id) ? p.filter(x => x !== id) : [...p, id]);
+      setPendingData(p => p.filter(v => v.id !== item.id));
+      setCollectedData(p => [...p, item]);
     }
+    setVendorDetailItem(null);
+    vendorSnackbar.showSnackbar();
   };
 
   // ── Buyer hooks & side effects ────────────────────────────────────────────
   const isDesktop = useMediaQuery('(min-width: 768px)');
   const deliverySnackbar = useSnackbar(SNACKBAR_DURATION.SUCCESS);
   const raffleSnackbar = useSnackbar(SNACKBAR_DURATION.SUCCESS);
+  const vendorSnackbar = useSnackbar(SNACKBAR_DURATION.SUCCESS);
 
   React.useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (buyerMobileMenuOpen && !(event.target as Element).closest(`.${listStyles.mobileMenuContainer}`)) {
         setBuyerMobileMenuOpen(null);
       }
-      if (buyerDesktopMenuOpen && !(event.target as Element).closest(`.${listStyles.desktopMenuContainer}`)) {
-        setBuyerDesktopMenuOpen(null);
-      }
     };
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
-  }, [buyerMobileMenuOpen, buyerDesktopMenuOpen]);
+  }, [buyerMobileMenuOpen]);
 
   // ── Buyer handlers ────────────────────────────────────────────────────────
   const handleToggleBuyerStatus = (buyerId: string) => {
@@ -293,35 +276,10 @@ function EventDetailContent() {
     ));
   };
 
-  const handleSelectBuyer = (buyerId: string) => {
-    setSelectedBuyers(prev =>
-      prev.includes(buyerId) ? prev.filter(id => id !== buyerId) : [...prev, buyerId]
-    );
-  };
-
-  const handleSelectAllBuyers = () => {
-    const selectable = filteredBuyers.filter(b => b.status === 'active');
-    if (selectedBuyers.length === selectable.length && selectable.length > 0) {
-      setSelectedBuyers([]);
-    } else {
-      setSelectedBuyers(selectable.map(b => b.id));
-    }
-  };
-
-  const handlePrintReceipts = (printed: boolean) => {
-    setBuyers(prev => prev.map(b =>
-      selectedBuyers.includes(b.id) ? { ...b, isPrinted: printed } : b
-    ));
-    setSelectedBuyers([]);
+  const handlePrintAllVisible = () => {
+    const ids = new Set(filteredBuyers.map(b => b.id));
+    setBuyers(prev => prev.map(b => ids.has(b.id) ? { ...b, isPrinted: true } : b));
     raffleSnackbar.showSnackbar();
-  };
-
-  const handleSetDeliveredStatus = (status: boolean) => {
-    setBuyers(prev => prev.map(b =>
-      selectedBuyers.includes(b.id) ? { ...b, isDelivered: status } : b
-    ));
-    setSelectedBuyers([]);
-    deliverySnackbar.showSnackbar();
   };
 
   // SVG icons for buyer context menus
@@ -333,18 +291,19 @@ function EventDetailContent() {
     </svg>
   );
   const IconDisable = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
-      <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
+      <path d="M5.636 5.636L18.364 18.364" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
   const IconEnable = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
       <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
   );
   const IconDetail = () => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
       <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M14 2V8H20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
       <path d="M16 13H8M16 17H8M10 9H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -496,30 +455,17 @@ function EventDetailContent() {
                     onChange={e => setSearchQuery(e.target.value)}
                   />
                 </div>
-                {activeVendorTab === 'pending' && selectedVendors.length > 0 && (
-                  <button className={styles.markAsPaidButton} onClick={handleMarkAsPaid}>Cobrado</button>
-                )}
-                {activeVendorTab === 'collected' && selectedCollectedVendors.length > 0 && (
-                  <button className={styles.markAsPaidButton} onClick={handleAssignMoreNumbers}>Asignar más números</button>
-                )}
               </div>
 
               {/* Desktop table view */}
               <div className={styles.tableView}>
                 {filteredVendorData.map((item, index) => {
-                  const isSelected = activeVendorTab === 'pending'
-                    ? selectedVendors.includes(item.id)
-                    : selectedCollectedVendors.includes(item.id);
                   return (
-                    <div key={item.id ?? index} className={`${styles.salesItem} ${styles.tableRow}`}>
-                      <div className={styles.checkboxWrapper}>
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => toggleVendorSelect(item.id, activeVendorTab)}
-                          className={styles.checkbox}
-                        />
-                      </div>
+                    <div
+                      key={item.id ?? index}
+                      className={`${styles.salesItem} ${listStyles.tableRow} ${styles.salesItemClickable}`}
+                      onClick={() => setVendorDetailItem(item)}
+                    >
                       <div className={styles.salesItemLeft}>
                         <div className={styles.sellerName}>{item.name}</div>
                         <div className={styles.sellerStats}>{item.sold} de {item.total} vendidos</div>
@@ -536,20 +482,12 @@ function EventDetailContent() {
               {/* Mobile list view */}
               <div className={styles.salesList}>
                 {filteredVendorData.map((item, index) => {
-                  const isSelected = activeVendorTab === 'pending'
-                    ? selectedVendors.includes(item.id)
-                    : selectedCollectedVendors.includes(item.id);
                   return (
-                    <div key={item.id ?? index} className={styles.salesItem}>
-                      <div className={styles.checkboxWrapper}>
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => toggleVendorSelect(item.id, activeVendorTab)}
-                          className={styles.checkbox}
-                          aria-label={`Seleccionar ${item.name}`}
-                        />
-                      </div>
+                    <div
+                      key={item.id ?? index}
+                      className={`${styles.salesItem} ${styles.salesItemClickable}`}
+                      onClick={() => setVendorDetailItem(item)}
+                    >
                       <div className={styles.salesItemLeft}>
                         <div className={styles.sellerName}>{item.name}</div>
                         <div className={styles.sellerStats}>{item.sold} de {item.total} vendidos</div>
@@ -619,46 +557,15 @@ function EventDetailContent() {
                     className={styles.searchInput}
                   />
                 </div>
-                {isDesktop && selectedBuyers.length > 0 && selectionType === 'raffle' && (
-                  <button onClick={() => handlePrintReceipts(!areAllSelectedPrinted)} className={styles.markAsPaidButton}>
-                    {areAllSelectedPrinted ? 'Desmarcar impreso' : 'Imprimir comprobantes'} ({selectedBuyers.length})
-                  </button>
-                )}
-                {isDesktop && selectedBuyers.length > 0 && selectionType === 'food_sale' && (
-                  <button onClick={() => handleSetDeliveredStatus(!areAllSelectedDelivered)} className={styles.markAsPaidButton}>
-                    {areAllSelectedDelivered ? 'Desmarcar' : 'Entregado'} ({selectedBuyers.length})
+                {eventType === 'raffle' && activeBuyerTab === 'tab2' && (
+                  <button onClick={handlePrintAllVisible} className={styles.markAsPaidButton}>
+                    Imprimir comprobante ({filteredBuyers.length})
                   </button>
                 )}
               </div>
 
               {/* Desktop table */}
-              {isDesktop && <table className={listStyles.table}>
-                  <thead>
-                    <tr>
-                      <th className={listStyles.checkboxColumn}>
-                        <div className={listStyles.checkboxWrapper}>
-                          <input
-                            type="checkbox"
-                            checked={
-                              filteredBuyers.filter(b => b.status === 'active').length > 0 &&
-                              selectedBuyers.length === filteredBuyers.filter(b => b.status === 'active').length
-                            }
-                            onChange={handleSelectAllBuyers}
-                            className={listStyles.checkbox}
-                            aria-label="Seleccionar todos"
-                          />
-                        </div>
-                      </th>
-                      <th>
-                        <div className={listStyles.headerWithCounter}>
-                          <span>Comprador</span>
-                          <span className={listStyles.headerCounter}>{filteredBuyers.length}</span>
-                        </div>
-                      </th>
-                      <th>Vendedor</th>
-                      <th className={listStyles.actionsColumn}></th>
-                    </tr>
-                  </thead>
+              {isDesktop && <table className={listStyles.table} style={{ tableLayout: 'auto' }}>
                   <tbody>
                     {filteredBuyers.map(buyer => {
                       const seller = MOCK_SELLERS.find(s => s.id === buyer.sellerId);
@@ -666,69 +573,30 @@ function EventDetailContent() {
                         <tr
                           key={buyer.id}
                           className={`${listStyles.tableRow} ${buyer.status === 'inactive' ? listStyles.tableRowInactive : ''}`}
+                          onClick={() => eventType === 'raffle' ? setRaffleDetailBuyer(buyer) : setPurchaseDetailBuyer(buyer)}
+                          style={{ cursor: 'pointer' }}
                         >
-                          <td className={listStyles.checkboxColumn}>
-                            <div className={listStyles.checkboxWrapper}>
-                              <input
-                                type="checkbox"
-                                checked={selectedBuyers.includes(buyer.id)}
-                                onChange={() => handleSelectBuyer(buyer.id)}
-                                className={listStyles.checkbox}
-                                disabled={buyer.status === 'inactive'}
-                                aria-label={`Seleccionar ${buyer.firstName} ${buyer.lastName}`}
-                              />
-                            </div>
-                          </td>
                           <td>
                             <div className={buyerStyles.buyerInfo}>
-                              <div
-                                className={buyerStyles.buyerName}
-                                onClick={() => eventType === 'raffle' ? setRaffleDetailBuyer(buyer) : setPurchaseDetailBuyer(buyer)}
-                                style={{ cursor: 'pointer' }}
-                              >
+                              <div className={buyerStyles.buyerName}>
                                 {buyer.firstName} {buyer.lastName}
                               </div>
                               <div className={buyerStyles.buyerPhone}>{buyer.phone}</div>
+                              {seller && (
+                                <div className={buyerStyles.buyerPhone}>Vendedor: {seller.firstName} {seller.lastName}</div>
+                              )}
                             </div>
                           </td>
-                          <td>
-                            {seller ? (
-                              <div className={listStyles.cellTruncate}>{seller.firstName} {seller.lastName}</div>
-                            ) : (
-                              <div className={listStyles.noEvent}>—</div>
-                            )}
-                          </td>
-                          <td className={listStyles.actionsColumn}>
-                            <div className={listStyles.desktopMenuContainer}>
+                          <td className={listStyles.inlineActionsCell}>
+                            <div>
                               <button
+                                type="button"
                                 className={listStyles.desktopMenuButton}
-                                onClick={() => setBuyerDesktopMenuOpen(buyerDesktopMenuOpen === buyer.id ? null : buyer.id)}
-                                aria-label="Menú de opciones"
-                                aria-expanded={buyerDesktopMenuOpen === buyer.id}
-                                aria-haspopup="true"
+                                aria-label={buyer.status === 'active' ? 'Deshabilitar' : 'Habilitar'}
+                                onClick={e => { e.stopPropagation(); handleToggleBuyerStatus(buyer.id); }}
                               >
-                                <IconDotsVertical />
+                                {buyer.status === 'active' ? <IconDisable /> : <IconEnable />}
                               </button>
-                              {buyerDesktopMenuOpen === buyer.id && (
-                                <div className={listStyles.desktopMenuDropdown} role="menu">
-                                  <button
-                                    type="button"
-                                    role="menuitem"
-                                    className={listStyles.desktopMenuItem}
-                                    onClick={() => { eventType === 'raffle' ? setRaffleDetailBuyer(buyer) : setPurchaseDetailBuyer(buyer); setBuyerDesktopMenuOpen(null); }}
-                                  >
-                                    <IconDetail /> Detalle
-                                  </button>
-                                  <button
-                                    type="button"
-                                    role="menuitem"
-                                    className={listStyles.desktopMenuItem}
-                                    onClick={() => { handleToggleBuyerStatus(buyer.id); setBuyerDesktopMenuOpen(null); }}
-                                  >
-                                    {buyer.status === 'active' ? <><IconDisable /> Deshabilitar</> : <><IconEnable /> Habilitar</>}
-                                  </button>
-                                </div>
-                              )}
                             </div>
                           </td>
                         </tr>
@@ -740,7 +608,7 @@ function EventDetailContent() {
               {/* Mobile list */}
               {!isDesktop && (
                 <div
-                  className={`${listStyles.mobileListContainer} ${selectedBuyers.length > 0 ? listStyles.hasStickyBar : ''}`}
+                  className={listStyles.mobileListContainer}
                   role="list"
                 >
                   {filteredBuyers.map(buyer => {
@@ -750,26 +618,8 @@ function EventDetailContent() {
                         key={buyer.id}
                         id={buyer.id}
                         isInactive={buyer.status === 'inactive'}
-                        isSelected={selectedBuyers.includes(buyer.id)}
-                        checkboxSlot={
-                          <input
-                            type="checkbox"
-                            id={`buyer-${buyer.id}`}
-                            checked={selectedBuyers.includes(buyer.id)}
-                            onChange={() => handleSelectBuyer(buyer.id)}
-                            disabled={buyer.status === 'inactive'}
-                            className={listStyles.mobileCheckbox}
-                            aria-label={`Seleccionar ${buyer.firstName} ${buyer.lastName}`}
-                          />
-                        }
-                        name={
-                          <span
-                            onClick={() => eventType === 'raffle' ? setRaffleDetailBuyer(buyer) : setPurchaseDetailBuyer(buyer)}
-                            style={{ cursor: 'pointer' }}
-                          >
-                            {buyer.firstName} {buyer.lastName}
-                          </span>
-                        }
+                        onClick={() => eventType === 'raffle' ? setRaffleDetailBuyer(buyer) : setPurchaseDetailBuyer(buyer)}
+                        name={<>{buyer.firstName} {buyer.lastName}</>}
                         phone={buyer.phone}
                         eventLine={
                           eventType === 'food_sale'
@@ -839,80 +689,65 @@ function EventDetailContent() {
           {/* ── CONFIGURACIÓN ────────────────────────────────────────────── */}
           {activeTopTab === 'configuracion' && (
             <div className={styles.configTab}>
-              <div className={styles.configSection}>
-                <EventDataStep
-                  key={eventData.id}
-                  ref={eventDataStepRef}
-                  readOnly={!isConfigEditing}
-                  prizesLocked={prizesLocked}
-                  allowDishClose={eventType === 'food_sale'}
-                  onDishCloseToggle={handleDishCloseToggle}
-                  initialData={{
-                    type: eventType,
-                    name: eventData.name,
-                    endDate: new Date(eventData.endDate),
-                    numberValue: String(eventData.ticketPrice),
-                    totalNumbers: String(eventData.totalNumbers),
-                    autoAdjust: false,
-                    prizes: [...(eventData.prizes ?? [])].sort((a, b) => a.position - b.position).map(p => p.description),
-                    foodItems: (eventData.dishes ?? []).map(d => ({ name: d.name, price: String(d.price), sold: d.sold, total: d.total })),
-                  }}
-                  onNext={() => setIsConfigEditing(false)}
-                  onBack={() => {}}
-                />
-              </div>
-
-              <div className={styles.configActions}>
-                {!isConfigEditing ? (
-                  <button className="btn btn-secondary btn-sm" onClick={() => setIsConfigEditing(true)}>
-                    Editar datos
-                  </button>
-                ) : (
-                  <>
-                    <button className="btn btn-primary btn-sm" onClick={() => eventDataStepRef.current?.validateAndNext()}>
-                      Guardar cambios
-                    </button>
-                    <button className="btn btn-secondary btn-sm" onClick={() => setIsConfigEditing(false)}>
-                      Cancelar
-                    </button>
-                  </>
-                )}
-              </div>
-
-              <div className={styles.dangerZone}>
-                <div className={styles.dangerZoneText}>
-                  <h3 className={styles.dangerZoneTitle}>Cancelar evento</h3>
-                  <p className={styles.dangerZoneDesc}>
-                    Cancelá el evento si no puede llevarse a cabo. Se registrará como cancelado y no se podrán agregar nuevas ventas.
-                  </p>
+              <div className={styles.tableContainer}>
+                <div className={styles.configSection}>
+                  <EventDataStep
+                    key={eventData.id}
+                    ref={eventDataStepRef}
+                    readOnly={!isConfigEditing}
+                    prizesLocked={prizesLocked}
+                    allowDishClose={eventType === 'food_sale'}
+                    onDishCloseToggle={handleDishCloseToggle}
+                    initialData={{
+                      type: eventType,
+                      name: eventData.name,
+                      endDate: new Date(eventData.endDate),
+                      numberValue: String(eventData.ticketPrice),
+                      totalNumbers: String(eventData.totalNumbers),
+                      autoAdjust: false,
+                      prizes: [...(eventData.prizes ?? [])].sort((a, b) => a.position - b.position).map(p => p.description),
+                      foodItems: (eventData.dishes ?? []).map(d => ({ name: d.name, price: String(d.price), sold: d.sold, total: d.total })),
+                    }}
+                    onNext={() => setIsConfigEditing(false)}
+                    onBack={() => {}}
+                  />
                 </div>
-                <button className={styles.dangerBtn} onClick={() => setIsCloseEventOpen(true)}>
-                  Cancelar
-                </button>
+                <div className={styles.configActions}>
+                  {!isConfigEditing ? (
+                    <button className="btn btn-secondary btn-sm" onClick={() => setIsConfigEditing(true)}>
+                      Editar datos
+                    </button>
+                  ) : (
+                    <>
+                      <button className="btn btn-primary btn-sm" onClick={() => eventDataStepRef.current?.validateAndNext()}>
+                        Guardar cambios
+                      </button>
+                      <button className="btn btn-secondary btn-sm" onClick={() => setIsConfigEditing(false)}>
+                        Cancelar
+                      </button>
+                    </>
+                  )}
+                </div>
+              </div>
+
+              <div className={styles.tableContainer}>
+                <div className={styles.dangerZone}>
+                  <div className={styles.dangerZoneText}>
+                    <h3 className={styles.dangerZoneTitle}>Cancelar evento</h3>
+                    <p className={styles.dangerZoneDesc}>
+                      Cancelá el evento si no puede llevarse a cabo. Se registrará como cancelado y no se podrán agregar nuevas ventas.
+                    </p>
+                  </div>
+                  <button className={styles.dangerBtn} onClick={() => setIsCloseEventOpen(true)}>
+                    Cancelar
+                  </button>
+                </div>
               </div>
             </div>
           )}
 
         </div>
       </div>
-
-      {/* Compradores: Mobile sticky action bar */}
-      <MobileStickyActionBar
-        visible={!isDesktop && activeTopTab === 'compradores' && selectedBuyers.length > 0}
-        onCancel={() => setSelectedBuyers([])}
-      >
-        {selectionType === 'raffle' && (
-          <button type="button" className={listStyles.assignStickyPrimary} onClick={() => handlePrintReceipts(!areAllSelectedPrinted)}>
-            {areAllSelectedPrinted ? `Desmarcar impreso (${selectedBuyers.length})` : `Imprimir comprobantes (${selectedBuyers.length})`}
-          </button>
-        )}
-        {selectionType === 'food_sale' && (
-          <button type="button" className={listStyles.assignStickyPrimary} onClick={() => handleSetDeliveredStatus(!areAllSelectedDelivered)}>
-            {areAllSelectedDelivered ? `Desmarcar (${selectedBuyers.length})` : `Entregado (${selectedBuyers.length})`}
-          </button>
-        )}
-      </MobileStickyActionBar>
-
 
       {/* Compradores: Modal detalle de números — rifa (desktop) */}
       {isDesktop && raffleDetailBuyer && (
@@ -1109,26 +944,113 @@ function EventDetailContent() {
         </div>
       )}
 
-      {/* Vendedores: Mobile sticky bars */}
-      {activeTopTab === 'vendedores' && activeVendorTab === 'pending' && selectedVendors.length > 0 && (
-        <div className={styles.assignStickyBar}>
-          <button className={styles.assignStickyCancel} onClick={() => setSelectedVendors([])}>Cancelar</button>
-          <button className={styles.assignStickyPrimary} onClick={handleMarkAsPaid}>Cobrado</button>
-        </div>
-      )}
-      {activeTopTab === 'vendedores' && activeVendorTab === 'collected' && selectedCollectedVendors.length > 0 && (
-        <div className={styles.assignStickyBar}>
-          <button className={styles.assignStickyPrimary} onClick={handleAssignMoreNumbers}>Asignar más números</button>
-        </div>
-      )}
+      {/* Vendedores: Modal detalle de vendedor (desktop) */}
+      {isDesktop && vendorDetailItem && (() => {
+        const isCollected = collectedData.some(v => v.id === vendorDetailItem.id);
+        return (
+          <div className={buyerStyles.modalOverlay} onClick={() => setVendorDetailItem(null)}>
+            <div className={buyerStyles.purchaseDetailModal} onClick={e => e.stopPropagation()}>
+              <div className={buyerStyles.purchaseDetailHeader}>
+                <div>
+                  <h2 className={buyerStyles.purchaseDetailTitle}>{vendorDetailItem.name}</h2>
+                  <div className={buyerStyles.detailBuyerMeta}>
+                    <span>{vendorDetailItem.sold} de {vendorDetailItem.total} vendidos</span>
+                  </div>
+                </div>
+                <button className={buyerStyles.closeButton} onClick={() => setVendorDetailItem(null)}>
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+                    <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                  </svg>
+                </button>
+              </div>
+              <div className={buyerStyles.detailStatusRow}>
+                <span className={`${buyerStyles.detailStatusBadge} ${isCollected ? buyerStyles.detailStatusDelivered : buyerStyles.detailStatusPending}`}>
+                  <span className={buyerStyles.detailStatusDot} />
+                  {isCollected ? 'Cobrado' : 'Por cobrar'}
+                </span>
+              </div>
+              <div className={buyerStyles.detailDivider} />
+              <div className={buyerStyles.detailItemList}>
+                <div className={buyerStyles.detailItemRow}>
+                  <span className={buyerStyles.detailItemName}>Números vendidos</span>
+                  <span className={buyerStyles.detailItemSubtotal}>{vendorDetailItem.sold} / {vendorDetailItem.total}</span>
+                </div>
+                <div className={buyerStyles.detailItemRow}>
+                  <span className={buyerStyles.detailItemName}>Porcentaje</span>
+                  <span className={buyerStyles.detailItemSubtotal}>{vendorDetailItem.percentage}%</span>
+                </div>
+              </div>
+              <div className={buyerStyles.detailDivider} />
+              <div className={buyerStyles.detailTotalRow}>
+                <span className={buyerStyles.detailTotalLabel}>Total</span>
+                <span className={buyerStyles.detailTotalValue}>${vendorDetailItem.amount.toLocaleString('es-AR')}</span>
+              </div>
+              <div className={buyerStyles.purchaseDetailFooter}>
+                <button
+                  className="btn btn-primary"
+                  onClick={() => handleToggleVendorCobrado(vendorDetailItem)}
+                >
+                  {isCollected ? 'Desmarcar cobrado' : 'Marcar como cobrado'}
+                </button>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
-      {/* Assign Numbers Modal */}
-      <AssignNumbersModal
-        isOpen={isAssignModalOpen}
-        vendorNames={collectedData.filter(v => selectedCollectedVendors.includes(v.id)).map(v => v.name)}
-        onClose={() => setIsAssignModalOpen(false)}
-        onConfirm={handleModalConfirm}
-      />
+      {/* Vendedores: Bottom sheet detalle de vendedor (mobile) */}
+      {(() => {
+        const isCollected = vendorDetailItem ? collectedData.some(v => v.id === vendorDetailItem.id) : false;
+        return (
+          <BottomSheet
+            isOpen={!isDesktop && !!vendorDetailItem}
+            onClose={() => setVendorDetailItem(null)}
+            label="Detalle de vendedor"
+            title={vendorDetailItem?.name ?? ''}
+            subtitle={vendorDetailItem ? `${vendorDetailItem.sold} de ${vendorDetailItem.total} vendidos` : ''}
+            showCloseButton
+            footer={
+              <button
+                className="btn btn-primary btn-full"
+                onClick={() => vendorDetailItem && handleToggleVendorCobrado(vendorDetailItem)}
+              >
+                {isCollected ? 'Desmarcar cobrado' : 'Marcar como cobrado'}
+              </button>
+            }
+          >
+            <div style={{ paddingBottom: 'var(--space-md)' }}>
+              <span className={`${buyerStyles.detailStatusBadge} ${isCollected ? buyerStyles.detailStatusDelivered : buyerStyles.detailStatusPending}`}>
+                <span className={buyerStyles.detailStatusDot} />
+                {isCollected ? 'Cobrado' : 'Por cobrar'}
+              </span>
+            </div>
+            <div className={buyerStyles.detailDivider} style={{ margin: '0 calc(-1 * var(--space-lg))' }} />
+            <div style={{ padding: '4px 0 8px' }}>
+              <div className={buyerStyles.detailItemRow}>
+                <span className={buyerStyles.detailItemName}>Números vendidos</span>
+                <span className={buyerStyles.detailItemSubtotal}>{vendorDetailItem?.sold} / {vendorDetailItem?.total}</span>
+              </div>
+              <div className={buyerStyles.detailItemRow}>
+                <span className={buyerStyles.detailItemName}>Porcentaje</span>
+                <span className={buyerStyles.detailItemSubtotal}>{vendorDetailItem?.percentage}%</span>
+              </div>
+            </div>
+            <div className={buyerStyles.detailDivider} style={{ margin: '0 calc(-1 * var(--space-lg))' }} />
+            <div className={buyerStyles.detailTotalRow} style={{ padding: 'var(--space-md) 0 0' }}>
+              <span className={buyerStyles.detailTotalLabel}>Total</span>
+              <span className={buyerStyles.detailTotalValue}>${vendorDetailItem?.amount.toLocaleString('es-AR')}</span>
+            </div>
+          </BottomSheet>
+        );
+      })()}
+
+      {/* Vendedores: Snackbar cobrado */}
+      {vendorSnackbar.isVisible && (
+        <div className={`${buyerStyles.snackbar} ${vendorSnackbar.isClosing ? buyerStyles.snackbarClosing : ''}`}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M22 4L12 14.01L9 11.01" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
+          Estado de cobro actualizado
+        </div>
+      )}
 
       {/* Register Sale — mobile bottom button */}
       <div className={styles.registerSaleBottomBar}>

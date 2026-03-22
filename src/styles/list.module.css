@@ -410,9 +410,7 @@
   padding: 16px;
 }
 
-/* Checkbox — fixed width, 20px left edge margin */
-.table th:nth-child(1),
-.tableRow td:nth-child(1),
+/* Checkbox — fixed width (kept for backwards compat if class is used directly) */
 .table th.checkboxColumn,
 .tableRow td.checkboxColumn {
   width: 56px !important;
@@ -424,6 +422,8 @@
 }
 
 /* Content columns — no explicit width, table-layout:fixed distributes evenly */
+.table th:nth-child(1),
+.tableRow td:nth-child(1),
 .table th:nth-child(2),
 .tableRow td:nth-child(2),
 .table th:nth-child(3),
@@ -520,6 +520,21 @@
   text-align: center;
   overflow: visible !important;
   position: relative;
+}
+
+.inlineActionsCell {
+  vertical-align: middle !important;
+  padding: 8px 16px !important;
+  white-space: nowrap;
+  overflow: visible !important;
+  width: 1%;
+}
+
+.inlineActionsCell > div {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+  align-items: center;
 }
 
 /* ─── Desktop Context Menu ───────────────────────────────────────────────── */
@@ -720,6 +735,10 @@
 
 .mobileRowSelected:hover {
   background: var(--color-bg-tertiary);
+}
+
+.mobileRowClickable {
+  cursor: pointer;
 }
 
 .mobileRowInactive {

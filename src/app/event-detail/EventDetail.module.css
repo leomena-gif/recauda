@@ -416,6 +416,14 @@
   border-bottom: none;
 }
 
+.salesItemClickable {
+  cursor: pointer;
+  transition: background-color var(--transition-base);
+}
+.salesItemClickable:hover {
+  background: var(--color-bg-tertiary);
+}
+
 /* Checkbox wrapper for mobile list */
 .salesList .checkboxWrapper {
   display: flex;
@@ -451,7 +459,7 @@
 
 .sellerName {
   font-size: var(--font-size-base);
-  font-weight: var(--font-weight-medium);
+  font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
 }
 
@@ -698,7 +706,6 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-xs);
-  padding-right: 120px; /* room for badge */
 }
 
 .metricProgressHeader {
@@ -721,7 +728,7 @@
 
 .metricTrack {
   height: 6px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-full);
   overflow: hidden;
 }
@@ -737,8 +744,6 @@
 .metricKpis {
   display: flex;
   gap: 0;
-  border-top: 1px solid var(--color-border-divider);
-  padding-top: var(--space-md);
 }
 
 .metricKpi {
@@ -776,8 +781,8 @@
 
 /* Dish breakdown — food_sale */
 .dishBreakdown {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: var(--space-sm);
   border-top: 1px solid var(--color-border-divider);
   padding-top: var(--space-md);
@@ -790,6 +795,7 @@
   text-transform: uppercase;
   letter-spacing: 0.5px;
   margin: 0 0 var(--space-xs);
+  grid-column: 1 / -1;
 }
 
 .dishRow {
@@ -811,7 +817,7 @@
 .dishTrack {
   width: 80px;
   height: 4px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.12);
   border-radius: var(--radius-full);
   overflow: hidden;
   flex-shrink: 0;
@@ -844,6 +850,17 @@
   }
   .dishTrack {
     width: 120px;
+  }
+  .dishBreakdown {
+    grid-template-columns: 1fr 1fr;
+    column-gap: 0;
+  }
+  .dishBreakdown .dishRow:nth-child(even) {
+    border-right: 1px solid var(--color-border-divider);
+    padding-right: var(--space-lg);
+  }
+  .dishBreakdown .dishRow:nth-child(odd):not(:first-child) {
+    padding-left: var(--space-lg);
   }
 }
 
@@ -1142,6 +1159,7 @@
   display: flex;
   flex-direction: column;
   gap: var(--space-md);
+  padding: var(--space-lg);
 }
 
 .configSectionTitle {
@@ -1156,13 +1174,14 @@
 .configActions {
   display: flex;
   gap: var(--space-sm);
+  padding: var(--space-md) var(--space-lg) var(--space-lg);
+  border-top: 1px solid var(--color-border-light);
 }
 
 /* Danger Zone */
 .dangerZone {
   background: rgba(255, 59, 48, 0.05);
-  border: 1px solid rgba(255, 59, 48, 0.15);
-  border-radius: var(--radius-lg);
+  border-radius: inherit;
   padding: var(--space-lg);
   display: flex;
   flex-direction: row;
@@ -1466,14 +1485,13 @@
     display: flex;
     flex-direction: column;
     gap: 0;
-    padding: 0 var(--space-md);
   }
 
   .tableView .salesItem {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: var(--space-md) 0;
+    padding: var(--space-md);
     border-bottom: 1px solid var(--color-border-light);
     gap: var(--space-md);
   }
