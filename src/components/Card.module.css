@@ -5,14 +5,14 @@
   display: flex;
   flex-direction: column;
   border-radius: var(--radius-xl);
-  transition: all var(--transition-base);
+  transition: border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
 }
 
 /* === VARIANTES === */
 
 /* surface: contenedor principal (fondo oscuro secundario, sombra suave) */
 .surface {
-  background-color: var(--color-bg-secondary);
+  background-color: var(--color-bg-topbar);
   border: 1px solid var(--color-border-card);
   box-shadow: var(--shadow-card);
 }
@@ -43,15 +43,14 @@
 }
 
 .surface.interactive:hover {
-  background-color: var(--color-bg-tertiary);
-  border-color: var(--color-border-card-hover);
-  box-shadow: var(--shadow-card-hover);
-  transform: translateY(-1px);
+  border-color: rgba(97, 204, 159, 0.35);
+  box-shadow: 0 0 0 1px rgba(97, 204, 159, 0.1), 0 4px 20px rgba(0, 0, 0, 0.3);
 }
 
 .surface.interactive:active {
-  transform: scale(0.98);
-  box-shadow: var(--shadow-card-active);
+  transform: scale(0.99);
+  border-color: rgba(97, 204, 159, 0.5);
+  box-shadow: 0 0 0 1px rgba(97, 204, 159, 0.15);
 }
 
 .elevated.interactive:hover,

@@ -129,7 +129,7 @@ html {
 body {
   font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
   background-color: var(--color-bg-primary);
-  background-image: linear-gradient(to top, #050908 0%, var(--color-bg-primary) 60%);
+  background-image: linear-gradient(to top, #050908 0%, #090f0d 60%);
   background-attachment: fixed;
   color: var(--color-text-primary);
   line-height: 1.5;
