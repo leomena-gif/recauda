@@ -27,7 +27,7 @@
 }
 
 .optionActive {
-  color: var(--color-brand-accent);
+  color: var(--color-text-primary);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -35,8 +35,8 @@
   content: '';
   position: absolute;
   inset: 0;
-  background: var(--color-brand);
+  background: var(--color-bg-topbar);
   border-radius: var(--radius-full);
-  border: 1px solid rgba(97, 204, 159, 0.15);
+  border: 1px solid rgba(97, 204, 159, 0.2);
   z-index: -1;
 }
