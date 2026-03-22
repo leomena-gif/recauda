@@ -6,7 +6,7 @@
 
 /* Options card — same as EventDataStep */
 .optionsCard {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-input);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   overflow: hidden;
@@ -44,7 +44,7 @@
 .stepper {
   display: flex;
   align-items: center;
-  background: var(--color-bg-tertiary);
+  background: var(--color-bg-input);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   overflow: hidden;
@@ -109,7 +109,7 @@
 /* Segmented control — same as EventDataStep */
 .segmented {
   display: flex;
-  background: var(--color-bg-tertiary);
+  background: var(--color-bg-input);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 3px;
@@ -136,7 +136,7 @@
 }
 
 .segmentedBtnActive {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-input);
   color: var(--color-text-primary);
   font-weight: 600;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
@@ -169,7 +169,7 @@
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 8px;
   font-size: 15px;
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-input);
   color: var(--color-text-primary);
   transition: border-color 0.2s ease;
   box-sizing: border-box;

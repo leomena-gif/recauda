@@ -338,7 +338,6 @@ function EventDetailContent() {
             <div className={styles.metricProgressBlock}>
               <div className={styles.metricProgressHeader}>
                 <span className={styles.metricProgressValue}>{percentage}%</span>
-                <span className={styles.metricProgressSub}>vendido</span>
               </div>
               <div className={styles.metricTrack}>
                 <div className={styles.metricFill} style={{ width: `${Math.min(percentage, 100)}%` }} />

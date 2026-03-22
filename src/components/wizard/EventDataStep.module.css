@@ -100,7 +100,7 @@
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 8px;
   font-size: 15px;
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-input);
   color: var(--color-text-tertiary);
   box-sizing: border-box;
   cursor: default;
@@ -108,7 +108,7 @@
 
 /* ── Options Card (Luma-style rows) ─────────── */
 .optionsCard {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-input);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   overflow: hidden;
@@ -152,7 +152,7 @@
 }
 
 .inlineInput {
-  background: var(--color-bg-tertiary);
+  background: var(--color-bg-input);
   border: 1px solid rgba(255, 255, 255, 0.10);
   font-size: 14px;
   font-weight: 500;
@@ -198,7 +198,7 @@
 /* Segmented control */
 .segmented {
   display: flex;
-  background: var(--color-bg-tertiary);
+  background: var(--color-bg-input);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
   padding: 3px;
@@ -323,12 +323,6 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-.foodRow:last-of-type {
-  border-bottom: none;
 }
 
 .foodRowClosed {
@@ -466,7 +460,7 @@
   border: 1px solid rgba(255, 255, 255, 0.09);
   border-radius: 8px;
   font-size: 15px;
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-input);
   color: var(--color-text-primary);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;

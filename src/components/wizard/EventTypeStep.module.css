@@ -19,7 +19,7 @@
 }
 
 .optionBox {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-input);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   padding: 14px 16px;
@@ -34,12 +34,12 @@
 
 .optionBox:hover {
   border-color: rgba(255, 255, 255, 0.18);
-  background: var(--color-bg-tertiary);
+  background: var(--color-bg-input);
 }
 
 .optionBox.selected {
   border-color: rgba(255, 255, 255, 0.35);
-  background: var(--color-bg-tertiary);
+  background: var(--color-bg-input);
 }
 
 /* Icon */
