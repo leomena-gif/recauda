@@ -13,7 +13,7 @@
 }
 
 .confirmationCard {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-input);
   border-radius: var(--radius-xl);
   border: 1px solid rgba(255, 255, 255, 0.08);
   padding: 24px;
