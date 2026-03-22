@@ -103,30 +103,28 @@ export default function EventCard({
         {/* Title */}
         <h2 className={styles.title}>{name}</h2>
 
-        {/* Progress — hidden for cancelled */}
-        {status !== 'cancelled' && (
-          <div className={styles.progressBlock}>
-            <div className={styles.progressTrack}>
-              <div
-                className={`${styles.progressFill} ${progressBarClass}`}
-                style={{ width: `${progress}%` }}
-              />
-            </div>
-            <div className={styles.progressMeta}>
-              {type === 'raffle' ? (
-                <span>{soldUnits}/{totalUnits} vendidos</span>
-              ) : (
-                <span>{Math.round(progress)}% vendido</span>
-              )}
-              {status === 'completed' && goalReached && (
-                <span className={styles.goalReached}>Meta alcanzada ✓</span>
-              )}
-            </div>
+        {/* Progress */}
+        <div className={styles.progressBlock}>
+          <div className={styles.progressTrack}>
+            <div
+              className={`${styles.progressFill} ${progressBarClass}`}
+              style={{ width: `${progress}%` }}
+            />
           </div>
-        )}
+          <div className={styles.progressMeta}>
+            {type === 'raffle' ? (
+              <span>{soldUnits}/{totalUnits} vendidos</span>
+            ) : (
+              <span>{Math.round(progress)}% vendido</span>
+            )}
+            {status === 'completed' && goalReached && (
+              <span className={styles.goalReached}>Meta alcanzada ✓</span>
+            )}
+          </div>
+        </div>
 
         {/* Footer */}
-        <div className={`${styles.footer} ${status === 'cancelled' ? styles.footerCancelled : ''}`}>
+        <div className={styles.footer}>
           <span className={styles.footerLeft}>Recaudado {fmt(collected)}</span>
           {status === 'cancelled' ? (
             <span className={styles.footerRight}>Meta {fmt(goal)}</span>

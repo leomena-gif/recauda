@@ -5,7 +5,7 @@ interface MobileListRowProps {
   id: string;
   isInactive?: boolean;
   isSelected?: boolean;
-  checkboxSlot: React.ReactNode;
+  checkboxSlot?: React.ReactNode;
   /** Content rendered inside the <h3> name element */
   name: React.ReactNode;
   phone: string;
@@ -13,6 +13,7 @@ interface MobileListRowProps {
   sellerLine?: string;
   /** Full menu: button + dropdown (use mobileMenuContainer/mobileMenuButton/mobileMenuDropdown/mobileMenuItem from list.module.css) */
   menuSlot: React.ReactNode;
+  onClick?: () => void;
 }
 
 export default function MobileListRow({
@@ -25,6 +26,7 @@ export default function MobileListRow({
   eventLine,
   sellerLine,
   menuSlot,
+  onClick,
 }: MobileListRowProps) {
   return (
     <article
@@ -33,9 +35,11 @@ export default function MobileListRow({
         styles.mobileListRow,
         isInactive ? styles.mobileRowInactive : '',
         isSelected ? styles.mobileRowSelected : '',
+        onClick ? styles.mobileRowClickable : '',
       ].filter(Boolean).join(' ')}
+      onClick={onClick}
     >
-      <div className={styles.mobileRowCheckbox}>{checkboxSlot}</div>
+      {checkboxSlot && <div className={styles.mobileRowCheckbox}>{checkboxSlot}</div>}
       <div className={styles.mobileRowMain}>
         <div className={styles.mobileRowTop}>
           <h3 className={styles.mobileRowName}>{name}</h3>

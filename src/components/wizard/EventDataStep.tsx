@@ -58,6 +58,7 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
     const eventType = initialData?.type || 'raffle';
     const isFoodSale = eventType === 'food_sale';
     const creationDate: Date = (initialData?.startDate instanceof Date ? initialData.startDate : new Date());
+    const initialFoodItemCount = initialData?.foodItems?.length ?? 0;
 
     const [formData, setFormData] = useState({
       name: initialData?.name || '',
@@ -154,7 +155,8 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
     };
 
     const handleRemoveFoodItem = (index: number) => {
-      if (formData.foodItems.length > 1) setFormData(prev => ({ ...prev, foodItems: prev.foodItems.filter((_, i) => i !== index) }));
+      if (index < initialFoodItemCount) return;
+      setFormData(prev => ({ ...prev, foodItems: prev.foodItems.filter((_, i) => i !== index) }));
     };
 
     const handleDishCloseToggle = (index: number) => {
@@ -189,9 +191,12 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
         <div className={styles.datesCard}>
           <div className={styles.fieldGroup}>
             <label className={styles.fieldLabel}>Fecha de inicio</label>
-            <div className={styles.startDateDisplay}>
-              {formData.startDate.toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
-            </div>
+            <DatePicker
+              selected={formData.startDate}
+              onChange={(date) => handleInputChange('startDate', date)}
+              placeholder="dd/mm/aa"
+              disabled={readOnly}
+            />
           </div>
           <div className={styles.fieldGroup}>
             <label className={styles.fieldLabel}>Fecha de fin</label>
@@ -339,28 +344,40 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
                   </div>
                 ) : (
                   /* Vista de edición: inputs */
-                  <div className={styles.foodRowFields}>
-                    <div className={styles.foodNameField}>
-                      <input
-                        type="text"
-                        value={item.name}
-                        onChange={(e) => handleFoodItemChange(index, 'name', e.target.value)}
-                        className={`${styles.input} ${errors[`foodItem_${index}_name`] ? styles.inputError : ''}`}
-                        placeholder={index === 0 ? 'Ej: Pollo asado con papas' : 'Nombre del plato'}
-                      />
-                      {errors[`foodItem_${index}_name`] && <span className={styles.errorText}>{errors[`foodItem_${index}_name`]}</span>}
+                  <>
+                    <div className={styles.foodRowFields}>
+                      <div className={styles.foodNameField}>
+                        <input
+                          type="text"
+                          value={item.name}
+                          onChange={(e) => handleFoodItemChange(index, 'name', e.target.value)}
+                          className={`${styles.input} ${errors[`foodItem_${index}_name`] ? styles.inputError : ''}`}
+                          placeholder={index === 0 ? 'Ej: Pollo asado con papas' : 'Nombre del plato'}
+                        />
+                        {errors[`foodItem_${index}_name`] && <span className={styles.errorText}>{errors[`foodItem_${index}_name`]}</span>}
+                      </div>
+                      <div className={styles.foodPriceField}>
+                        <input
+                          type="text"
+                          value={item.price}
+                          onChange={(e) => handleFoodItemChange(index, 'price', e.target.value)}
+                          className={`${styles.input} ${errors[`foodItem_${index}_price`] ? styles.inputError : ''}`}
+                          placeholder="$0"
+                        />
+                        {errors[`foodItem_${index}_price`] && <span className={styles.errorText}>{errors[`foodItem_${index}_price`]}</span>}
+                      </div>
                     </div>
-                    <div className={styles.foodPriceField}>
-                      <input
-                        type="text"
-                        value={item.price}
-                        onChange={(e) => handleFoodItemChange(index, 'price', e.target.value)}
-                        className={`${styles.input} ${errors[`foodItem_${index}_price`] ? styles.inputError : ''}`}
-                        placeholder="$0"
-                      />
-                      {errors[`foodItem_${index}_price`] && <span className={styles.errorText}>{errors[`foodItem_${index}_price`]}</span>}
-                    </div>
-                  </div>
+                    {index >= initialFoodItemCount && (
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveFoodItem(index)}
+                        className={styles.removeBtn}
+                        aria-label="Eliminar plato"
+                      >
+                        <Trash2 size={15} />
+                      </button>
+                    )}
+                  </>
                 )}
                 {allowDishClose && (
                   <button

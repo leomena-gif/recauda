@@ -197,24 +197,36 @@ const generateBuyers = (): Buyer[] => {
     buyerId++;
   }
 
-  // 320 compradores para VENTA DE COMIDA (evento 2)
-  const foodDishes = [
-    { dishName: 'Milanesa con papas', unitPrice: 2500 },
-    { dishName: 'Empanadas (docena)', unitPrice: 3000 },
-  ];
-  for (let i = 0; i < 320; i++) {
+  // 185 compradores para VENTA DE COMIDA (evento 2)
+  // Distribución determinista alineada con los sold de cada plato:
+  // Milanesa: 45 | Empanadas: 30 | Asado: 18 | Pollo: 22 | Choripán: 55 | Torta: 40
+  const MI = { dishName: 'Milanesa napolitana con papas fritas', unitPrice: 2500 };
+  const EM = { dishName: 'Empanadas (docena)',                   unitPrice: 3000 };
+  const AS = { dishName: 'Asado con ensalada mixta',             unitPrice: 4500 };
+  const PO = { dishName: 'Pollo al horno con guarnición',        unitPrice: 3200 };
+  const CH = { dishName: 'Choripán completo',                    unitPrice: 1500 };
+  const TO = { dishName: 'Torta casera (porción)',               unitPrice:  800 };
+
+  // Plan de compras por comprador (cada ítem = qty 1)
+  // Milanesa: 40 + 5 = 45 | Torta: 5 + 20 + 15 = 40 | Choripán: 35 + 20 = 55
+  const purchasePlan: Array<typeof MI[]> = [
+    ...Array(40).fill([MI]),        // 40 → solo milanesa
+    ...Array(5).fill([MI, TO]),     //  5 → milanesa + torta
+    ...Array(30).fill([EM]),        // 30 → solo empanadas
+    ...Array(18).fill([AS]),        // 18 → solo asado
+    ...Array(22).fill([PO]),        // 22 → solo pollo
+    ...Array(35).fill([CH]),        // 35 → solo choripán
+    ...Array(20).fill([CH, TO]),    // 20 → choripán + torta
+    ...Array(15).fill([TO]),        // 15 → solo torta
+  ]; // total: 185 compradores
+
+  for (let i = 0; i < purchasePlan.length; i++) {
     const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
     const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
     const phone = `3584${String(100000 + buyerId).padStart(6, '0')}`;
     const isActive = Math.random() > 0.1; // 90% activos
 
-    // Generar detalle de compra aleatorio
-    const foodPurchase = foodDishes
-      .filter(() => Math.random() > 0.3)
-      .map(dish => ({ ...dish, quantity: Math.floor(Math.random() * 4) + 1 }));
-    const finalPurchase = foodPurchase.length > 0
-      ? foodPurchase
-      : [{ ...foodDishes[Math.floor(Math.random() * foodDishes.length)], quantity: 1 }];
+    const finalPurchase = purchasePlan[i].map(d => ({ ...d, quantity: 1 }));
 
     const seller = pickSellerForEvent('2');
     buyers.push({
