@@ -19,6 +19,17 @@
   gap: var(--space-sm);
 }
 
+.headerActions .btn-primary {
+  background-color: var(--color-brand);
+  color: var(--color-brand-accent);
+  border: 1px solid rgba(97, 204, 159, 0.2);
+}
+
+.headerActions .btn-primary:hover:not(:disabled) {
+  background-color: var(--color-brand-hover);
+  color: var(--color-brand-accent);
+}
+
 /* Page Title - Hidden on mobile, visible on desktop */
 .pageTitle {
   display: none;
@@ -219,13 +230,13 @@
 
 .registerSaleSubmit {
   width: 100%;
-  min-height: 48px;
+  min-height: 40px;
   margin-top: var(--space-sm);
   background: var(--color-white);
   color: var(--color-bg-primary);
   border: none;
   border-radius: var(--radius-xl);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: all var(--transition-base);
@@ -326,12 +337,12 @@
 
 .registerSaleBackButton {
   flex: 1;
-  min-height: 48px;
+  min-height: 40px;
   background: var(--color-bg-tertiary);
   color: var(--color-text-primary);
   border: 1px solid var(--color-border-light);
   border-radius: var(--radius-xl);
-  font-size: var(--font-size-base);
+  font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
   cursor: pointer;
   transition: background-color var(--transition-base);

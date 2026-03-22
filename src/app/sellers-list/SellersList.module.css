@@ -15,6 +15,11 @@
   margin-bottom: 4px;
 }
 
+.sellerNameInactive {
+  text-decoration: line-through;
+  color: var(--color-text-tertiary);
+}
+
 .sellerPhone {
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);

@@ -18,6 +18,11 @@
   text-overflow: ellipsis;
 }
 
+.buyerNameInactive {
+  text-decoration: line-through;
+  color: var(--color-text-tertiary);
+}
+
 .buyerPhone {
   font-weight: var(--font-weight-medium);
   color: var(--color-text-secondary);

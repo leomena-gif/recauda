@@ -14,6 +14,7 @@ import EmptyState from '@/components/EmptyState';
 import TabBar from '@/components/TabBar';
 import RegisterSaleWizard from '@/components/wizard/RegisterSaleWizard';
 import EventDataStep, { EventDataStepRef } from '@/components/wizard/EventDataStep';
+import { UserX, UserCheck } from 'lucide-react';
 import listStyles from '@/styles/list.module.css';
 import buyerStyles from './BuyerDetail.module.css';
 
@@ -290,18 +291,8 @@ function EventDetailContent() {
       <circle cx="12" cy="18" r="1.5" fill="currentColor" />
     </svg>
   );
-  const IconDisable = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="2" />
-      <path d="M5.636 5.636L18.364 18.364" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  );
-  const IconEnable = () => (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-      <path d="M9 12L11 14L15 10" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M21 12C21 16.9706 16.9706 21 12 21C7.02944 21 3 16.9706 3 12C3 7.02944 7.02944 3 12 3C16.9706 3 21 7.02944 21 12Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
+  const IconDisable = () => <UserX size={18} />;
+  const IconEnable = () => <UserCheck size={18} />;
   const IconDetail = () => (
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
       <path d="M14 2H6C5.46957 2 4.96086 2.21071 4.58579 2.58579C4.21071 2.96086 4 3.46957 4 4V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -415,7 +406,7 @@ function EventDetailContent() {
             tabs={[
               { value: 'vendedores', label: 'Vendedores' },
               { value: 'compradores', label: 'Compradores' },
-              { value: 'configuracion', label: 'Detalle' },
+              { value: 'configuracion', label: 'Datos del evento' },
             ]}
             activeTab={activeTopTab}
             onChange={(value) => setActiveTopTab(value as TopTab)}
@@ -578,7 +569,7 @@ function EventDetailContent() {
                         >
                           <td>
                             <div className={buyerStyles.buyerInfo}>
-                              <div className={buyerStyles.buyerName}>
+                              <div className={`${buyerStyles.buyerName} ${buyer.status === 'inactive' ? buyerStyles.buyerNameInactive : ''}`}>
                                 {buyer.firstName} {buyer.lastName}
                               </div>
                               <div className={buyerStyles.buyerPhone}>{buyer.phone}</div>
@@ -588,7 +579,10 @@ function EventDetailContent() {
                             </div>
                           </td>
                           <td className={listStyles.inlineActionsCell}>
-                            <div>
+                            <div
+                              className={listStyles.tooltipWrapper}
+                              data-tooltip={buyer.status === 'active' ? 'Deshabilitar' : 'Habilitar'}
+                            >
                               <button
                                 type="button"
                                 className={listStyles.desktopMenuButton}

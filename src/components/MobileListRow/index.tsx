@@ -42,7 +42,7 @@ export default function MobileListRow({
       {checkboxSlot && <div className={styles.mobileRowCheckbox}>{checkboxSlot}</div>}
       <div className={styles.mobileRowMain}>
         <div className={styles.mobileRowTop}>
-          <h3 className={styles.mobileRowName}>{name}</h3>
+          <h3 className={`${styles.mobileRowName} ${isInactive ? styles.mobileRowNameInactive : ''}`}>{name}</h3>
           {menuSlot}
         </div>
         <p className={styles.mobileRowPhone}>{phone}</p>
