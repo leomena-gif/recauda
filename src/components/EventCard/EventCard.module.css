@@ -111,11 +111,11 @@
 }
 
 .progressActive {
-  background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand-accent) 100%);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .progressSuccess {
-  background: var(--color-brand-accent);
+  background: rgba(255, 255, 255, 0.7);
 }
 
 .progressMuted {
@@ -135,7 +135,7 @@
 }
 
 .goalReached {
-  color: var(--color-brand-accent);
+  color: var(--color-text-secondary);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -166,6 +166,6 @@
 }
 
 .footerSuccess {
-  color: var(--color-brand-accent);
+  color: var(--color-text-secondary);
   font-weight: var(--font-weight-semibold);
 }

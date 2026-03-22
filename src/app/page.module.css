@@ -214,8 +214,8 @@
 
 .registerSaleInput:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: none;
 }
 
 .registerSaleHelper {
@@ -476,8 +476,8 @@
 
 .registerSaleModalInput:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: none;
 }
 
 .registerSaleModalInput::placeholder {
@@ -499,8 +499,8 @@
 
 .registerSaleModalInput:is(select):focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: none;
 }
 
 .registerSaleModalInput:is(select) option {

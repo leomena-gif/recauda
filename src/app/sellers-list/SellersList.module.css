@@ -149,7 +149,7 @@
 /* ─── Assign Event Modal ─────────────────────────────────────────────────── */
 
 .assignModal {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-modal);
   border-radius: var(--radius-xl);
   width: 100%;
   max-width: 480px;
@@ -173,16 +173,15 @@
   width: 100%;
   padding: var(--space-md);
   background: var(--color-bg-tertiary);
-  border: 1.5px solid rgba(255, 255, 255, 0.08);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-md);
   cursor: pointer;
   transition: all var(--transition-base);
   text-align: left;
 }
 
 .assignEventCard:hover {
-  border-color: rgba(255, 255, 255, 0.18);
-  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--color-border);
 }
 
 .assignEventCardContent {
@@ -280,8 +279,8 @@
 
 .editInput:focus {
   outline: none;
-  border-color: var(--color-primary);
-  box-shadow: 0 0 0 3px var(--color-primary-light);
+  border-color: rgba(255, 255, 255, 0.35);
+  box-shadow: none;
 }
 
 .editError .editInput {

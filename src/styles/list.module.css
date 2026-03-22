@@ -21,6 +21,8 @@
   top: 0;
   z-index: 100;
   background-color: var(--color-bg-primary);
+  background-image: linear-gradient(to top, #050908 0%, #090f0d 60%);
+  background-attachment: fixed;
   padding-top: var(--space-xl);
   margin-top: calc(var(--space-xl) * -1);
   padding-bottom: var(--space-md);
@@ -96,7 +98,7 @@
 
 .searchInput:focus {
   outline: none;
-  border-bottom-color: var(--color-brand-accent);
+  border-bottom-color: rgba(255, 255, 255, 0.35);
   box-shadow: none;
 }
 
@@ -1026,7 +1028,7 @@
   }
 
   .searchInput:focus {
-    border-bottom-color: var(--color-brand-accent);
+    border-bottom-color: rgba(255, 255, 255, 0.35);
     box-shadow: none;
   }
 

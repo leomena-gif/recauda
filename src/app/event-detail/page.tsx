@@ -748,15 +748,14 @@ function EventDetailContent() {
           <div className={buyerStyles.purchaseDetailModal} onClick={e => e.stopPropagation()}>
             <div className={buyerStyles.purchaseDetailHeader}>
               <div>
-                <h2 className={buyerStyles.purchaseDetailTitle}>Números asignados</h2>
-                <p className={buyerStyles.purchaseDetailBuyerName}>{raffleDetailBuyer.firstName} {raffleDetailBuyer.lastName}</p>
+                <h2 className={buyerStyles.purchaseDetailTitle}>{raffleDetailBuyer.firstName} {raffleDetailBuyer.lastName}</h2>
+                <p className={buyerStyles.purchaseDetailBuyerName}>Vendedor: {raffleDetailBuyer.sellerName}</p>
               </div>
               <button className={buyerStyles.closeButton} onClick={() => setRaffleDetailBuyer(null)}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" /></svg>
               </button>
             </div>
             <div className={buyerStyles.purchaseDetailContent}>
-              <p className={buyerStyles.raffleNumbersCount}>{raffleDetailBuyer.assignedNumbers?.length ?? 0} número{(raffleDetailBuyer.assignedNumbers?.length ?? 0) !== 1 ? 's' : ''} · Vendedor: {raffleDetailBuyer.sellerName}</p>
               <div className={buyerStyles.raffleNumbersGrid}>{(raffleDetailBuyer.assignedNumbers ?? []).map(num => <span key={num} className={buyerStyles.raffleNumberChip}>{num}</span>)}</div>
             </div>
             <div className={buyerStyles.purchaseDetailFooter}>
@@ -773,8 +772,8 @@ function EventDetailContent() {
         isOpen={!isDesktop && !!raffleDetailBuyer}
         onClose={() => setRaffleDetailBuyer(null)}
         label="Números asignados"
-        title="Números asignados"
-        subtitle={raffleDetailBuyer ? `${raffleDetailBuyer.firstName} ${raffleDetailBuyer.lastName}` : ''}
+        title={raffleDetailBuyer ? `${raffleDetailBuyer.firstName} ${raffleDetailBuyer.lastName}` : ''}
+        subtitle={raffleDetailBuyer ? `Vendedor: ${raffleDetailBuyer.sellerName}` : ''}
         showCloseButton
         footer={
           <button className="btn btn-primary btn-full" onClick={() => { setBuyers(prev => prev.map(b => b.id === raffleDetailBuyer!.id ? { ...b, isPrinted: !raffleDetailBuyer!.isPrinted } : b)); setRaffleDetailBuyer(null); raffleSnackbar.showSnackbar(); }}>
@@ -782,7 +781,6 @@ function EventDetailContent() {
           </button>
         }
       >
-        <p className={buyerStyles.raffleNumbersCount}>{raffleDetailBuyer?.assignedNumbers?.length ?? 0} número{(raffleDetailBuyer?.assignedNumbers?.length ?? 0) !== 1 ? 's' : ''} · Vendedor: {raffleDetailBuyer?.sellerName}</p>
         <div className={buyerStyles.raffleNumbersGrid}>{(raffleDetailBuyer?.assignedNumbers ?? []).map(num => <span key={num} className={buyerStyles.raffleNumberChip}>{num}</span>)}</div>
       </BottomSheet>
 
@@ -944,23 +942,18 @@ function EventDetailContent() {
           <div className={buyerStyles.modalOverlay} onClick={() => setVendorDetailItem(null)}>
             <div className={buyerStyles.purchaseDetailModal} onClick={e => e.stopPropagation()}>
               <div className={buyerStyles.purchaseDetailHeader}>
-                <div>
+                <div className={buyerStyles.purchaseDetailTitleRow}>
                   <h2 className={buyerStyles.purchaseDetailTitle}>{vendorDetailItem.name}</h2>
-                  <div className={buyerStyles.detailBuyerMeta}>
-                    <span>{vendorDetailItem.sold} de {vendorDetailItem.total} vendidos</span>
-                  </div>
+                  <span className={`${buyerStyles.detailStatusBadge} ${isCollected ? buyerStyles.detailStatusDelivered : buyerStyles.detailStatusPending}`}>
+                    <span className={buyerStyles.detailStatusDot} />
+                    {isCollected ? 'Cobrado' : 'Por cobrar'}
+                  </span>
                 </div>
                 <button className={buyerStyles.closeButton} onClick={() => setVendorDetailItem(null)}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                     <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
-              </div>
-              <div className={buyerStyles.detailStatusRow}>
-                <span className={`${buyerStyles.detailStatusBadge} ${isCollected ? buyerStyles.detailStatusDelivered : buyerStyles.detailStatusPending}`}>
-                  <span className={buyerStyles.detailStatusDot} />
-                  {isCollected ? 'Cobrado' : 'Por cobrar'}
-                </span>
               </div>
               <div className={buyerStyles.detailDivider} />
               <div className={buyerStyles.detailItemList}>
@@ -1000,7 +993,7 @@ function EventDetailContent() {
             onClose={() => setVendorDetailItem(null)}
             label="Detalle de vendedor"
             title={vendorDetailItem?.name ?? ''}
-            subtitle={vendorDetailItem ? `${vendorDetailItem.sold} de ${vendorDetailItem.total} vendidos` : ''}
+            subtitle=""
             showCloseButton
             footer={
               <button
