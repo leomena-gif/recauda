@@ -527,7 +527,7 @@ export default function SellersList() {
                 </td>
                 <td>
                   <div className={styles.sellerInfo}>
-                    <div className={styles.sellerName}>
+                    <div className={`${styles.sellerName} ${seller.status === 'inactive' ? styles.sellerNameInactive : ''}`}>
                       {seller.firstName} {seller.lastName}
                     </div>
                     <div className={styles.sellerPhone}>{seller.phone}</div>

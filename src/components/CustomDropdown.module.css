@@ -33,7 +33,7 @@
 }
 
 .dropdownButtonActive {
-  color: var(--color-primary);
+  color: var(--color-brand-accent);
 }
 
 .dropdownValue {
@@ -49,7 +49,7 @@
 
 .dropdownArrowOpen {
   transform: rotate(180deg);
-  color: var(--color-primary);
+  color: var(--color-brand-accent);
 }
 
 /* Dropdown Menu - Dark Mode */
@@ -135,23 +135,23 @@
 }
 
 .dropdownOption:hover {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
+  background-color: rgba(97, 204, 159, 0.10);
+  color: var(--color-brand-accent);
 }
 
 .dropdownOption:active {
-  background-color: var(--color-primary-light);
+  background-color: rgba(97, 204, 159, 0.10);
 }
 
 /* Selected Option - Dark Mode */
 .dropdownOptionSelected {
-  background-color: var(--color-primary);
+  background-color: var(--color-brand-accent);
   color: var(--color-bg-primary);
   font-weight: var(--font-weight-semibold);
 }
 
 .dropdownOptionSelected:hover {
-  background-color: var(--color-primary-hover);
+  background-color: var(--color-brand-hover);
   color: var(--color-bg-primary);
 }
 

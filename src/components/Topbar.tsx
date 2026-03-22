@@ -2,9 +2,9 @@
 
 import React, { useState } from 'react';
 import { useRouter, usePathname } from 'next/navigation';
-import Image from 'next/image';
 import { Home, Users, Plus, X, LogOut, ChevronDown } from 'lucide-react';
 import { ROUTES } from '@/constants';
+import RecaudaLogo from './RecaudaLogo';
 import styles from './Topbar.module.css';
 
 const navItems = [
@@ -89,14 +89,7 @@ const Topbar: React.FC = () => {
         {/* ── Desktop layout ── */}
         <div className={styles.desktopContent}>
           <button className={styles.logoButton} onClick={() => router.push(ROUTES.HOME)}>
-            <Image
-              src="/images/logo-long.png"
-              alt="Recauda"
-              width={140}
-              height={32}
-              priority
-              style={{ objectFit: 'contain' }}
-            />
+            <RecaudaLogo height={22} />
           </button>
 
           <nav className={styles.desktopNav}>
@@ -165,7 +158,7 @@ const Topbar: React.FC = () => {
           onClick={(e) => e.stopPropagation()}
         >
           <div className={styles.mobileMenuHeader}>
-            <h2 className={styles.mobileMenuTitle}>Recauda</h2>
+            <RecaudaLogo height={20} />
             <button
               className={styles.closeButton}
               onClick={() => setIsMobileMenuOpen(false)}

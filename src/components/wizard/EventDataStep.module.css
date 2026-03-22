@@ -16,20 +16,6 @@
   letter-spacing: 0.6px;
 }
 
-.containerReadOnly .input {
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-  border-radius: 0;
-  padding: 10px 0;
-  cursor: default;
-}
-
-.containerReadOnly .input:focus {
-  border-bottom-color: rgba(255, 255, 255, 0.07);
-  box-shadow: none;
-}
-
 .containerReadOnly .startDateDisplay {
   background: transparent;
   border: none;
@@ -464,6 +450,15 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
+/* ── Field value (read-only display) ────────── */
+.fieldValue {
+  margin: 0;
+  padding: 10px 0;
+  font-size: 15px;
+  color: var(--color-text-primary);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
 /* ── Shared inputs ──────────────────────────── */
 .input {
   width: 100%;
@@ -485,11 +480,6 @@
 
 .input::placeholder {
   color: var(--color-text-tertiary);
-}
-
-.containerReadOnly .input:disabled {
-  opacity: 1;
-  cursor: default;
 }
 
 .containerEditing .input:disabled {

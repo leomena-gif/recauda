@@ -125,14 +125,14 @@
 
 .progressTrack {
   flex: 1;
-  background-color: var(--color-bg-tertiary);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-full);
   height: 8px;
   overflow: hidden;
 }
 
 .progressFill {
-  background-color: var(--color-primary);
+  background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand-accent) 100%);
   border-radius: var(--radius-full);
   height: 100%;
   transition: width var(--transition-slow);
@@ -141,7 +141,7 @@
 .progressPct {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-primary);
+  color: var(--color-brand-accent);
   white-space: nowrap;
   flex-shrink: 0;
   min-width: 36px;
@@ -212,7 +212,7 @@
   min-height: 44px;
   padding: var(--space-md) var(--space-lg);
   background: transparent;
-  border: 1px solid #E5E5EA;
+  border: 1px solid var(--color-border);
   border-radius: var(--radius-xl);
   color: var(--color-text-primary);
   font-size: var(--font-size-base);
@@ -235,7 +235,7 @@
   flex: 1;
   min-height: 44px;
   padding: var(--space-md) var(--space-lg);
-  background-color: #E5E5EA;
+  background-color: var(--color-brand-accent);
   color: var(--color-bg-primary);
   border: none;
   border-radius: 7px;
@@ -247,7 +247,7 @@
 }
 
 .assignStickyPrimary:hover {
-  background-color: #D1D1D6;
+  background-color: #4fb886;
 }
 
 .assignStickyPrimary:active {
@@ -438,7 +438,7 @@
 .salesList .checkbox {
   width: 20px;
   height: 20px;
-  accent-color: var(--color-primary);
+  accent-color: var(--color-brand-accent);
   cursor: pointer;
   vertical-align: middle;
   margin: 0;
@@ -716,7 +716,7 @@
 
 .metricProgressValue {
   font-size: var(--font-size-2xl);
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
   color: var(--color-text-primary);
   line-height: 1;
 }
@@ -728,7 +728,7 @@
 
 .metricTrack {
   height: 6px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-full);
   overflow: hidden;
 }
@@ -736,7 +736,7 @@
 .metricFill {
   height: 100%;
   border-radius: var(--radius-full);
-  background: linear-gradient(90deg, var(--color-primary) 0%, #007AFF 100%);
+  background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand-accent) 100%);
   transition: width var(--transition-slow);
 }
 
@@ -766,7 +766,7 @@
 
 .metricKpiValue {
   font-size: var(--font-size-lg);
-  font-weight: var(--font-weight-bold);
+  font-weight: 700;
   color: var(--color-text-primary);
   line-height: 1.1;
 }
@@ -817,7 +817,7 @@
 .dishTrack {
   width: 80px;
   height: 4px;
-  background: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.08);
   border-radius: var(--radius-full);
   overflow: hidden;
   flex-shrink: 0;
@@ -826,7 +826,7 @@
 .dishFill {
   height: 100%;
   border-radius: var(--radius-full);
-  background: var(--color-primary);
+  background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand-accent) 100%);
   transition: width var(--transition-slow);
 }
 
@@ -1511,7 +1511,7 @@
   .tableView .checkbox {
     width: 18px;
     height: 18px;
-    accent-color: var(--color-primary);
+    accent-color: var(--color-brand-accent);
     cursor: pointer;
     vertical-align: middle;
     margin: 0;

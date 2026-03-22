@@ -22,7 +22,7 @@
 }
 
 .badge_active {
-  background: rgba(52, 199, 89, 0.12);
+  background: rgba(30, 65, 62, 0.6);
 }
 
 .badge_completed {
@@ -41,7 +41,7 @@
 }
 
 .badge_active .badgeDot {
-  background-color: var(--color-success);
+  background-color: var(--color-brand-accent);
   animation: pulse 2s ease-in-out infinite;
 }
 
@@ -61,7 +61,7 @@
   text-transform: uppercase;
 }
 
-.badge_active    .badgeText { color: var(--color-success); }
+.badge_active    .badgeText { color: var(--color-brand-accent); }
 .badge_completed .badgeText { color: var(--color-text-secondary); }
 .badge_cancelled .badgeText { color: var(--color-text-secondary); }
 
@@ -111,11 +111,11 @@
 }
 
 .progressActive {
-  background: linear-gradient(90deg, var(--color-primary) 0%, #007AFF 100%);
+  background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand-accent) 100%);
 }
 
 .progressSuccess {
-  background: var(--color-success);
+  background: var(--color-brand-accent);
 }
 
 .progressMuted {
@@ -135,7 +135,7 @@
 }
 
 .goalReached {
-  color: var(--color-success);
+  color: var(--color-brand-accent);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -166,6 +166,6 @@
 }
 
 .footerSuccess {
-  color: var(--color-success);
+  color: var(--color-brand-accent);
   font-weight: var(--font-weight-semibold);
 }

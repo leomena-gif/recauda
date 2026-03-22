@@ -176,14 +176,17 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
           <label className={styles.fieldLabel}>
             {isFoodSale ? 'Nombre de la venta' : 'Nombre del evento'}
           </label>
-          <input
-            type="text"
-            value={formData.name}
-            onChange={(e) => handleInputChange('name', e.target.value)}
-            className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
-            placeholder={isFoodSale ? 'Ej: Venta de comida - Fiesta de fin de año' : 'Ej: Rifa día del niño'}
-            disabled={readOnly}
-          />
+          {readOnly ? (
+            <p className={styles.fieldValue}>{formData.name}</p>
+          ) : (
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => handleInputChange('name', e.target.value)}
+              className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
+              placeholder={isFoodSale ? 'Ej: Venta de comida - Fiesta de fin de año' : 'Ej: Rifa día del niño'}
+            />
+          )}
           {errors.name && <span className={styles.errorText}>{errors.name}</span>}
         </div>
 
