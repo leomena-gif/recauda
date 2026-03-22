@@ -132,7 +132,7 @@
 }
 
 .progressFill {
-  background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand-accent) 100%);
+  background: rgba(255, 255, 255, 0.7);
   border-radius: var(--radius-full);
   height: 100%;
   transition: width var(--transition-slow);
@@ -141,7 +141,7 @@
 .progressPct {
   font-size: var(--font-size-sm);
   font-weight: var(--font-weight-semibold);
-  color: var(--color-brand-accent);
+  color: var(--color-text-secondary);
   white-space: nowrap;
   flex-shrink: 0;
   min-width: 36px;

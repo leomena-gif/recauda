@@ -13,13 +13,13 @@
 }
 
 .modal {
-    background: var(--color-bg-primary);
+    background: var(--color-bg-modal);
     border-radius: 14px;
     width: 100%;
     max-width: 520px;
     max-height: 90vh;
     overflow-y: auto;
-    border: 1px solid rgba(255, 255, 255, 0.08);
+    border: 1px solid var(--color-border-light);
 }
 
 /* Header */
@@ -129,13 +129,13 @@
 
 .input {
     width: 100%;
-    padding: 14px 16px;
-    border: 1px solid rgba(255, 255, 255, 0.09);
-    border-radius: 8px;
+    padding: 16px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-lg);
     font-size: 15px;
-    background: var(--color-bg-input);
+    background: var(--color-bg-tertiary);
     color: var(--color-text-primary);
-    transition: border-color 0.2s ease;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     box-sizing: border-box;
     font-family: inherit;
 }
@@ -143,6 +143,7 @@
 .input:focus {
     outline: none;
     border-color: rgba(255, 255, 255, 0.35);
+    box-shadow: none;
 }
 
 .input::placeholder {
@@ -163,9 +164,9 @@
 
 /* Options card (Luma-style rows) */
 .optionsCard {
-    background: var(--color-bg-input);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
     overflow: hidden;
 }
 
@@ -249,9 +250,9 @@
     gap: 12px;
     width: 100%;
     padding: 14px 16px;
-    background: var(--color-bg-input);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    border-radius: 10px;
+    background: var(--color-bg-tertiary);
+    border: 1px solid var(--color-border-light);
+    border-radius: var(--radius-md);
     cursor: pointer;
     transition: border-color 0.2s ease, background 0.2s ease;
     text-align: left;
@@ -259,13 +260,12 @@
 }
 
 .eventCard:hover {
-    border-color: rgba(255, 255, 255, 0.18);
-    background: var(--color-bg-input);
+    border-color: var(--color-border);
 }
 
 .eventCardSelected {
-    border-color: rgba(255, 255, 255, 0.35);
-    background: var(--color-bg-input);
+    border-color: var(--color-border);
+    background: var(--color-bg-tertiary);
 }
 
 .eventCardContent {
