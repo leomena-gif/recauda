@@ -89,7 +89,7 @@ const Topbar: React.FC = () => {
         {/* ── Desktop layout ── */}
         <div className={styles.desktopContent}>
           <button className={styles.logoButton} onClick={() => router.push(ROUTES.HOME)}>
-            <RecaudaLogo height={22} />
+            <RecaudaLogo height={18} />
           </button>
 
           <nav className={styles.desktopNav}>
@@ -158,7 +158,7 @@ const Topbar: React.FC = () => {
           onClick={(e) => e.stopPropagation()}
         >
           <div className={styles.mobileMenuHeader}>
-            <RecaudaLogo height={20} />
+            <RecaudaLogo height={16} />
             <button
               className={styles.closeButton}
               onClick={() => setIsMobileMenuOpen(false)}
