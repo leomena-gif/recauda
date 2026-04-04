@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useRouter, usePathname } from 'next/navigation';
-import { Home, Users, Plus, X, LogOut, ChevronDown } from 'lucide-react';
+import { useRouter, usePathname, useSearchParams } from 'next/navigation';
+import { Home, Users, Plus, LogOut, ChevronDown, X, Menu } from 'lucide-react';
 import { ROUTES } from '@/constants';
 import RecaudaLogo from './RecaudaLogo';
 import styles from './Topbar.module.css';
@@ -10,15 +10,10 @@ import styles from './Topbar.module.css';
 const navItems = [
   { id: 'home', label: 'Mis eventos', path: ROUTES.HOME, icon: <Home size={20} /> },
   { id: 'sellers-list', label: 'Lista de vendedores', path: ROUTES.SELLERS_LIST, icon: <Users size={20} /> },
+  { id: 'create-event', label: 'Crear evento', path: ROUTES.CREATE_EVENT, icon: <Plus size={20} /> },
 ];
 
-const ROUTE_TITLES: Record<string, string> = {
-  [ROUTES.HOME]: 'Mis Eventos',
-  [ROUTES.CREATE_EVENT]: 'Crear evento',
-  [ROUTES.SELLERS_LIST]: 'Lista de vendedores',
-  [ROUTES.ADD_SELLER]: 'Agregar vendedor',
-  [ROUTES.EVENT_DETAIL]: 'Detalle del evento',
-};
+const desktopNavItems = navItems.filter(item => item.id !== 'create-event');
 
 // TODO: Replace with real auth context
 const mockUser = {
@@ -37,153 +32,170 @@ const getInitials = (name: string): string =>
 const Topbar: React.FC = () => {
   const router = useRouter();
   const pathname = usePathname();
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const searchParams = useSearchParams();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
 
-  const headerTitle = ROUTE_TITLES[pathname] ?? 'Recauda';
-
-  const handleNavigation = (path: string) => {
-    router.push(path);
-    setIsMobileMenuOpen(false);
-  };
-
   const handlePlusAction = () => {
+    if (pathname.startsWith(ROUTES.EVENT_DETAIL)) {
+      const eventId = searchParams.get('id') ?? '';
+      router.push(`${ROUTES.REGISTER_SALE}?eventId=${eventId}`);
+      return;
+    }
     const destination =
       pathname === ROUTES.SELLERS_LIST ? ROUTES.ADD_SELLER : ROUTES.CREATE_EVENT;
     router.push(destination);
-    setIsMobileMenuOpen(false);
+  };
+
+  const handleNavigation = (path: string) => {
+    router.push(path);
+    setIsMenuOpen(false);
   };
 
   const handleLogout = () => {
     router.push(ROUTES.LOGIN);
+    setIsMenuOpen(false);
     setIsUserMenuOpen(false);
   };
 
   return (
     <>
       <header className={styles.topbar}>
-        {/* ── Mobile layout ── */}
-        <div className={styles.mobileContent}>
+        <div className={styles.topbarContent}>
+
+          {/* Hamburger — mobile only, left of logo */}
           <button
-            className={`${styles.hamburger} ${isMobileMenuOpen ? styles.hamburgerOpen : ''}`}
-            onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-            aria-label={isMobileMenuOpen ? 'Cerrar menú' : 'Abrir menú'}
-            aria-expanded={isMobileMenuOpen}
+            className={`${styles.hamburger} ${styles.mobileOnly}`}
+            onClick={() => setIsMenuOpen((prev) => !prev)}
+            aria-label="Abrir menú"
           >
-            <span />
-            <span />
-            <span />
+            <Menu size={26} />
           </button>
 
-          <h1 className={styles.mobileTitle}>{headerTitle}</h1>
-
-          <button
-            className={styles.plusButton}
-            onClick={handlePlusAction}
-            aria-label={pathname === ROUTES.SELLERS_LIST ? 'Agregar vendedor' : 'Crear evento'}
-          >
-            <Plus size={24} />
-          </button>
-        </div>
-
-        {/* ── Desktop layout ── */}
-        <div className={styles.desktopContent}>
+          {/* Logo */}
           <button className={styles.logoButton} onClick={() => router.push(ROUTES.HOME)}>
             <RecaudaLogo height={18} />
           </button>
 
-          <nav className={styles.desktopNav}>
-            {navItems.map((item) => (
+          {/* Nav — desktop only */}
+          <nav className={styles.nav}>
+            {desktopNavItems.map((item) => (
               <button
                 key={item.id}
-                className={`${styles.navTab} ${pathname === item.path ? styles.navTabActive : ''}`}
-                onClick={() => handleNavigation(item.path)}
+                className={`${styles.navItem} ${pathname === item.path ? styles.navItemActive : ''}`}
+                onClick={() => router.push(item.path)}
               >
-                {item.label}
+                <span className={styles.navIcon}>{item.icon}</span>
+                <span className={styles.navLabel}>{item.label}</span>
               </button>
             ))}
           </nav>
 
-          <div className={styles.userMenuWrapper}>
-            <button
-              className={styles.userButton}
-              onClick={() => setIsUserMenuOpen((prev) => !prev)}
-              aria-expanded={isUserMenuOpen}
-            >
-              <div className={styles.userAvatar}>
-                {getInitials(mockUser.name)}
-              </div>
-              <span className={styles.userName}>{mockUser.name}</span>
-              <ChevronDown
-                size={13}
-                className={`${styles.chevron} ${isUserMenuOpen ? styles.chevronOpen : ''}`}
-              />
-            </button>
-
-            {isUserMenuOpen && (
-              <>
-                <div
-                  className={styles.userMenuOverlay}
-                  onClick={() => setIsUserMenuOpen(false)}
-                />
-                <div className={styles.userDropdown}>
-                  <div className={styles.dropdownUserInfo}>
-                    <div className={styles.dropdownAvatar}>
-                      {getInitials(mockUser.name)}
-                    </div>
-                    <div className={styles.dropdownUserText}>
-                      <span className={styles.dropdownUserName}>{mockUser.name}</span>
-                      <span className={styles.dropdownUserInstitution}>{mockUser.institution}</span>
-                    </div>
-                  </div>
-                  <div className={styles.dropdownDivider} />
-                  <button className={styles.logoutItem} onClick={handleLogout}>
-                    <LogOut size={15} />
-                    Cerrar sesión
-                  </button>
-                </div>
-              </>
+          {/* Right actions */}
+          <div className={styles.rightActions}>
+            {pathname.startsWith(ROUTES.EVENT_DETAIL) ? (
+              <button className={`btn btn-sm btn-tertiary ${styles.mobileOnly}`} onClick={handlePlusAction}>
+                Registrar venta
+              </button>
+            ) : pathname === ROUTES.SELLERS_LIST ? (
+              <button className={`btn btn-sm btn-tertiary ${styles.mobileOnly}`} onClick={handlePlusAction}>
+                Agregar vendedor
+              </button>
+            ) : pathname !== ROUTES.HOME &&
+                pathname !== ROUTES.CREATE_EVENT &&
+                pathname !== ROUTES.ADD_SELLER &&
+                pathname !== ROUTES.REGISTER_SALE && (
+              <button className={styles.plusButton} onClick={handlePlusAction} aria-label="Crear evento">
+                <Plus size={26} />
+              </button>
             )}
+
+            {/* User menu — desktop only */}
+            <div className={`${styles.userMenuWrapper} ${styles.desktopOnly}`}>
+              <button
+                className={styles.userButton}
+                onClick={() => setIsUserMenuOpen((prev) => !prev)}
+                aria-expanded={isUserMenuOpen}
+              >
+                <span className={styles.userName}>{mockUser.name}</span>
+                <ChevronDown
+                  size={13}
+                  className={`${styles.chevron} ${isUserMenuOpen ? styles.chevronOpen : ''}`}
+                />
+              </button>
+
+              {isUserMenuOpen && (
+                <>
+                  <div className={styles.userMenuOverlay} onClick={() => setIsUserMenuOpen(false)} />
+                  <div className={styles.userDropdown}>
+                    <div className={styles.dropdownUserInfo}>
+                      <div className={styles.dropdownAvatar}>{getInitials(mockUser.name)}</div>
+                      <div className={styles.dropdownUserText}>
+                        <span className={styles.dropdownUserName}>{mockUser.name}</span>
+                        <span className={styles.dropdownUserInstitution}>{mockUser.institution}</span>
+                      </div>
+                    </div>
+                    <div className={styles.dropdownDivider} />
+                    <button className={styles.logoutItem} onClick={handleLogout}>
+                      <LogOut size={15} />
+                      Cerrar sesión
+                    </button>
+                  </div>
+                </>
+              )}
+            </div>
+
           </div>
+
         </div>
       </header>
 
-      {/* Mobile slide-in menu */}
-      <div
-        className={`${styles.mobileOverlay} ${isMobileMenuOpen ? styles.mobileOverlayOpen : ''}`}
-        onClick={() => setIsMobileMenuOpen(false)}
-      >
-        <nav
-          className={`${styles.mobileMenu} ${isMobileMenuOpen ? styles.mobileMenuOpen : ''}`}
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className={styles.mobileMenuHeader}>
+      {/* Mobile drawer menu */}
+      <div className={`${styles.fullMenu} ${isMenuOpen ? styles.fullMenuOpen : ''}`}>
+        <div className={styles.fullMenuScrim} onClick={() => setIsMenuOpen(false)} aria-hidden="true" />
+
+        <div className={styles.fullMenuPanel}>
+
+          {/* Header */}
+          <div className={styles.fullMenuTop}>
             <RecaudaLogo height={16} />
-            <button
-              className={styles.closeButton}
-              onClick={() => setIsMobileMenuOpen(false)}
-              aria-label="Cerrar menú"
-            >
-              <X size={24} />
+            <button className={styles.fullMenuClose} onClick={() => setIsMenuOpen(false)} aria-label="Cerrar menú">
+              <X size={20} />
             </button>
           </div>
 
-          <ul className={styles.mobileMenuList}>
+          {/* User profile */}
+          <div className={styles.fullMenuProfile}>
+            <div className={styles.fullMenuAvatar}>{getInitials(mockUser.name)}</div>
+            <div className={styles.fullMenuProfileInfo}>
+              <span className={styles.fullMenuProfileName}>{mockUser.name}</span>
+              <span className={styles.fullMenuProfileInstitution}>{mockUser.institution}</span>
+            </div>
+          </div>
+
+          {/* Nav items */}
+          <nav className={styles.fullMenuNav}>
             {navItems.map((item) => (
-              <li key={item.id} className={styles.mobileMenuItem}>
-                <button
-                  className={`${styles.mobileMenuButton} ${
-                    pathname === item.path ? styles.mobileMenuButtonActive : ''
-                  }`}
-                  onClick={() => handleNavigation(item.path)}
-                >
-                  <span className={styles.mobileMenuIcon}>{item.icon}</span>
-                  <span className={styles.mobileMenuLabel}>{item.label}</span>
-                </button>
-              </li>
+              <button
+                key={item.id}
+                className={`${styles.fullMenuNavItem} ${pathname === item.path ? styles.fullMenuNavItemActive : ''}`}
+                onClick={() => handleNavigation(item.path)}
+              >
+                <span className={styles.fullMenuNavIcon}>{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
             ))}
-          </ul>
-        </nav>
+          </nav>
+
+          {/* Footer */}
+          <div className={styles.fullMenuFooter}>
+            <button className={styles.fullMenuLogout} onClick={handleLogout}>
+              <LogOut size={16} />
+              Cerrar sesión
+            </button>
+          </div>
+
+        </div>
       </div>
     </>
   );

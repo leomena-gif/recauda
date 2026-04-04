@@ -77,16 +77,14 @@ const CreateEventForm: React.FC = () => {
   return (
     <div className="pageContainer">
 
-      <div className={styles.navigationContainer}>
-        <button className={styles.backButton} onClick={handleBackToEvents}>
-          <svg className={styles.chevronIcon} width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <div className={styles.pageHeaderRow}>
+        <button className={styles.backArrow} onClick={handleBackToEvents} aria-label="Volver">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          Mis eventos
         </button>
+        <h1 className={styles.pageTitle}>Crear evento</h1>
       </div>
-
-      <h1 className={styles.pageTitle}>Crear evento</h1>
 
       <div className={styles.twoColumnLayout}>
         <div className={styles.leftColumn}>

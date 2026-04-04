@@ -72,15 +72,9 @@ export default function EventCard({
       : `Cancelado el ${formatDate(endDate)}`
     : '';
 
-  // Progress bar variant
+  // Progress bar variant: white for active, gray for everything else
   const progressBarClass =
-    status === 'active'
-      ? styles.progressActive
-      : status === 'completed' && goalReached
-      ? styles.progressSuccess
-      : status === 'completed'
-      ? styles.progressMuted
-      : styles.progressCancelled;
+    status === 'active' ? styles.progressActive : styles.progressMuted;
 
   return (
     <Card

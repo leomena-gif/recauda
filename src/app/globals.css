@@ -8,12 +8,12 @@
   --color-brand-accent: #61cc9f;
 
   /* Colors - UI */
-  --color-bg-topbar: #080e0c;
-  --color-bg-input: #0d1412;
+  --color-bg-topbar: #0a0a0a;
+  --color-bg-input: #111111;
   --color-bg-modal: var(--color-bg-primary);
-  --color-menu-bg: #192421;
-  --color-menu-hover: #1e2e2b;
-  --color-menu-active: #243330;
+  --color-menu-bg: #1c1c1c;
+  --color-menu-hover: #222222;
+  --color-menu-active: #282828;
 
   /* Colors - Primary */
   --color-primary: #5AC8FA;
@@ -29,9 +29,9 @@
   /* Colors - Dark Mode Neutral */
   --color-white: #fcf8ef;
   --color-black: #000000;
-  --color-bg-primary: #0b1210;
-  --color-bg-secondary: #121c1a;
-  --color-bg-tertiary: #192421;
+  --color-bg-primary: #0f0f0f;
+  --color-bg-secondary: #161616;
+  --color-bg-tertiary: #1c1c1c;
   --color-text-primary: #fcf8ef;
   --color-text-secondary: rgba(255, 255, 255, 0.65);
   --color-text-tertiary: rgba(255, 255, 255, 0.4);
@@ -39,9 +39,9 @@
   --color-border-light: rgba(255, 255, 255, 0.07);
 
   /* Legacy Gray Scale (for compatibility) */
-  --color-gray-50: #121c1a;
-  --color-gray-100: #192421;
-  --color-gray-200: #243330;
+  --color-gray-50: #161616;
+  --color-gray-100: #1c1c1c;
+  --color-gray-200: #282828;
   --color-gray-300: #48484A;
   --color-gray-400: #636366;
   --color-gray-500: #8E8E93;
@@ -131,8 +131,6 @@ html {
 body {
   font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
   background-color: var(--color-bg-primary);
-  background-image: linear-gradient(to top, #050908 0%, #090f0d 60%);
-  background-attachment: fixed;
   color: var(--color-text-primary);
   line-height: 1.5;
   min-height: 100vh;
@@ -205,12 +203,6 @@ body {
   width: 100%;
 }
 
-/* Mobile: ocultar H1 de páginas (reemplazados por el título del header) */
-@media (max-width: 768px) {
-  .mainContent h1 {
-    display: none !important;
-  }
-}
 
 /* Pantallas muy estrechas (mínimo 360px) - evitar scroll horizontal */
 @media (max-width: 400px) {

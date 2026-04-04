@@ -21,8 +21,6 @@
   top: 0;
   z-index: 100;
   background-color: var(--color-bg-primary);
-  background-image: linear-gradient(to top, #050908 0%, #090f0d 60%);
-  background-attachment: fixed;
   padding-top: var(--space-xl);
   margin-top: calc(var(--space-xl) * -1);
   padding-bottom: var(--space-md);
@@ -958,6 +956,11 @@
   }
 
   .header {
+    display: flex;
+    margin-bottom: var(--space-md);
+  }
+
+  .headerActions {
     display: none;
   }
 }

@@ -109,16 +109,14 @@ const AddSellerForm: React.FC = () => {
   return (
     <div className="pageContainer">
 
-      <div className={styles.navigationContainer}>
-        <button className={styles.backButton} onClick={() => router.push('/sellers-list')}>
-          <svg className={styles.chevronIcon} width="14" height="14" viewBox="0 0 24 24" fill="none">
+      <div className={styles.pageHeaderRow}>
+        <button className={styles.backArrow} onClick={() => router.push('/sellers-list')} aria-label="Volver">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
             <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
           </svg>
-          Lista de vendedores
         </button>
+        <h1 className={styles.pageTitle}>Agregar vendedor</h1>
       </div>
-
-      <h1 className={styles.pageTitle}>Agregar vendedor</h1>
 
       <div className={styles.formContainer}>
 
