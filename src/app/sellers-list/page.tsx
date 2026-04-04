@@ -325,7 +325,7 @@ export default function SellersList() {
             <h1 className="pageTitle">Lista de vendedores</h1>
           </div>
           <div className={listStyles.headerActions}>
-            <button className="btn btn-primary" onClick={handleAddSeller}>
+            <button className="btn btn-tertiary" onClick={handleAddSeller}>
               Agregar vendedor
             </button>
           </div>

@@ -6,13 +6,12 @@ import styles from './EventDetail.module.css';
 import BottomSheet from '@/components/BottomSheet';
 import { MOCK_BUYERS, MOCK_EVENTS, MOCK_SELLERS, MOCK_HOME_EVENTS } from '@/mocks/data';
 import { Buyer } from '@/types/models';
-import { SNACKBAR_DURATION } from '@/constants';
+import { SNACKBAR_DURATION, ROUTES } from '@/constants';
 import { useSnackbar } from '@/hooks/useSnackbar';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 import MobileListRow from '@/components/MobileListRow';
 import EmptyState from '@/components/EmptyState';
 import TabBar from '@/components/TabBar';
-import RegisterSaleWizard from '@/components/wizard/RegisterSaleWizard';
 import EventDataStep, { EventDataStepRef } from '@/components/wizard/EventDataStep';
 import { UserX, UserCheck } from 'lucide-react';
 import listStyles from '@/styles/list.module.css';
@@ -154,9 +153,6 @@ function EventDetailContent() {
   // Close event confirmation
   const [isCloseEventOpen, setIsCloseEventOpen] = useState(false);
 
-  // Register sale wizard
-  const [isSaleWizardOpen, setIsSaleWizardOpen] = useState(false);
-
   // ── Buyers tab state ──────────────────────────────────────────────────────
   const [buyers, setBuyers] = useState<Buyer[]>(MOCK_BUYERS);
   const [buyerSearchTerm, setBuyerSearchTerm] = useState('');
@@ -215,11 +211,6 @@ function EventDetailContent() {
 
   // ── Business rules ────────────────────────────────────────────────────────
   const prizesLocked = eventType === 'raffle' && eventData.soldNumbers > 0;
-
-  const eventsForWizard = useMemo(() => MOCK_HOME_EVENTS.map(e => {
-    if (e.id !== eventId || closedDishIndices.size === 0) return e;
-    return { ...e, dishes: e.dishes?.filter((_, i) => !closedDishIndices.has(i)) };
-  }), [eventId, closedDishIndices]);
 
   const currentVendorData = activeVendorTab === 'collected' ? collectedData : pendingData;
   const filteredVendorData = currentVendorData.filter(item =>
@@ -309,17 +300,14 @@ function EventDetailContent() {
 
           {/* Page Header */}
           <div className={styles.pageHeader}>
-            <button className={styles.breadcrumb} onClick={() => router.push('/')}>
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
-              Mis eventos
-            </button>
             <div className={styles.titleRow}>
-              <div className={styles.titleGroup}>
-                <h1 className={styles.eventTitle}>{eventData.name}</h1>
-              </div>
-              <button className="btn btn-primary" onClick={() => setIsSaleWizardOpen(true)}>
+              <button className={styles.backArrow} onClick={() => router.push('/')} aria-label="Volver">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
+                  <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+              <h1 className={styles.eventTitle}>{eventData.name}</h1>
+              <button className={`btn btn-tertiary ${styles.desktopOnly}`} onClick={() => router.push(`${ROUTES.REGISTER_SALE}?eventId=${eventId}`)}>
                 Registrar venta
               </button>
             </div>
@@ -345,7 +333,7 @@ function EventDetailContent() {
             </div>
 
             {/* KPIs */}
-            <div className={styles.metricKpis}>
+            <div className={`${styles.metricKpis} ${eventType !== 'food_sale' ? styles.metricKpisGrid : ''}`}>
               <div className={styles.metricKpi}>
                 <span className={styles.metricKpiValue}>
                   ${(eventType === 'food_sale' ? foodSaleTotal : eventData.collected).toLocaleString('es-AR')}
@@ -1038,21 +1026,7 @@ function EventDetailContent() {
         </div>
       )}
 
-      {/* Register Sale — mobile bottom button */}
-      <div className={styles.registerSaleBottomBar}>
-        <button className="btn btn-primary btn-full" onClick={() => setIsSaleWizardOpen(true)}>
-          Registrar venta
-        </button>
-      </div>
-
       {/* Register Sale Wizard */}
-      <RegisterSaleWizard
-        isOpen={isSaleWizardOpen}
-        onClose={() => setIsSaleWizardOpen(false)}
-        events={eventsForWizard}
-        preselectedEventId={eventId}
-      />
-
       {/* Close Event Confirmation Sheet */}
       <BottomSheet
         isOpen={isCloseEventOpen}

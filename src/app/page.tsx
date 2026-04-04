@@ -30,7 +30,7 @@ export default function Home() {
   return (
     <>
       <div className="pageContainer">
-        {/* Header - Desktop Only */}
+        {/* Header */}
         <div className={styles.header}>
           <div className={styles.titleSection}>
             <h1 className={`pageTitle ${styles.pageTitle}`}>Mis eventos</h1>
@@ -41,6 +41,9 @@ export default function Home() {
             </button>
           </div>
         </div>
+
+        {/* H1 — mobile only */}
+        <h1 className={styles.mobiletitle}>Mis eventos</h1>
 
         {/* Filter */}
         {hasEvents && (

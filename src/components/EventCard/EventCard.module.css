@@ -111,18 +111,10 @@
 }
 
 .progressActive {
-  background: linear-gradient(90deg, var(--color-brand) 0%, var(--color-brand-accent) 100%);
-}
-
-.progressSuccess {
-  background: var(--color-brand-accent);
+  background: rgba(255, 255, 255, 0.9);
 }
 
 .progressMuted {
-  background: rgba(255, 255, 255, 0.2);
-}
-
-.progressCancelled {
   background: rgba(255, 255, 255, 0.2);
 }
 

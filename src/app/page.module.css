@@ -35,6 +35,21 @@
   display: none;
 }
 
+/* H1 mobile only */
+.mobiletitle {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--color-text-primary);
+  letter-spacing: -0.4px;
+  margin: 0 0 var(--space-lg);
+}
+
+@media (min-width: 768px) {
+  .mobiletitle {
+    display: none;
+  }
+}
+
 /* Filter Pills - Dark Mode Mobile First */
 
 /* Bottom Button Container */

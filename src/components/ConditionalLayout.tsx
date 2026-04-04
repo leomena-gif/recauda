@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react';
+import React, { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import Topbar from '@/components/Topbar';
 
@@ -22,7 +22,9 @@ const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({ children }) => {
 
   return (
     <>
-      <Topbar />
+      <Suspense fallback={null}>
+        <Topbar />
+      </Suspense>
       <div className="appLayout">
         <div className="mainContent">
           {children}

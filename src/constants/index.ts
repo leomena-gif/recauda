@@ -18,6 +18,7 @@ export const ROUTES = {
   SELLERS_LIST: '/sellers-list',
   ADD_SELLER: '/add-seller',
   EVENT_DETAIL: '/event-detail',
+  REGISTER_SALE: '/register-sale',
   LOGIN: '/login',
 } as const;
 
