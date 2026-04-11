@@ -12,15 +12,32 @@
 
 /* surface: contenedor principal (fondo oscuro secundario, sombra suave) */
 .surface {
-  background-color: var(--color-bg-topbar);
-  border: 1px solid var(--color-border-card);
-  box-shadow: var(--shadow-card);
+  background-color: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Subtle top border highlight for realistic depth */
+.surface::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, 
+    rgba(255, 255, 255, 0) 0%, 
+    rgba(255, 255, 255, 0.05) 50%, 
+    rgba(255, 255, 255, 0) 100%
+  );
+  pointer-events: none;
 }
 
 /* elevated: card interna dentro de un surface (un nivel de profundidad más) */
 .elevated {
   background-color: var(--color-bg-tertiary);
-  border: 1px solid var(--color-border-card-inner);
+  border: 1px solid var(--color-border-light);
   border-radius: var(--radius-lg);
 }
 
@@ -28,6 +45,7 @@
 .inset {
   background-color: var(--color-bg-tertiary);
   border-radius: var(--radius-lg);
+  opacity: 0.8;
 }
 
 /* === PADDING === */
@@ -43,8 +61,8 @@
 }
 
 .surface.interactive:hover {
-  border-color: var(--color-pill-active-border);
-  box-shadow: var(--shadow-card-hover);
+  border-color: var(--color-border-card-hover);
+  background-color: var(--color-surface-overlay);
 }
 
 .surface.interactive:active {

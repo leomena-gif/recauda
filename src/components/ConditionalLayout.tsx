@@ -31,7 +31,6 @@ const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({ children }) => {
           {children}
         </div>
       </div>
-      <BottomNavBar />
     </>
   );
 };

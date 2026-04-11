@@ -59,7 +59,7 @@
   border-color: var(--color-border);
   background: var(--color-bg-tertiary);
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: none;
 }
 
 .sheetEventButton:active {
@@ -332,8 +332,8 @@
 .cancelButton {
   padding: var(--space-md) var(--space-lg);
   background: transparent;
-  border: 1px solid var(--color-border-light);
-  border-radius: 7px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-full, 9999px);
   color: var(--color-text-primary);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-medium);
@@ -349,7 +349,7 @@
   padding: var(--space-md) var(--space-lg);
   background: var(--color-white);
   border: none;
-  border-radius: 7px;
+  border-radius: var(--radius-full, 9999px);
   color: var(--color-bg-primary);
   font-size: var(--font-size-base);
   font-weight: var(--font-weight-semibold);

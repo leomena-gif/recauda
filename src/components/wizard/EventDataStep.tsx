@@ -3,6 +3,7 @@
 import React, { useState, useImperativeHandle, forwardRef } from 'react';
 import { Trash2 } from 'lucide-react';
 import DatePicker from '@/components/DatePicker';
+import Input from '@/components/Input';
 import type { FoodItem } from './CreateEventForm';
 import styles from './EventDataStep.module.css';
 
@@ -172,23 +173,23 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
       <div className={`${styles.container} ${readOnly ? styles.containerReadOnly : styles.containerEditing}`}>
 
         {/* Event Name */}
-        <div className={styles.fieldGroup}>
-          <label className={styles.fieldLabel}>
-            {isFoodSale ? 'Nombre de la venta' : 'Nombre del evento'}
-          </label>
-          {readOnly ? (
+        {readOnly ? (
+          <div className={styles.fieldGroup}>
+            <label className={styles.fieldLabel}>
+              {isFoodSale ? 'Nombre de la venta' : 'Nombre del evento'}
+            </label>
             <p className={styles.fieldValue}>{formData.name}</p>
-          ) : (
-            <input
-              type="text"
-              value={formData.name}
-              onChange={(e) => handleInputChange('name', e.target.value)}
-              className={`${styles.input} ${errors.name ? styles.inputError : ''}`}
-              placeholder={isFoodSale ? 'Ej: Venta de comida - Fiesta de fin de año' : 'Ej: Rifa día del niño'}
-            />
-          )}
-          {errors.name && <span className={styles.errorText}>{errors.name}</span>}
-        </div>
+          </div>
+        ) : (
+          <Input
+            label={isFoodSale ? 'Nombre de la venta' : 'Nombre del evento'}
+            type="text"
+            value={formData.name}
+            onChange={(e) => handleInputChange('name', e.target.value)}
+            placeholder={isFoodSale ? 'Ej: Venta de comida - Fiesta de fin de año' : 'Ej: Rifa día del niño'}
+            error={errors.name}
+          />
+        )}
 
         {/* Dates */}
         <div className={styles.datesCard}>
@@ -223,15 +224,15 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
               </span>
               <span className={styles.optionLabel}>Valor del número</span>
               <div className={styles.optionControl}>
-                <input
+                <Input
                   type="text"
                   value={formData.numberValue}
                   onChange={(e) => handleInputChange('numberValue', e.target.value)}
-                  className={`${styles.inlineInput} ${errors.numberValue ? styles.inlineInputError : ''}`}
+                  inputClassName={styles.inlineInput}
                   placeholder="Ej: $500"
                   disabled={readOnly}
+                  error={errors.numberValue}
                 />
-                {errors.numberValue && <span className={styles.inlineError}>{errors.numberValue}</span>}
               </div>
             </div>
 
@@ -262,16 +263,16 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
                   </button>
                 </div>
                 {!formData.autoAdjust && (
-                  <input
+                  <Input
                     type="text"
                     value={formData.totalNumbers}
                     onChange={(e) => handleInputChange('totalNumbers', e.target.value)}
-                    className={`${styles.inlineInput} ${errors.totalNumbers ? styles.inlineInputError : ''}`}
+                    inputClassName={styles.inlineInput}
                     placeholder="Ej: 1000"
                     disabled={readOnly}
+                    error={errors.totalNumbers}
                   />
                 )}
-                {errors.totalNumbers && <span className={styles.inlineError}>{errors.totalNumbers}</span>}
               </div>
             </div>
           </div>
@@ -285,16 +286,15 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
               <div key={index} className={styles.listItem}>
                 <span className={styles.listRank}>{index + 1}</span>
                 <div className={styles.listItemInput}>
-                  <input
+                  <Input
                     type="text"
                     value={prize}
                     onChange={(e) => handlePrizeChange(index, e.target.value)}
-                    className={`${styles.input} ${errors[`prize_${index}`] ? styles.inputError : ''}`}
                     placeholder={getPrizePlaceholder(index)}
                     aria-label={getPrizeLabel(index)}
                     disabled={readOnly}
+                    error={errors[`prize_${index}`]}
                   />
-                  {errors[`prize_${index}`] && <span className={styles.errorText}>{errors[`prize_${index}`]}</span>}
                 </div>
                 {!readOnly && !prizesLocked && (
                   <button
@@ -349,26 +349,20 @@ const EventDataStep = forwardRef<EventDataStepRef, EventDataStepProps>(
                   /* Vista de edición: inputs */
                   <>
                     <div className={styles.foodRowFields}>
-                      <div className={styles.foodNameField}>
-                        <input
-                          type="text"
-                          value={item.name}
-                          onChange={(e) => handleFoodItemChange(index, 'name', e.target.value)}
-                          className={`${styles.input} ${errors[`foodItem_${index}_name`] ? styles.inputError : ''}`}
-                          placeholder={index === 0 ? 'Ej: Pollo asado con papas' : 'Nombre del plato'}
-                        />
-                        {errors[`foodItem_${index}_name`] && <span className={styles.errorText}>{errors[`foodItem_${index}_name`]}</span>}
-                      </div>
-                      <div className={styles.foodPriceField}>
-                        <input
-                          type="text"
-                          value={item.price}
-                          onChange={(e) => handleFoodItemChange(index, 'price', e.target.value)}
-                          className={`${styles.input} ${errors[`foodItem_${index}_price`] ? styles.inputError : ''}`}
-                          placeholder="$0"
-                        />
-                        {errors[`foodItem_${index}_price`] && <span className={styles.errorText}>{errors[`foodItem_${index}_price`]}</span>}
-                      </div>
+                      <Input
+                        type="text"
+                        value={item.name}
+                        onChange={(e) => handleFoodItemChange(index, 'name', e.target.value)}
+                        placeholder={index === 0 ? 'Ej: Pollo asado con papas' : 'Nombre del plato'}
+                        error={errors[`foodItem_${index}_name`]}
+                      />
+                      <Input
+                        type="text"
+                        value={item.price}
+                        onChange={(e) => handleFoodItemChange(index, 'price', e.target.value)}
+                        placeholder="$0"
+                        error={errors[`foodItem_${index}_price`]}
+                      />
                     </div>
                     {index >= initialFoodItemCount && (
                       <button

@@ -199,23 +199,24 @@
 .segmented {
   display: flex;
   background: var(--color-bg-input);
-  border: 1px solid var(--color-border-card);
-  border-radius: 8px;
-  padding: 3px;
-  gap: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 12px);
+  padding: 4px;
+  gap: 4px;
 }
 
 .segmentedBtn {
-  padding: 5px 12px;
-  font-size: 13px;
+  padding: 10px 14px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--color-text-tertiary);
   background: transparent;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
+  flex: 1;
 }
 
 .segmentedBtn:hover:not(.segmentedBtnActive) {
@@ -224,10 +225,10 @@
 }
 
 .segmentedBtnActive {
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-tertiary);
   color: var(--color-text-primary);
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: none;
 }
 
 /* Toggle */
@@ -453,51 +454,7 @@
   border-bottom: 1px solid var(--color-border-light);
 }
 
-/* ── Shared inputs ──────────────────────────── */
-.input {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  font-size: 15px;
-  background: var(--color-bg-input);
-  color: var(--color-text-primary);
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-  box-sizing: border-box;
-}
 
-.input:focus {
-  outline: none;
-  border-color: var(--color-focus-border);
-  box-shadow: none;
-}
-
-.input::placeholder {
-  color: var(--color-text-tertiary);
-}
-
-.containerEditing .input:disabled {
-  opacity: 0.45;
-  cursor: not-allowed;
-}
-
-.inlineInput:disabled {
-  cursor: default;
-}
-
-.inputError {
-  border-color: var(--color-error);
-}
-
-.inputError:focus {
-  border-color: var(--color-error);
-  box-shadow: none;
-}
-
-.errorText {
-  font-size: 12px;
-  color: var(--color-error);
-}
 
 /* Remove button */
 .removeBtn {

@@ -3,39 +3,39 @@
 /* CSS Variables - Dark Mode Mobile First */
 :root {
   /* Colors - Brand / Primary */
-  --color-brand: #1e413e;
-  --color-brand-hover: #17322F;
-  --color-brand-accent: #27896A;
+  --color-brand: #064E3B;
+  --color-brand-hover: #064E3B;
+  --color-brand-accent: #10B981; /* Vibrant Emerald */
 
   /* Eradicate the legacy blue primary, alias primary to brand for consistency */
   --color-primary: var(--color-brand-accent);
-  --color-primary-hover: #1e6b52;
-  --color-primary-light: rgba(39, 137, 106, 0.1);
+  --color-primary-hover: #059669;
+  --color-primary-light: rgba(16, 185, 129, 0.1);
 
-  /* Colors - UI (Dark Mode - OLED base) */
-  --color-bg-topbar: #0B0B0C;
-  --color-bg-input: #121214;
-  --color-bg-modal: #18181B;
-  --color-menu-bg: #18181B;
-  --color-menu-hover: #27272A;
-  --color-menu-active: #3F3F46;
+  /* Colors - UI (Dark Mode - Deep Slate base) */
+  --color-bg-topbar: rgba(9, 9, 11, 0.85); /* Glass base */
+  --color-bg-input: #18181B; /* Raised surface */
+  --color-bg-modal: #121215; /* Main surface */
+  --color-menu-bg: #121215;
+  --color-menu-hover: #1C1C1F;
+  --color-menu-active: #27272A;
 
   /* Colors - Dark Mode Neutral */
   --color-white: #FFFFFF;
   --color-black: #000000;
   
-  /* Absolute black for ultimate contrast and battery savings */
-  --color-bg-primary: #000000;
-  --color-bg-secondary: #0A0A0A;
-  --color-bg-tertiary: #111111;
+  /* Absolute Dark but allowing for depth and perspective */
+  --color-bg-primary: #09090B;   /* Background base */
+  --color-bg-secondary: #121215; /* Cards and major containers */
+  --color-bg-tertiary: #18181B;  /* Buttons and interactive elements */
   
-  --color-text-primary: #EDEDED;
-  --color-text-secondary: #A1A1A1;
-  --color-text-tertiary: #737373;
-  --color-border: rgba(255, 255, 255, 0.1);
-  --color-border-light: rgba(255, 255, 255, 0.05);
+  --color-text-primary: #FAFAFA;   /* Maximum contrast Zinc */
+  --color-text-secondary: #A1A1AA; /* Muted contrast Zinc */
+  --color-text-tertiary: #71717A;  /* Disabled/Low-key contrast Zinc */
+  --color-border: rgba(255, 255, 255, 0.08);       /* Defined but subtle border */
+  --color-border-light: rgba(255, 255, 255, 0.04); /* Ultra-subtle border */
 
-  /* Semantic */
+  /* Semantic - Vibrant but slightly desaturated for dark mode avoidance of eye fatigue */
   --color-success: #10B981;
   --color-error: #EF4444;
   --color-warning: #F59E0B;
@@ -104,15 +104,15 @@
   /* Tab / nav active indicator */
   --color-tab-indicator: var(--color-text-primary);
 
-  /* Status pill semantic tokens */
-  --color-pill-success-bg: rgba(16, 185, 129, 0.15);
+  /* Status pill semantic tokens - Refined for Deep Slate */
+  --color-pill-success-bg: rgba(16, 185, 129, 0.1);
   --color-pill-success-border: rgba(16, 185, 129, 0.2);
-  --color-pill-warning-bg: rgba(245, 158, 11, 0.15);
+  --color-pill-warning-bg: rgba(245, 158, 11, 0.1);
   --color-pill-warning-border: rgba(245, 158, 11, 0.2);
-  --color-pill-active-bg: rgba(39, 137, 106, 0.2);
-  --color-pill-active-border: rgba(39, 137, 106, 0.3);
-  --color-pill-neutral-bg: var(--color-surface-overlay);
-  --color-pill-neutral-border: var(--color-border);
+  --color-pill-active-bg: rgba(16, 185, 129, 0.12); /* Matching new emerald */
+  --color-pill-active-border: rgba(16, 185, 129, 0.2);
+  --color-pill-neutral-bg: rgba(255, 255, 255, 0.06);
+  --color-pill-neutral-border: rgba(255, 255, 255, 0.1);
 
   /* Progress gradient */
   --color-progress-gradient: linear-gradient(90deg, #1e413e 0%, var(--color-brand-accent) 100%);
@@ -280,8 +280,8 @@ body {
   max-width: 100%;
   padding: var(--space-md);
   min-height: calc(100vh - var(--mobile-header-height));
-  padding-bottom: 90px;
-  /* Space for bottom button (16px container padding + 56px button + 16px container padding) */
+  padding-bottom: 40px;
+  /* Simplified padding after nav removal */
   /* overflow-x: hidden; - Removed */
 }
 
@@ -377,50 +377,51 @@ body {
 [data-theme="light"] .btn-primary {
   background-color: var(--color-primary);
   color: #ffffff;
-  box-shadow: 0 1px 3px rgba(39, 137, 106, 0.3);
+  box-shadow: none;
   border: 1px solid transparent; 
 }
 
 [data-theme="light"] .btn-primary:hover:not(:disabled) {
   background-color: var(--color-primary-hover);
   color: #ffffff;
-  box-shadow: 0 4px 6px rgba(39, 137, 106, 0.25);
+  box-shadow: none;
   transform: translateY(-1px);
 }
 
 [data-theme="light"] .btn-primary:active:not(:disabled) {
-  background-color: #1e6b52;
+  background-color: var(--color-primary-hover);
+  filter: brightness(0.9);
   box-shadow: none;
   transform: translateY(1px);
 }
 
 [data-theme="light"] .btn-secondary {
-  background-color: var(--color-primary-light);
-  color: var(--color-primary);
-  border-color: transparent;
+  background-color: var(--color-surface-overlay);
+  color: var(--color-text-primary);
+  border-color: var(--color-border);
 }
 
 [data-theme="light"] .btn-secondary:hover:not(:disabled) {
-  background-color: rgba(39, 137, 106, 0.15);
+  background-color: var(--color-surface-overlay-hover);
 }
 
 [data-theme="light"] .btn-secondary:active:not(:disabled) {
-  background-color: rgba(39, 137, 106, 0.2);
+  background-color: var(--color-surface-overlay-active);
 }
 
 [data-theme="light"] .btn-tertiary {
   background-color: transparent;
-  color: var(--color-primary);
-  border-color: rgba(39, 137, 106, 0.40);
+  color: var(--color-text-secondary);
+  border-color: var(--color-border);
 }
 
 [data-theme="light"] .btn-tertiary:hover:not(:disabled) {
-  background-color: rgba(39, 137, 106, 0.06);
-  border-color: var(--color-primary);
+  background-color: var(--color-surface-overlay);
+  border-color: var(--color-text-primary);
 }
 
 [data-theme="light"] .btn-tertiary:active:not(:disabled) {
-  background-color: rgba(39, 137, 106, 0.10);
+  background-color: var(--color-surface-overlay-active);
 }
 
 /* Focus Visible - Accessibility */

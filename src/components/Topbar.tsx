@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { Home, Users, Plus, LogOut, ChevronDown, X, Menu, Sun, Moon } from 'lucide-react';
+import { Home, Users, Plus, LogOut, ChevronDown, X, Menu } from 'lucide-react';
 import { ROUTES } from '@/constants';
 import RecaudaLogo from './RecaudaLogo';
 import styles from './Topbar.module.css';
@@ -36,7 +36,7 @@ const Topbar: React.FC = () => {
   const searchParams = useSearchParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme(); // Keeping theme for conditional logic, but removing toggleTheme
 
   const handlePlusAction = () => {
     if (pathname.startsWith(ROUTES.EVENT_DETAIL)) {
@@ -112,14 +112,7 @@ const Topbar: React.FC = () => {
               </button>
             )}
 
-            {/* Theme toggle */}
-            <button
-              className={styles.themeToggle}
-              onClick={toggleTheme}
-              aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-            >
-              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-            </button>
+
 
             {/* User menu — desktop only */}
             <div className={`${styles.userMenuWrapper} ${styles.desktopOnly}`}>
@@ -200,22 +193,7 @@ const Topbar: React.FC = () => {
 
           {/* Footer */}
           <div className={styles.fullMenuFooter}>
-            <div className={styles.fullMenuThemeRow}>
-              <span className={styles.fullMenuThemeLabel}>
-                {theme === 'dark' ? 'Modo oscuro' : 'Modo claro'}
-              </span>
-              <button
-                className={styles.fullMenuThemeToggle}
-                onClick={toggleTheme}
-                aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
-              >
-                <span className={`${styles.fullMenuThemeTrack} ${theme === 'light' ? styles.fullMenuThemeTrackActive : ''}`}>
-                  <span className={styles.fullMenuThemeThumb}>
-                    {theme === 'dark' ? <Moon size={10} /> : <Sun size={10} />}
-                  </span>
-                </span>
-              </button>
-            </div>
+
             <button className={styles.fullMenuLogout} onClick={handleLogout}>
               <LogOut size={16} />
               Cerrar sesión

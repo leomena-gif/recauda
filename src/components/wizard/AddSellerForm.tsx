@@ -3,6 +3,7 @@
 import React, { useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import SuccessScreen from './SuccessScreen';
+import Input from '@/components/Input';
 import styles from './AddSellerForm.module.css';
 
 interface FormData {
@@ -122,42 +123,31 @@ const AddSellerForm: React.FC = () => {
 
         <div className={styles.dataSection}>
           <div className={styles.dataRow}>
-            <div className={styles.field}>
-              <span className={styles.fieldLabel}>Nombre</span>
-              <input
-                type="text"
-                className={`${styles.input} ${errors.firstName ? styles.inputError : ''}`}
-                value={formData.firstName}
-                onChange={(e) => set('firstName', e.target.value)}
-                placeholder="Ej: Leonardo"
-              />
-              {errors.firstName && <span className={styles.errorText}>{errors.firstName}</span>}
-            </div>
-            <div className={styles.field}>
-              <span className={styles.fieldLabel}>Apellido</span>
-              <input
-                type="text"
-                className={`${styles.input} ${errors.lastName ? styles.inputError : ''}`}
-                value={formData.lastName}
-                onChange={(e) => set('lastName', e.target.value)}
-                placeholder="Ej: Mena"
-              />
-              {errors.lastName && <span className={styles.errorText}>{errors.lastName}</span>}
-            </div>
-            <div className={styles.field}>
-              <span className={styles.fieldLabel}>Teléfono</span>
-              <input
-                type="tel"
-                className={`${styles.input} ${errors.phone ? styles.inputError : ''}`}
-                value={formData.phone}
-                onChange={(e) => set('phone', e.target.value)}
-                placeholder="Ej: 3584129488"
-              />
-              {errors.phone
-                ? <span className={styles.errorText}>{errors.phone}</span>
-                : <span className={styles.hint}>Sin 0 y sin 15</span>
-              }
-            </div>
+            <Input
+              label="Nombre"
+              type="text"
+              value={formData.firstName}
+              onChange={(e) => set('firstName', e.target.value)}
+              placeholder="Ej: Leonardo"
+              error={errors.firstName}
+            />
+            <Input
+              label="Apellido"
+              type="text"
+              value={formData.lastName}
+              onChange={(e) => set('lastName', e.target.value)}
+              placeholder="Ej: Mena"
+              error={errors.lastName}
+            />
+            <Input
+              label="Teléfono"
+              type="tel"
+              value={formData.phone}
+              onChange={(e) => set('phone', e.target.value)}
+              placeholder="Ej: 3584129488"
+              error={errors.phone}
+              hint={!errors.phone ? "Sin 0 y sin 15" : undefined}
+            />
           </div>
         </div>
 
@@ -239,29 +229,23 @@ const AddSellerForm: React.FC = () => {
                 </div>
                 {!formData.autoAssign && (
                   <div className={styles.rangeRow}>
-                    <div className={styles.rangeField}>
-                      <span className={styles.fieldLabel}>Desde</span>
-                      <input
-                        type="text"
-                        className={`${styles.inlineInput} ${errors.fromNumber ? styles.inlineInputError : ''}`}
-                        value={formData.fromNumber}
-                        onChange={(e) => set('fromNumber', e.target.value)}
-                        placeholder="001"
-                        autoFocus
-                      />
-                      {errors.fromNumber && <span className={styles.inlineError}>{errors.fromNumber}</span>}
-                    </div>
-                    <div className={styles.rangeField}>
-                      <span className={styles.fieldLabel}>Hasta</span>
-                      <input
-                        type="text"
-                        className={`${styles.inlineInput} ${errors.toNumber ? styles.inlineInputError : ''}`}
-                        value={formData.toNumber}
-                        onChange={(e) => set('toNumber', e.target.value)}
-                        placeholder="010"
-                      />
-                      {errors.toNumber && <span className={styles.inlineError}>{errors.toNumber}</span>}
-                    </div>
+                    <Input
+                      label="Desde"
+                      type="text"
+                      value={formData.fromNumber}
+                      onChange={(e) => set('fromNumber', e.target.value)}
+                      placeholder="001"
+                      error={errors.fromNumber}
+                      autoFocus
+                    />
+                    <Input
+                      label="Hasta"
+                      type="text"
+                      value={formData.toNumber}
+                      onChange={(e) => set('toNumber', e.target.value)}
+                      placeholder="010"
+                      error={errors.toNumber}
+                    />
                   </div>
                 )}
               </div>

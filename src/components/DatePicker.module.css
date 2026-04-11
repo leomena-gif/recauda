@@ -10,10 +10,10 @@
 .input {
   width: 100%;
   padding: 14px 40px 14px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 12px);
   font-size: 15px;
-  background: var(--color-bg-secondary);
+  background: var(--color-bg-input);
   color: var(--color-text-primary);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
