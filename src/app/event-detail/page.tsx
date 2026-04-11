@@ -16,6 +16,7 @@ import EventDataStep, { EventDataStepRef } from '@/components/wizard/EventDataSt
 import { UserX, UserCheck } from 'lucide-react';
 import listStyles from '@/styles/list.module.css';
 import buyerStyles from './BuyerDetail.module.css';
+import Badge, { BadgeVariant } from '@/components/Badge';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 type TopTab = 'vendedores' | 'compradores' | 'configuracion';
@@ -103,6 +104,7 @@ export default function EventDetail() {
 function EventDetailContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
+
   const eventId = searchParams?.get('id') ?? EVENT_DETAIL.id;
 
   // ── Event data dinámico basado en eventId ─────────────────────────────────
@@ -226,10 +228,10 @@ function EventDetailContent() {
   const statusLabel =
     daysRemaining <= 0 ? 'FINALIZADO' : 'ACTIVO';
 
-  const statusBadgeClass =
-    daysRemaining <= 0 ? styles.statusBadgeCompleted :
-    daysRemaining <= 5 ? styles.statusBadgeWarning :
-    styles.statusBadgeActive;
+  const statusVariant: BadgeVariant =
+    daysRemaining <= 0 ? 'neutral' :
+    daysRemaining <= 5 ? 'warning' :
+    'active';
 
   // ── Vendor actions ───────────────────────────────────────────────────────
   const handleToggleVendorCobrado = (item: (typeof INITIAL_COLLECTED)[0]) => {
@@ -317,10 +319,9 @@ function EventDetailContent() {
           <div className={styles.metricPanel}>
 
             {/* Status badge */}
-            <div className={`${styles.statusBadge} ${statusBadgeClass} ${styles.statusBadgeInCard}`}>
-              <span className={styles.statusDot} />
-              <span className={styles.statusText}>{statusLabel}</span>
-            </div>
+            <Badge variant={statusVariant} showDot className={styles.statusBadgeInCard}>
+              {statusLabel}
+            </Badge>
 
             {/* Progress bar */}
             <div className={styles.metricProgressBlock}>
@@ -803,12 +804,10 @@ function EventDetailContent() {
                 </button>
               </div>
 
-              {/* Estado */}
               <div className={buyerStyles.detailStatusRow}>
-                <span className={`${buyerStyles.detailStatusBadge} ${purchaseDetailBuyer.isDelivered ? buyerStyles.detailStatusDelivered : buyerStyles.detailStatusPending}`}>
-                  <span className={buyerStyles.detailStatusDot} />
+                <Badge variant={purchaseDetailBuyer.isDelivered ? 'success' : 'neutral'} showDot>
                   {purchaseDetailBuyer.isDelivered ? 'Entregado' : 'Por entregar'}
-                </span>
+                </Badge>
               </div>
 
               <div className={buyerStyles.detailDivider} />
@@ -877,12 +876,10 @@ function EventDetailContent() {
               </button>
             }
           >
-            {/* Estado */}
             <div style={{ paddingBottom: 'var(--space-md)' }}>
-              <span className={`${buyerStyles.detailStatusBadge} ${purchaseDetailBuyer?.isDelivered ? buyerStyles.detailStatusDelivered : buyerStyles.detailStatusPending}`}>
-                <span className={buyerStyles.detailStatusDot} />
+              <Badge variant={purchaseDetailBuyer?.isDelivered ? 'success' : 'neutral'} showDot>
                 {purchaseDetailBuyer?.isDelivered ? 'Entregado' : 'Por entregar'}
-              </span>
+              </Badge>
             </div>
 
             <div className={buyerStyles.detailDivider} style={{ margin: `0 calc(-1 * ${sp})` }} />
@@ -932,10 +929,9 @@ function EventDetailContent() {
               <div className={buyerStyles.purchaseDetailHeader}>
                 <div className={buyerStyles.purchaseDetailTitleRow}>
                   <h2 className={buyerStyles.purchaseDetailTitle}>{vendorDetailItem.name}</h2>
-                  <span className={`${buyerStyles.detailStatusBadge} ${isCollected ? buyerStyles.detailStatusDelivered : buyerStyles.detailStatusPending}`}>
-                    <span className={buyerStyles.detailStatusDot} />
+                  <Badge variant={isCollected ? 'success' : 'neutral'} showDot>
                     {isCollected ? 'Cobrado' : 'Por cobrar'}
-                  </span>
+                  </Badge>
                 </div>
                 <button className={buyerStyles.closeButton} onClick={() => setVendorDetailItem(null)}>
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
@@ -993,10 +989,9 @@ function EventDetailContent() {
             }
           >
             <div style={{ paddingBottom: 'var(--space-md)' }}>
-              <span className={`${buyerStyles.detailStatusBadge} ${isCollected ? buyerStyles.detailStatusDelivered : buyerStyles.detailStatusPending}`}>
-                <span className={buyerStyles.detailStatusDot} />
+              <Badge variant={isCollected ? 'success' : 'neutral'} showDot>
                 {isCollected ? 'Cobrado' : 'Por cobrar'}
-              </span>
+              </Badge>
             </div>
             <div className={buyerStyles.detailDivider} style={{ margin: '0 calc(-1 * var(--space-lg))' }} />
             <div style={{ padding: '4px 0 8px' }}>

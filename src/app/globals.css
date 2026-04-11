@@ -2,52 +2,55 @@
 
 /* CSS Variables - Dark Mode Mobile First */
 :root {
-  /* Colors - Brand */
+  /* Colors - Brand / Primary */
   --color-brand: #1e413e;
-  --color-brand-hover: #265250;
-  --color-brand-accent: #61cc9f;
+  --color-brand-hover: #17322F;
+  --color-brand-accent: #27896A;
 
-  /* Colors - UI */
-  --color-bg-topbar: #0a0a0a;
-  --color-bg-input: #111111;
-  --color-bg-modal: var(--color-bg-primary);
-  --color-menu-bg: #1c1c1c;
-  --color-menu-hover: #222222;
-  --color-menu-active: #282828;
+  /* Eradicate the legacy blue primary, alias primary to brand for consistency */
+  --color-primary: var(--color-brand-accent);
+  --color-primary-hover: #1e6b52;
+  --color-primary-light: rgba(39, 137, 106, 0.1);
 
-  /* Colors - Primary */
-  --color-primary: #5AC8FA;
-  --color-primary-hover: #7AD4FF;
-  --color-primary-light: rgba(90, 200, 250, 0.1);
-
-  /* Colors - Semantic */
-  --color-success: #34C759;
-  --color-error: #FF3B30;
-  --color-warning: #FF9500;
-  --color-info: #5AC8FA;
+  /* Colors - UI (Dark Mode - OLED base) */
+  --color-bg-topbar: #0B0B0C;
+  --color-bg-input: #121214;
+  --color-bg-modal: #18181B;
+  --color-menu-bg: #18181B;
+  --color-menu-hover: #27272A;
+  --color-menu-active: #3F3F46;
 
   /* Colors - Dark Mode Neutral */
-  --color-white: #fcf8ef;
+  --color-white: #FFFFFF;
   --color-black: #000000;
-  --color-bg-primary: #0f0f0f;
-  --color-bg-secondary: #161616;
-  --color-bg-tertiary: #1c1c1c;
-  --color-text-primary: #fcf8ef;
-  --color-text-secondary: rgba(255, 255, 255, 0.65);
-  --color-text-tertiary: rgba(255, 255, 255, 0.4);
-  --color-border: rgba(255, 255, 255, 0.14);
-  --color-border-light: rgba(255, 255, 255, 0.07);
+  
+  /* Absolute black for ultimate contrast and battery savings */
+  --color-bg-primary: #000000;
+  --color-bg-secondary: #0A0A0A;
+  --color-bg-tertiary: #111111;
+  
+  --color-text-primary: #EDEDED;
+  --color-text-secondary: #A1A1A1;
+  --color-text-tertiary: #737373;
+  --color-border: rgba(255, 255, 255, 0.1);
+  --color-border-light: rgba(255, 255, 255, 0.05);
 
-  /* Legacy Gray Scale (for compatibility) */
-  --color-gray-50: #161616;
-  --color-gray-100: #1c1c1c;
-  --color-gray-200: #282828;
-  --color-gray-300: #48484A;
-  --color-gray-400: #636366;
-  --color-gray-500: #8E8E93;
-  --color-gray-600: #AEAEB2;
-  --color-gray-700: #C7C7CC;
-  --color-gray-800: #D1D1D6;
+  /* Semantic */
+  --color-success: #10B981;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
+
+  /* Legacy Gray Scale mapping to modern slates */
+  --color-gray-50: #0A0A0A;
+  --color-gray-100: #111111;
+  --color-gray-200: #1C1C1E;
+  --color-gray-300: #2C2C2E;
+  --color-gray-400: #3A3A3C;
+  --color-gray-500: #636366;
+  --color-gray-600: #8E8E93;
+  --color-gray-700: #AEAEB2;
+  --color-gray-800: #C7C7CC;
   --color-gray-900: #E5E5EA;
 
   /* Spacing */
@@ -60,58 +63,161 @@
   --space-3xl: 48px;
 
   /* Typography */
-  --font-size-xs: 11px;
-  --font-size-sm: 13px;
-  --font-size-base: 15px;
-  --font-size-lg: 17px;
-  --font-size-xl: 19px;
-  --font-size-2xl: 22px;
-  --font-size-3xl: 28px;
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
 
-  --font-weight-normal: 300;
-  --font-weight-medium: 400;
-  --font-weight-semibold: 500;
-  --font-weight-bold: 600;
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
 
   /* Border Radius */
-  --radius-sm: 4px;
+  --radius-sm: 6px;
   --radius-md: 10px;
-  --radius-lg: 14px;
-  --radius-xl: 18px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
   --radius-full: 9999px;
 
-  /* Shadows - Dark Mode */
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
-  --shadow-md: 0 4px 12px rgba(0, 0, 0, 0.5);
-  --shadow-lg: 0 10px 24px rgba(0, 0, 0, 0.6);
-  --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.7);
+  /* Shadows - Dark Mode Highlights */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.8);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.8), 0 2px 4px -2px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.8), 0 4px 6px -4px rgba(0, 0, 0, 0.8);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.8), 0 8px 10px -6px rgba(0, 0, 0, 0.8);
 
-  /* Shadows - Cards */
-  --shadow-card: 0 2px 12px rgba(0, 0, 0, 0.25);
-  --shadow-card-hover: 0 6px 24px rgba(0, 0, 0, 0.4);
-  --shadow-card-active: 0 2px 8px rgba(0, 0, 0, 0.25);
-  --shadow-sheet: 0 -8px 32px rgba(0, 0, 0, 0.2);
+  /* Shadows - Cards (Inner light for depth on dark) */
+  --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 2px 12px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 24px rgba(0, 0, 0, 0.8);
+  --shadow-card-active: inset 0 1px 0 rgba(255, 255, 255, 0.02), 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-sheet: 0 -8px 32px rgba(0, 0, 0, 0.6);
 
   /* Borders - Cards */
-  --color-border-card: rgba(255, 255, 255, 0.07);
-  --color-border-card-hover: rgba(255, 255, 255, 0.12);
-  --color-border-card-inner: rgba(255, 255, 255, 0.08);
-  --color-border-divider: rgba(255, 255, 255, 0.06);
+  --color-border-card: rgba(255, 255, 255, 0.05);
+  --color-border-card-hover: rgba(255, 255, 255, 0.1);
+  --color-border-card-inner: rgba(255, 255, 255, 0.04);
+  --color-border-divider: rgba(255, 255, 255, 0.08);
+
+  /* Tab / nav active indicator */
+  --color-tab-indicator: var(--color-text-primary);
+
+  /* Status pill semantic tokens */
+  --color-pill-success-bg: rgba(16, 185, 129, 0.15);
+  --color-pill-success-border: rgba(16, 185, 129, 0.2);
+  --color-pill-warning-bg: rgba(245, 158, 11, 0.15);
+  --color-pill-warning-border: rgba(245, 158, 11, 0.2);
+  --color-pill-active-bg: rgba(39, 137, 106, 0.2);
+  --color-pill-active-border: rgba(39, 137, 106, 0.3);
+  --color-pill-neutral-bg: var(--color-surface-overlay);
+  --color-pill-neutral-border: var(--color-border);
+
+  /* Progress gradient */
+  --color-progress-gradient: linear-gradient(90deg, #1e413e 0%, var(--color-brand-accent) 100%);
+
+  /* Overlays */
+  --color-surface-overlay: rgba(255, 255, 255, 0.05);
+  --color-surface-overlay-hover: rgba(255, 255, 255, 0.08);
+  --color-surface-overlay-active: rgba(255, 255, 255, 0.12);
+  --color-avatar-bg: rgba(255, 255, 255, 0.1);
+  --color-avatar-border: rgba(255, 255, 255, 0.15);
+  --color-track-bg: rgba(255, 255, 255, 0.08);
+  --color-divider-subtle: rgba(255, 255, 255, 0.05);
+  
+  /* Focus Rings modernos alineados a la marca */
+  --color-focus-border: rgba(39, 137, 106, 0.5);
 
   /* Transitions */
-  --transition-fast: 0.15s ease;
-  --transition-base: 0.2s ease;
-  --transition-slow: 0.3s ease;
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 
-  /* Layout - Mobile First */
+  /* Layout */
   --header-height: 60px;
   --mobile-header-height: 60px;
 
-  /* Breakpoints (for reference) */
+  /* Breakpoints */
   --breakpoint-sm: 640px;
   --breakpoint-md: 768px;
   --breakpoint-lg: 1024px;
   --breakpoint-xl: 1280px;
+}
+
+/* Light Theme Override */
+[data-theme="light"] {
+  /* Topbar & Modules */
+  --color-bg-topbar: #FFFFFF;
+  --color-bg-input: #FFFFFF;
+  --color-bg-modal: #FFFFFF;
+  --color-menu-bg: #FFFFFF;
+  --color-menu-hover: #F1F5F9;
+  --color-menu-active: #E2E8F0;
+
+  /* Backgrounds: Slate tint for hierarchy */
+  --color-bg-primary: #F8FAFC; 
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-tertiary: #F1F5F9; 
+  
+  /* Modern Neutral Texts */
+  --color-text-primary: #0F172A;
+  --color-text-secondary: #475569;
+  --color-text-tertiary: #94A3B8;
+
+  /* Status pills — border adds definition on light backgrounds */
+  --color-pill-success-bg: rgba(16, 185, 129, 0.1);
+  --color-pill-success-border: rgba(16, 185, 129, 0.3);
+  --color-pill-warning-bg: rgba(245, 158, 11, 0.1);
+  --color-pill-warning-border: rgba(245, 158, 11, 0.3);
+  --color-pill-active-bg: rgba(39, 137, 106, 0.1);
+  --color-pill-active-border: rgba(39, 137, 106, 0.3);
+  --color-pill-neutral-bg: #F1F5F9;
+  --color-pill-neutral-border: #E2E8F0;
+
+  /* Borders */
+  --color-border: #E2E8F0;
+  --color-border-light: #F1F5F9;
+
+  --color-white: #0F172A;
+  --color-black: #FFFFFF;
+
+  /* Deep mapping for Grays */
+  --color-gray-50: #FFFFFF;
+  --color-gray-100: #F8FAFC;
+  --color-gray-200: #F1F5F9;
+  --color-gray-300: #E2E8F0;
+  --color-gray-400: #CBD5E1;
+  --color-gray-500: #94A3B8;
+  --color-gray-600: #64748B;
+  --color-gray-700: #475569;
+  --color-gray-800: #334155;
+  --color-gray-900: #0F172A;
+
+  /* Overlay surfaces — light grays */
+  --color-surface-overlay: rgba(15, 23, 42, 0.05);
+  --color-surface-overlay-hover: rgba(15, 23, 42, 0.08);
+  --color-surface-overlay-active: rgba(15, 23, 42, 0.12);
+  --color-avatar-bg: #F1F5F9;
+  --color-avatar-border: #E2E8F0;
+  --color-track-bg: #E2E8F0;
+  --color-divider-subtle: #F1F5F9;
+
+  /* Elevations & Depth - Soft Glass Shadows */
+  --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
+  --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
+  --shadow-xl: 0 20px 25px -5px rgba(15, 23, 42, 0.1), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+  
+  --shadow-card: var(--shadow-sm);
+  --shadow-card-hover: var(--shadow-md);
+  --shadow-card-active: 0 1px 2px 0 rgba(15, 23, 42, 0.02);
+  --shadow-sheet: 0 -4px 20px rgba(15, 23, 42, 0.08);
+
+  --color-border-card: #E2E8F0;
+  --color-border-card-hover: #CBD5E1;
+  --color-border-card-inner: #F1F5F9;
+  --color-border-divider: #E2E8F0;
 }
 
 /* Reset and base styles */
@@ -267,14 +373,77 @@ body {
   border: 1px solid var(--color-border) !important;
 }
 
+/* Light mode button overrides */
+[data-theme="light"] .btn-primary {
+  background-color: var(--color-primary);
+  color: #ffffff;
+  box-shadow: 0 1px 3px rgba(39, 137, 106, 0.3);
+  border: 1px solid transparent; 
+}
+
+[data-theme="light"] .btn-primary:hover:not(:disabled) {
+  background-color: var(--color-primary-hover);
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(39, 137, 106, 0.25);
+  transform: translateY(-1px);
+}
+
+[data-theme="light"] .btn-primary:active:not(:disabled) {
+  background-color: #1e6b52;
+  box-shadow: none;
+  transform: translateY(1px);
+}
+
+[data-theme="light"] .btn-secondary {
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border-color: transparent;
+}
+
+[data-theme="light"] .btn-secondary:hover:not(:disabled) {
+  background-color: rgba(39, 137, 106, 0.15);
+}
+
+[data-theme="light"] .btn-secondary:active:not(:disabled) {
+  background-color: rgba(39, 137, 106, 0.2);
+}
+
+[data-theme="light"] .btn-tertiary {
+  background-color: transparent;
+  color: var(--color-primary);
+  border-color: rgba(39, 137, 106, 0.40);
+}
+
+[data-theme="light"] .btn-tertiary:hover:not(:disabled) {
+  background-color: rgba(39, 137, 106, 0.06);
+  border-color: var(--color-primary);
+}
+
+[data-theme="light"] .btn-tertiary:active:not(:disabled) {
+  background-color: rgba(39, 137, 106, 0.10);
+}
+
 /* Focus Visible - Accessibility */
 *:focus-visible {
   outline: 2px solid rgba(255, 255, 255, 0.5);
   outline-offset: 2px;
 }
 
+[data-theme="light"] *:focus-visible {
+  outline-color: rgba(30, 65, 62, 0.6);
+}
+
 /* Selection Color */
 ::selection {
   background-color: rgba(255, 255, 255, 0.2);
   color: var(--color-text-primary);
+}
+
+[data-theme="light"] ::selection {
+  background-color: rgba(30, 65, 62, 0.15);
+}
+
+/* Light mode: bottom gradient footer */
+[data-theme="light"] .bottomButtonContainer {
+  background: linear-gradient(to top, rgba(248, 250, 252, 0.98) 70%, rgba(248, 250, 252, 0) 100%);
 }

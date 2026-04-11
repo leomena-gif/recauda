@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import ConditionalLayout from '@/components/ConditionalLayout';
+import { ThemeProvider } from '@/contexts/ThemeContext';
 import './globals.css';
 import '@/styles/utilities.css';
 
@@ -23,10 +24,16 @@ export default function RootLayout({
 }) {
   return (
     <html lang="es" className={inter.variable}>
+      <head>
+        {/* Anti-flash: apply stored theme before React hydrates */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('recauda-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();` }} />
+      </head>
       <body>
-        <ConditionalLayout>
-          {children}
-        </ConditionalLayout>
+        <ThemeProvider>
+          <ConditionalLayout>
+            {children}
+          </ConditionalLayout>
+        </ThemeProvider>
       </body>
     </html>
   );

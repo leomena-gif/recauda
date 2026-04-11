@@ -15,7 +15,7 @@
 .confirmationCard {
   background: var(--color-bg-input);
   border-radius: var(--radius-xl);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border-card);
   padding: 24px;
   width: 100%;
   max-width: 100%;
@@ -28,7 +28,7 @@
   align-items: center;
   margin-bottom: 16px;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--color-border-divider);
 }
 
 .detailRow:last-child {
@@ -75,7 +75,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 12px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--color-border-divider);
 }
 
 .prizeItem:last-child {

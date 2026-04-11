@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import { ChevronDown, Check } from 'lucide-react';
 import styles from './CustomDropdown.module.css';
 
 interface Option {
@@ -72,22 +73,11 @@ export default function CustomDropdown({
         <span className={styles.dropdownValue}>
           {selectedOption ? selectedOption.label : placeholder}
         </span>
-        <svg
+        <ChevronDown
           className={`${styles.dropdownArrow} ${isOpen ? styles.dropdownArrowOpen : ''}`}
-          width="12"
-          height="8"
-          viewBox="0 0 12 8"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M1 1.5L6 6.5L11 1.5"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-        </svg>
+          size={16}
+          strokeWidth={2}
+        />
       </button>
 
       {isOpen && (
@@ -106,22 +96,11 @@ export default function CustomDropdown({
             >
               {option.label}
               {option.value === value && (
-                <svg
+                <Check
                   className={styles.checkIcon}
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M20 6L9 17L4 12"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                </svg>
+                  size={16}
+                  strokeWidth={2}
+                />
               )}
             </li>
           ))}

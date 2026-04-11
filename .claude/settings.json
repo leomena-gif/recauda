@@ -1,0 +1,44 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run dev)",
+      "Bash(grep -r \"button\" /Users/leo/Documents/recauda-app/src/components/*.tsx)",
+      "Bash(npx tsc --noEmit)",
+      "Bash(git push:*)",
+      "Bash(git merge:*)",
+      "Bash(git checkout:*)",
+      "Bash(git commit:*)",
+      "Bash(git add:*)",
+      "Bash(find /Users/leo/Documents/recauda-app/src -name *event* -type f)",
+      "Bash(curl -s http://localhost:3000/create-event)",
+      "Bash(curl -s \"http://localhost:3000/_next/static/css/app/create-event/page.css\")",
+      "Bash(npx next:*)",
+      "Bash(lsof -i :3000 -sTCP:LISTEN)",
+      "Read(//Users/leo/Documents/recauda-app/**)",
+      "Bash(grep -E \"\\\\.\\(json|js|ts\\)$\")",
+      "Bash(grep -r \"ActionButtons\\\\|ProgressIndicator\\\\|ConfirmSellerStep\\\\|SellerDataStep\" src/ --include=*.tsx --include=*.ts)",
+      "Bash(pkill -f \"next dev\")",
+      "Bash(curl -s http://127.0.0.1:3000/event-detail)",
+      "Bash(git -C /Users/leo/Documents/recauda-app status --short)",
+      "Bash(find /Users/leo/Documents/recauda-app/src -name \"*.module.css\" -exec basename {})",
+      "Bash(git rm:*)",
+      "Bash(gh pr:*)",
+      "Bash(npx vercel:*)",
+      "Bash(curl -s \"http://localhost:3000/_next/static/css/app/layout.css?v=1774129524224\")",
+      "Bash(npx tsc:*)",
+      "Bash(node -e \"const l = require\\(''lucide-react''\\); const icons = Object.keys\\(l\\).filter\\(k => k.toLowerCase\\(\\).includes\\(''hand''\\) || k.toLowerCase\\(\\).includes\\(''ban''\\) || k.toLowerCase\\(\\).includes\\(''block''\\) || k.toLowerCase\\(\\).includes\\(''prohibit''\\)\\); console.log\\(icons\\);\")",
+      "Bash(node -e \"const l = require\\(''lucide-react''\\); const icons = Object.keys\\(l\\).filter\\(k => !k.startsWith\\(''Lucide''\\) && !k.endsWith\\(''Icon''\\) && k.toLowerCase\\(\\).startsWith\\(''user''\\)\\); console.log\\(icons\\);\")",
+      "Bash(node -e \"const l = require\\(''lucide-react''\\); const icons = Object.keys\\(l\\).filter\\(k => k.startsWith\\(''User''\\)\\).filter\\(k => k.length < 20\\); console.log\\(icons\\);\")",
+      "Bash(grep -r \"color-scheme\\\\|prefers-color-scheme\\\\|data-theme\\\\|\\\\.dark\" /Users/leo/Documents/recauda-app/src --include=*.css --include=*.tsx --include=*.ts)",
+      "Bash(for file:*)",
+      "Bash(do)",
+      "Bash(sed -i '' 's/background: var\\(--color-bg-secondary\\);/background: var\\(--color-bg-input\\);/g' \"$file\")",
+      "Bash(sed -i '' 's/background: var\\(--color-bg-tertiary\\);/background: var\\(--color-bg-input\\);/g' \"$file\")",
+      "Bash(done)",
+      "Bash(find /Users/leo/Documents/recauda-app/src -name \"*.module.css\" -type f -exec grep -l \"box-shadow\" {} \\\\;)"
+    ],
+    "additionalDirectories": [
+      "/Users/leo/Documents/recauda-app/src/app/buyers-list"
+    ]
+  }
+}

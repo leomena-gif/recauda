@@ -10,60 +10,7 @@
 }
 
 
-/* ─── Status badge ───────────────────────────────────────────────────────── */
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 10px;
-  border-radius: var(--radius-full);
-  align-self: flex-start;
-}
-
-.badge_active {
-  background: rgba(30, 65, 62, 0.6);
-}
-
-.badge_completed {
-  background: rgba(255, 255, 255, 0.07);
-}
-
-.badge_cancelled {
-  background: rgba(255, 255, 255, 0.07);
-}
-
-.badgeDot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  flex-shrink: 0;
-}
-
-.badge_active .badgeDot {
-  background-color: var(--color-brand-accent);
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.badge_completed .badgeDot {
-  background-color: var(--color-text-tertiary);
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.5; transform: scale(0.8); }
-}
-
-.badgeText {
-  font-size: 11px;
-  font-weight: var(--font-weight-semibold);
-  letter-spacing: 0.4px;
-  text-transform: uppercase;
-}
-
-.badge_active    .badgeText { color: var(--color-brand-accent); }
-.badge_completed .badgeText { color: var(--color-text-secondary); }
-.badge_cancelled .badgeText { color: var(--color-text-secondary); }
 
 
 /* ─── Date ───────────────────────────────────────────────────────────────── */
@@ -99,7 +46,7 @@
 
 .progressTrack {
   height: 6px;
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-track-bg);
   border-radius: var(--radius-full);
   overflow: hidden;
 }
@@ -111,11 +58,11 @@
 }
 
 .progressActive {
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--color-card-progress-active);
 }
 
 .progressMuted {
-  background: rgba(255, 255, 255, 0.2);
+  background: var(--color-card-progress-muted);
 }
 
 .progressMeta {

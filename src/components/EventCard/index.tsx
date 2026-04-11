@@ -3,6 +3,7 @@
 import React from 'react';
 import { useRouter } from 'next/navigation';
 import Card from '@/components/Card';
+import Badge from '@/components/Badge';
 import styles from './EventCard.module.css';
 
 type EventStatus = 'active' | 'completed' | 'cancelled';
@@ -84,12 +85,12 @@ export default function EventCard({
       <div className={styles.content}>
 
         {/* Status badge */}
-        <div className={`${styles.badge} ${styles[`badge_${status}`]}`}>
-          {status !== 'cancelled' && <span className={styles.badgeDot} />}
-          <span className={styles.badgeText}>
-            {status === 'active' ? 'ACTIVO' : status === 'completed' ? 'FINALIZADO' : 'CANCELADO'}
-          </span>
-        </div>
+        <Badge 
+          variant={status === 'active' ? 'active' : 'neutral'} 
+          showDot={status !== 'cancelled'}
+        >
+          {status === 'active' ? 'ACTIVO' : status === 'completed' ? 'FINALIZADO' : 'CANCELADO'}
+        </Badge>
 
         {/* Date */}
         {dateLabel && <p className={styles.date}>{dateLabel}</p>}
