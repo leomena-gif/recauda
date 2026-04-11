@@ -58,7 +58,7 @@
 .sectionLabel {
   font-size: 11px;
   font-weight: 600;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.6px;
   margin: 0;
@@ -67,7 +67,7 @@
 /* Options card — same as EventDataStep */
 .optionsCard {
   background: var(--color-bg-input);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border-card);
   border-radius: 10px;
   overflow: hidden;
 }
@@ -81,7 +81,7 @@
 
 .optionDivider {
   height: 1px;
-  background: rgba(255, 255, 255, 0.06);
+  background: var(--color-border-divider);
   margin: 0 20px;
 }
 
@@ -107,7 +107,7 @@
   display: flex;
   align-items: center;
   background: var(--color-bg-input);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border-card);
   border-radius: 8px;
   overflow: hidden;
   flex-shrink: 0;
@@ -131,12 +131,12 @@
 }
 
 .stepperBtn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.08);
+  background: var(--color-surface-overlay);
   color: var(--color-text-primary);
 }
 
 .stepperBtn:active:not(:disabled) {
-  background: rgba(255, 255, 255, 0.12);
+  background: var(--color-surface-overlay-active);
 }
 
 .stepperBtn:disabled {
@@ -148,8 +148,8 @@
   width: 46px;
   height: 34px;
   border: none;
-  border-left: 1px solid rgba(255, 255, 255, 0.08);
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-left: 1px solid var(--color-border-card);
+  border-right: 1px solid var(--color-border-card);
   background: transparent;
   text-align: center;
   font-size: 14px;
@@ -167,7 +167,7 @@
 .segmented {
   display: flex;
   background: var(--color-bg-input);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  border: 1px solid var(--color-border-card);
   border-radius: 8px;
   padding: 3px;
   gap: 2px;
@@ -190,14 +190,13 @@
 
 .segmentedBtn:hover:not(.segmentedBtnActive) {
   color: var(--color-text-secondary);
-  background: rgba(255, 255, 255, 0.05);
+  background: var(--color-surface-overlay);
 }
 
 .segmentedBtnActive {
   background: var(--color-bg-input);
   color: var(--color-text-primary);
   font-weight: 600;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 /* Option control — matches EventDataStep */
@@ -211,7 +210,7 @@
 /* Inline input — matches EventDataStep */
 .inlineInput {
   background: var(--color-bg-input);
-  border: 1px solid rgba(255, 255, 255, 0.10);
+  border: 1px solid var(--color-border);
   font-size: 14px;
   font-weight: 500;
   color: var(--color-text-primary);
@@ -225,7 +224,7 @@
 
 .inlineInput:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.35);
+  border-color: var(--color-focus-border);
 }
 
 .inlineInput::placeholder {
@@ -271,7 +270,7 @@
 .fieldLabel {
   font-size: 11px;
   font-weight: 600;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -279,7 +278,7 @@
 .input {
   width: 100%;
   padding: 14px 16px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid var(--color-border);
   border-radius: 8px;
   font-size: 15px;
   background: var(--color-bg-input);
@@ -291,7 +290,7 @@
 
 .input:focus {
   outline: none;
-  border-color: rgba(255, 255, 255, 0.35);
+  border-color: var(--color-focus-border);
 }
 
 .input::placeholder { color: var(--color-text-tertiary); }

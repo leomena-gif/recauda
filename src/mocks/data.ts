@@ -119,7 +119,7 @@ export const MOCK_EVENTS: Event[] = [
   },
   {
     id: '3',
-    name: 'Sorteo especial - Día de la madre',
+    name: 'Rifa anual Bomberos Voluntarios Gral. Deheza',
     type: 'raffle',
     status: 'completed',
     endDate: '2024-05-12',
@@ -128,7 +128,7 @@ export const MOCK_EVENTS: Event[] = [
   },
   {
     id: '4',
-    name: 'Bingo benéfico',
+    name: 'Pro fondos viaje de egresados IPEM 280',
     type: 'raffle',
     status: 'inactive',
     endDate: '2024-11-30',
@@ -281,8 +281,8 @@ export const MOCK_HOME_EVENTS: SaleEvent[] = [
       { name: 'Torta casera (porción)', price: 800, sold: 40, total: 80 },
     ],
   },
-  { id: '3', status: 'cancelled', type: 'raffle', name: 'Rifa cancelada', collected: 80000, goal: 300000, soldUnits: 80, totalUnits: 300 },
-  { id: '4', status: 'completed', type: 'raffle', name: 'Rifa completada', collected: 600000, goal: 600000, soldUnits: 600, totalUnits: 600 },
-  { id: '5', status: 'completed', type: 'raffle', name: 'Rifa completada 2', collected: 150000, goal: 200000, soldUnits: 150, totalUnits: 200 },
+  { id: '3', status: 'cancelled', type: 'raffle', name: 'Pro fondos viaje de egresados IPEM 280', collected: 80000, goal: 300000, soldUnits: 80, totalUnits: 300 },
+  { id: '4', status: 'completed', type: 'raffle', name: 'Rifa anual Bomberos Voluntarios Gral. Deheza', collected: 600000, goal: 600000, soldUnits: 600, totalUnits: 600 },
+  { id: '5', status: 'completed', type: 'food_sale', name: 'Venta de comida - Festejo aniversario Club Atlético Deheza', collected: 187500, goal: 200000, soldUnits: 150, totalUnits: 200 },
 ];
 

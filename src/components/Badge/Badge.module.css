@@ -1,0 +1,91 @@
+/* ─── Base Styles ──────────────────────────────────────────────────────────── */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: var(--radius-full);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  width: fit-content;
+}
+
+/* ─── Sizes ──────────────────────────────────────────────────────────────── */
+.badge_size_sm {
+  gap: 4px;
+  padding: 2px 8px;
+  font-size: var(--font-size-xs);
+}
+
+.badge_size_md {
+  gap: 6px;
+  padding: 4px 10px;
+  font-size: var(--font-size-sm);
+}
+
+.badge_size_lg {
+  gap: 8px;
+  padding: 6px 14px;
+  font-size: var(--font-size-base);
+}
+
+/* ─── Dot (Internal Indicator) ───────────────────────────────────────────── */
+.dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+/* ─── Variants (Success, Warning, Active, Neutral, Error) ────────────────── */
+
+/* Success */
+.badge_success {
+  background: var(--color-pill-success-bg);
+  border: 1px solid var(--color-pill-success-border);
+  color: var(--color-text-primary);
+}
+.badge_success .dot {
+  background-color: var(--color-success);
+}
+
+/* Warning */
+.badge_warning {
+  background: var(--color-pill-warning-bg);
+  border: 1px solid var(--color-pill-warning-border);
+  color: var(--color-text-primary);
+}
+.badge_warning .dot {
+  background-color: var(--color-warning);
+}
+
+/* Active */
+.badge_active {
+  background: var(--color-pill-active-bg);
+  border: 1px solid var(--color-pill-active-border);
+  color: var(--color-text-primary); /* or brand-accent */
+}
+.badge_active .dot {
+  background-color: var(--color-brand-accent);
+}
+
+/* Error */
+.badge_error {
+  /* En globals.css debemos asegurar que existan los tokens, pero fallbackeamos */
+  background: rgba(239, 68, 68, 0.15);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  color: #ef4444; 
+}
+.badge_error .dot {
+  background-color: #ef4444;
+}
+
+/* Neutral */
+.badge_neutral {
+  background: var(--color-pill-neutral-bg);
+  border: 1px solid var(--color-pill-neutral-border);
+  color: var(--color-text-secondary);
+}
+.badge_neutral .dot {
+  background-color: var(--color-text-tertiary);
+}

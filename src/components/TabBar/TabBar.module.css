@@ -32,7 +32,7 @@
 }
 
 .tabActive {
-  color: var(--color-text-primary);
+  color: var(--color-tab-indicator);
   font-weight: var(--font-weight-semibold);
 }
 
@@ -43,6 +43,6 @@
   left: var(--space-lg);
   right: var(--space-lg);
   height: 2px;
-  background: var(--color-text-primary);
+  background: var(--color-tab-indicator);
   border-radius: 1px 1px 0 0;
 }

@@ -363,66 +363,70 @@
   border-radius: 9px;
 }
 
-/* Primary Button - Botón principal (azul sólido) */
+/* Primary Button - Botón principal */
 .btn-primary {
-  background-color: var(--color-white);
-  color: var(--color-bg-primary);
-  border: none;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  background-color: var(--color-primary);
+  color: #ffffff;
+  border: 1px solid transparent;
+  box-shadow: 0 1px 3px rgba(39, 137, 106, 0.3);
 }
 
 .btn-primary:hover:not(:disabled) {
-  background-color: var(--color-gray-900);
-  color: var(--color-bg-primary);
+  background-color: var(--color-primary-hover);
+  color: #ffffff;
+  box-shadow: 0 4px 6px rgba(39, 137, 106, 0.25);
+  transform: translateY(-1px);
 }
 
 .btn-primary:active:not(:disabled) {
-  background-color: var(--color-gray-800);
-  color: var(--color-bg-primary);
+  background-color: #1e6b52;
+  box-shadow: none;
+  transform: translateY(1px);
 }
 
 .btn-primary:focus-visible {
-  outline: 2px solid var(--color-white);
+  outline: 2px solid var(--color-focus-border);
   outline-offset: 2px;
 }
 
-/* Secondary Button - Botón secundario (outline: negro, borde blanco, texto blanco) */
+/* Secondary Button - Botón secundario */
 .btn-secondary {
-  background-color: var(--color-bg-primary);
-  color: var(--color-white);
-  border: 1px solid var(--color-white);
+  background-color: var(--color-primary-light);
+  color: var(--color-primary);
+  border: 1px solid transparent;
 }
 
 .btn-secondary:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(39, 137, 106, 0.15);
 }
 
 .btn-secondary:active:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(39, 137, 106, 0.2);
 }
 
 .btn-secondary:focus-visible {
-  outline: 2px solid var(--color-white);
+  outline: 2px solid var(--color-focus-border);
   outline-offset: 2px;
 }
 
-/* Tertiary Button - Botón terciario (outline blanco) */
+/* Tertiary Button - Botón terciario (ghost) */
 .btn-tertiary {
   background-color: transparent;
-  color: var(--color-white);
-  border: 1px solid var(--color-white);
+  color: var(--color-primary);
+  border: 1px solid rgba(39, 137, 106, 0.40);
 }
 
 .btn-tertiary:hover:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.08);
+  background-color: rgba(39, 137, 106, 0.06);
+  border-color: var(--color-primary);
 }
 
 .btn-tertiary:active:not(:disabled) {
-  background-color: rgba(255, 255, 255, 0.12);
+  background-color: rgba(39, 137, 106, 0.10);
 }
 
 .btn-tertiary:focus-visible {
-  outline: 2px solid var(--color-white);
+  outline: 2px solid var(--color-focus-border);
   outline-offset: 2px;
 }
 

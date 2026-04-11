@@ -96,7 +96,7 @@
 
 .searchInput:focus {
   outline: none;
-  border-bottom-color: rgba(255, 255, 255, 0.35);
+  border-bottom-color: var(--color-focus-border);
   box-shadow: none;
 }
 
@@ -190,11 +190,11 @@
 }
 
 .assignStickyCancel:hover {
-  background-color: rgba(229, 229, 234, 0.15);
+  background-color: var(--color-surface-overlay-hover);
 }
 
 .assignStickyCancel:active {
-  background-color: rgba(229, 229, 234, 0.25);
+  background-color: var(--color-surface-overlay-active);
   transform: scale(0.98);
 }
 
@@ -394,7 +394,7 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: var(--color-surface-overlay-hover);
   color: var(--color-text-secondary);
   border-radius: var(--radius-full);
   padding: 2px 8px;
@@ -553,7 +553,7 @@
   white-space: nowrap;
   padding: 5px 9px;
   border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid var(--color-border-light);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.15s ease, transform 0.15s ease;
@@ -607,8 +607,8 @@
   right: 0;
   background: var(--color-menu-bg);
   border-radius: var(--radius-md);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border-light);
   min-width: 180px;
   z-index: 10000;
   overflow: visible;
@@ -1031,7 +1031,7 @@
   }
 
   .searchInput:focus {
-    border-bottom-color: rgba(255, 255, 255, 0.35);
+    border-bottom-color: var(--color-focus-border);
     box-shadow: none;
   }
 

@@ -3,6 +3,7 @@
 import React, { Suspense } from 'react';
 import { usePathname } from 'next/navigation';
 import Topbar from '@/components/Topbar';
+import BottomNavBar from '@/components/BottomNavBar';
 
 interface ConditionalLayoutProps {
   children: React.ReactNode;
@@ -30,6 +31,7 @@ const ConditionalLayout: React.FC<ConditionalLayoutProps> = ({ children }) => {
           {children}
         </div>
       </div>
+      <BottomNavBar />
     </>
   );
 };

@@ -9,10 +9,14 @@
   background: rgba(0, 0, 0, 0.88);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--color-border-light);
   z-index: 1001;
   height: var(--header-height);
   overflow: hidden;
+}
+
+:global([data-theme="light"]) .header {
+  background: rgba(255, 255, 255, 0.92);
 }
 
 .headerContent {
@@ -48,8 +52,8 @@
   justify-content: space-around;
   width: 36px;
   height: 36px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-surface-overlay);
+  border: 1px solid var(--color-avatar-border);
   border-radius: var(--radius-md);
   cursor: pointer;
   padding: 9px;
@@ -58,7 +62,7 @@
 }
 
 .hamburger:hover {
-  background: rgba(255, 255, 255, 0.10);
+  background: var(--color-surface-overlay-hover);
 }
 
 .hamburger span {
@@ -90,8 +94,8 @@
   justify-content: center;
   width: 36px;
   height: 36px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-surface-overlay);
+  border: 1px solid var(--color-avatar-border);
   border-radius: var(--radius-md);
   cursor: pointer;
   color: var(--color-text-primary);
@@ -100,7 +104,7 @@
 }
 
 .plusButton:hover {
-  background: rgba(255, 255, 255, 0.10);
+  background: var(--color-surface-overlay-hover);
 }
 
 .plusButton:active {
@@ -135,7 +139,7 @@
   width: min(280px, calc(100vw - 60px));
   max-width: 85vw;
   background: var(--color-bg-secondary);
-  border-left: 1px solid rgba(255, 255, 255, 0.07);
+  border-left: 1px solid var(--color-border-light);
   transform: translateX(100%);
   transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   display: flex;
@@ -152,7 +156,7 @@
   align-items: center;
   justify-content: space-between;
   padding: var(--space-lg);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  border-bottom: 1px solid var(--color-border-light);
 }
 
 .menuTitle {
@@ -169,8 +173,8 @@
   justify-content: center;
   width: 32px;
   height: 32px;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: var(--color-surface-overlay);
+  border: 1px solid var(--color-avatar-border);
   border-radius: var(--radius-md);
   cursor: pointer;
   color: var(--color-text-secondary);
@@ -178,7 +182,7 @@
 }
 
 .closeButton:hover {
-  background-color: rgba(255, 255, 255, 0.10);
+  background-color: var(--color-surface-overlay-hover);
   color: var(--color-text-primary);
 }
 
@@ -213,7 +217,7 @@
 }
 
 .menuButton:hover {
-  background-color: rgba(255, 255, 255, 0.06);
+  background-color: var(--color-surface-overlay);
   color: var(--color-text-primary);
 }
 
