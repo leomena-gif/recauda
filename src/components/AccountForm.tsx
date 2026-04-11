@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './AccountForm.module.css';
 import Button from './Button';
+import Input from '@/components/Input';
 
 interface FormData {
   organization: string;
@@ -83,57 +84,42 @@ const AccountForm: React.FC = () => {
       </p>
 
       <form className={styles.accountForm} onSubmit={handleSubmit}>
-        <div className={`${styles.formGroup} ${errors.organization ? styles.error : ''}`}>
-          <label htmlFor="organization" className={styles.formLabel}>
-            Nombre de la organización
-          </label>
-          <input
-            type="text"
-            id="organization"
-            name="organization"
-            className={styles.formInput}
-            placeholder="Ej: Club Deportivo San Martín"
-            value={formData.organization}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+        <Input
+          label="Nombre de la organización"
+          type="text"
+          id="organization"
+          name="organization"
+          placeholder="Ej: Club Deportivo San Martín"
+          value={formData.organization}
+          onChange={handleInputChange}
+          required
+          error={errors.organization ? "La organización es requerida" : undefined}
+        />
 
-        <div className={`${styles.formGroup} ${errors.name ? styles.error : ''}`}>
-          <label htmlFor="name" className={styles.formLabel}>
-            Tu nombre
-          </label>
-          <input
-            type="text"
-            id="name"
-            name="name"
-            className={styles.formInput}
-            placeholder="Ej: María González"
-            value={formData.name}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
+        <Input
+          label="Tu nombre"
+          type="text"
+          id="name"
+          name="name"
+          placeholder="Ej: María González"
+          value={formData.name}
+          onChange={handleInputChange}
+          required
+          error={errors.name ? "El nombre es requerido" : undefined}
+        />
 
-        <div className={`${styles.formGroup} ${errors.phone ? styles.error : ''}`}>
-          <label htmlFor="phone" className={styles.formLabel}>
-            Tu teléfono
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            className={styles.formInput}
-            placeholder="Ej: 3584129488"
-            aria-describedby="phone-helper"
-            value={formData.phone}
-            onChange={handleInputChange}
-            required
-          />
-          <p id="phone-helper" className={styles.phoneInstruction}>
-            Escribe el número sin 0 y sin 15
-          </p>
-        </div>
+        <Input
+          label="Tu teléfono"
+          type="tel"
+          id="phone"
+          name="phone"
+          placeholder="Ej: 3584129488"
+          value={formData.phone}
+          onChange={handleInputChange}
+          required
+          error={errors.phone ? "El teléfono es requerido" : undefined}
+          hint="Escribe el número sin 0 y sin 15"
+        />
 
         <Button type="submit" variant="primary" size="lg" fullWidth className={styles.submitButton}>
           Crear cuenta

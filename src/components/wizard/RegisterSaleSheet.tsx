@@ -17,6 +17,7 @@ import { X } from 'lucide-react';
 import type { SaleEvent } from './RegisterSaleWizard';
 import type { SaleDetailsErrors } from '@/utils/registerSaleSchema';
 import QuantityStepper from './QuantityStepper';
+import Input from '@/components/Input';
 import styles from './RegisterSaleSheet.module.css';
 
 interface Props {
@@ -247,32 +248,25 @@ const RegisterSaleSheet: React.FC<Props> = ({
                             <div className={styles.section}>
                                 <p className={styles.sectionLabel}>Comprador</p>
                                 <div className={styles.fields}>
-                                    <div className={`${styles.field} ${detailErrors.buyerName ? styles.fieldError : ''}`}>
-                                        <span className={styles.fieldLabel}>Nombre</span>
-                                        <input
-                                            id="sheet-buyer"
-                                            type="text"
-                                            value={buyerName}
-                                            onChange={(e) => onBuyerNameChange(e.target.value)}
-                                            placeholder="Ej: María González"
-                                            className={styles.input}
-                                        />
-                                        {detailErrors.buyerName && <span className={styles.error}>{detailErrors.buyerName}</span>}
-                                    </div>
-
-                                    <div className={`${styles.field} ${detailErrors.phone ? styles.fieldError : ''}`}>
-                                        <span className={styles.fieldLabel}>Teléfono</span>
-                                        <input
-                                            id="sheet-phone"
-                                            type="tel"
-                                            value={phone}
-                                            onChange={(e) => onPhoneChange(e.target.value)}
-                                            placeholder="Ej: 3584129488"
-                                            className={styles.input}
-                                        />
-                                        <span className={styles.hint}>Sin 0 y sin 15</span>
-                                        {detailErrors.phone && <span className={styles.error}>{detailErrors.phone}</span>}
-                                    </div>
+                                    <Input
+                                        id="sheet-buyer"
+                                        label="Nombre"
+                                        type="text"
+                                        value={buyerName}
+                                        onChange={(e) => onBuyerNameChange(e.target.value)}
+                                        placeholder="Ej: María González"
+                                        error={detailErrors.buyerName}
+                                    />
+                                    <Input
+                                        id="sheet-phone"
+                                        label="Teléfono"
+                                        type="tel"
+                                        value={phone}
+                                        onChange={(e) => onPhoneChange(e.target.value)}
+                                        placeholder="Ej: 3584129488"
+                                        hint={!detailErrors.phone ? "Sin 0 y sin 15" : undefined}
+                                        error={detailErrors.phone}
+                                    />
                                 </div>
                             </div>
 
@@ -298,32 +292,25 @@ const RegisterSaleSheet: React.FC<Props> = ({
                             <div className={styles.section}>
                                 <p className={styles.sectionLabel}>Comprador</p>
                                 <div className={styles.fields}>
-                                    <div className={`${styles.field} ${detailErrors.buyerName ? styles.fieldError : ''}`}>
-                                        <span className={styles.fieldLabel}>Nombre</span>
-                                        <input
-                                            id="sheet-buyer-food"
-                                            type="text"
-                                            value={buyerName}
-                                            onChange={(e) => onBuyerNameChange(e.target.value)}
-                                            placeholder="Ej: María González"
-                                            className={styles.input}
-                                        />
-                                        {detailErrors.buyerName && <span className={styles.error}>{detailErrors.buyerName}</span>}
-                                    </div>
-
-                                    <div className={`${styles.field} ${detailErrors.phone ? styles.fieldError : ''}`}>
-                                        <span className={styles.fieldLabel}>Teléfono</span>
-                                        <input
-                                            id="sheet-phone-food"
-                                            type="tel"
-                                            value={phone}
-                                            onChange={(e) => onPhoneChange(e.target.value)}
-                                            placeholder="Ej: 3584129488"
-                                            className={styles.input}
-                                        />
-                                        <span className={styles.hint}>Sin 0 y sin 15</span>
-                                        {detailErrors.phone && <span className={styles.error}>{detailErrors.phone}</span>}
-                                    </div>
+                                    <Input
+                                        id="sheet-buyer-food"
+                                        label="Nombre"
+                                        type="text"
+                                        value={buyerName}
+                                        onChange={(e) => onBuyerNameChange(e.target.value)}
+                                        placeholder="Ej: María González"
+                                        error={detailErrors.buyerName}
+                                    />
+                                    <Input
+                                        id="sheet-phone-food"
+                                        label="Teléfono"
+                                        type="tel"
+                                        value={phone}
+                                        onChange={(e) => onPhoneChange(e.target.value)}
+                                        placeholder="Ej: 3584129488"
+                                        hint={!detailErrors.phone ? "Sin 0 y sin 15" : undefined}
+                                        error={detailErrors.phone}
+                                    />
                                 </div>
                             </div>
 

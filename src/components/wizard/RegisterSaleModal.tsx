@@ -17,6 +17,7 @@ import { X } from 'lucide-react';
 import type { SaleEvent } from './RegisterSaleWizard';
 import type { SaleDetailsErrors } from '@/utils/registerSaleSchema';
 import QuantityStepper from './QuantityStepper';
+import Input from '@/components/Input';
 import styles from './RegisterSaleModal.module.css';
 
 interface Props {
@@ -258,32 +259,25 @@ const RegisterSaleModal: React.FC<Props> = ({
                                 </div>
 
                                 <div className={styles.fields}>
-                                        <div className={`${styles.field} ${detailErrors.buyerName ? styles.fieldError : ''}`}>
-                                            <span className={styles.fieldLabel}>Nombre</span>
-                                            <input
-                                                id="modal-buyer"
-                                                type="text"
-                                                value={buyerName}
-                                                onChange={(e) => onBuyerNameChange(e.target.value)}
-                                                placeholder="Ej: María González"
-                                                className={styles.input}
-                                            />
-                                            {detailErrors.buyerName && <p className={styles.error}>{detailErrors.buyerName}</p>}
-                                        </div>
-
-                                        <div className={`${styles.field} ${detailErrors.phone ? styles.fieldError : ''}`}>
-                                            <span className={styles.fieldLabel}>Teléfono</span>
-                                            <input
-                                                id="modal-phone"
-                                                type="tel"
-                                                value={phone}
-                                                onChange={(e) => onPhoneChange(e.target.value)}
-                                                placeholder="Ej: 3584129488"
-                                                className={styles.input}
-                                            />
-                                            <p className={styles.hint}>Sin 0 y sin 15</p>
-                                            {detailErrors.phone && <p className={styles.error}>{detailErrors.phone}</p>}
-                                        </div>
+                                        <Input
+                                            id="modal-buyer"
+                                            label="Nombre"
+                                            type="text"
+                                            value={buyerName}
+                                            onChange={(e) => onBuyerNameChange(e.target.value)}
+                                            placeholder="Ej: María González"
+                                            error={detailErrors.buyerName}
+                                        />
+                                        <Input
+                                            id="modal-phone"
+                                            label="Teléfono"
+                                            type="tel"
+                                            value={phone}
+                                            onChange={(e) => onPhoneChange(e.target.value)}
+                                            placeholder="Ej: 3584129488"
+                                            hint={!detailErrors.phone ? "Sin 0 y sin 15" : undefined}
+                                            error={detailErrors.phone}
+                                        />
                                     </div>
 
                                 <div className={styles.actions}>
@@ -311,32 +305,25 @@ const RegisterSaleModal: React.FC<Props> = ({
                         <div className={styles.content}>
                             <form onSubmit={onSubmit} className={styles.form} noValidate>
                                 <div className={styles.fields}>
-                                        <div className={`${styles.field} ${detailErrors.buyerName ? styles.fieldError : ''}`}>
-                                            <span className={styles.fieldLabel}>Nombre</span>
-                                            <input
-                                                id="modal-buyer-food"
-                                                type="text"
-                                                value={buyerName}
-                                                onChange={(e) => onBuyerNameChange(e.target.value)}
-                                                placeholder="Ej: María González"
-                                                className={styles.input}
-                                            />
-                                            {detailErrors.buyerName && <p className={styles.error}>{detailErrors.buyerName}</p>}
-                                        </div>
-
-                                        <div className={`${styles.field} ${detailErrors.phone ? styles.fieldError : ''}`}>
-                                            <span className={styles.fieldLabel}>Teléfono</span>
-                                            <input
-                                                id="modal-phone-food"
-                                                type="tel"
-                                                value={phone}
-                                                onChange={(e) => onPhoneChange(e.target.value)}
-                                                placeholder="Ej: 3584129488"
-                                                className={styles.input}
-                                            />
-                                            <p className={styles.hint}>Sin 0 y sin 15</p>
-                                            {detailErrors.phone && <p className={styles.error}>{detailErrors.phone}</p>}
-                                        </div>
+                                        <Input
+                                            id="modal-buyer-food"
+                                            label="Nombre"
+                                            type="text"
+                                            value={buyerName}
+                                            onChange={(e) => onBuyerNameChange(e.target.value)}
+                                            placeholder="Ej: María González"
+                                            error={detailErrors.buyerName}
+                                        />
+                                        <Input
+                                            id="modal-phone-food"
+                                            label="Teléfono"
+                                            type="tel"
+                                            value={phone}
+                                            onChange={(e) => onPhoneChange(e.target.value)}
+                                            placeholder="Ej: 3584129488"
+                                            hint={!detailErrors.phone ? "Sin 0 y sin 15" : undefined}
+                                            error={detailErrors.phone}
+                                        />
                                     </div>
 
                                 <div className={styles.actions}>

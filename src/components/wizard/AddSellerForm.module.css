@@ -54,6 +54,12 @@
   gap: 20px;
 }
 
+.dataRow {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: 1fr;
+}
+
 /* Section label */
 .sectionLabel {
   font-size: 11px;
@@ -107,19 +113,19 @@
   display: flex;
   align-items: center;
   background: var(--color-bg-input);
-  border: 1px solid var(--color-border-card);
-  border-radius: 8px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 12px);
   overflow: hidden;
   flex-shrink: 0;
 }
 
 .stepperBtn {
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   background: transparent;
   border: none;
   color: var(--color-text-secondary);
-  font-size: 18px;
+  font-size: 20px;
   cursor: pointer;
   transition: background 0.15s ease, color 0.15s ease;
   display: flex;
@@ -145,14 +151,14 @@
 }
 
 .stepperInput {
-  width: 46px;
-  height: 34px;
+  width: 50px;
+  height: 44px;
   border: none;
-  border-left: 1px solid var(--color-border-card);
-  border-right: 1px solid var(--color-border-card);
+  border-left: 1px solid var(--color-border);
+  border-right: 1px solid var(--color-border);
   background: transparent;
   text-align: center;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 600;
   color: var(--color-text-primary);
   outline: none;
@@ -167,25 +173,26 @@
 .segmented {
   display: flex;
   background: var(--color-bg-input);
-  border: 1px solid var(--color-border-card);
-  border-radius: 8px;
-  padding: 3px;
-  gap: 2px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg, 12px);
+  padding: 4px;
+  gap: 4px;
   flex-shrink: 0;
 }
 
 .segmentedBtn {
-  padding: 5px 10px;
-  font-size: 12px;
+  padding: 10px 14px;
+  font-size: 14px;
   font-weight: 500;
   color: var(--color-text-tertiary);
   background: transparent;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
   cursor: pointer;
   transition: all 0.15s ease;
   white-space: nowrap;
   font-family: inherit;
+  flex: 1;
 }
 
 .segmentedBtn:hover:not(.segmentedBtnActive) {
@@ -194,9 +201,10 @@
 }
 
 .segmentedBtnActive {
-  background: var(--color-bg-input);
+  background: var(--color-bg-tertiary);
   color: var(--color-text-primary);
   font-weight: 600;
+  box-shadow: none; /* Removed for World-Class flat design */
 }
 
 /* Option control — matches EventDataStep */
@@ -207,106 +215,7 @@
   gap: 14px;
 }
 
-/* Inline input — matches EventDataStep */
-.inlineInput {
-  background: var(--color-bg-input);
-  border: 1px solid var(--color-border);
-  font-size: 14px;
-  font-weight: 500;
-  color: var(--color-text-primary);
-  width: 100%;
-  padding: 10px 12px;
-  border-radius: 8px;
-  transition: border-color 0.15s ease;
-  box-sizing: border-box;
-  font-family: inherit;
-}
 
-.inlineInput:focus {
-  outline: none;
-  border-color: var(--color-focus-border);
-}
-
-.inlineInput::placeholder {
-  color: var(--color-text-tertiary);
-  font-weight: 400;
-}
-
-.inlineInputError {
-  border-color: var(--color-error) !important;
-}
-
-.inlineError {
-  font-size: 11px;
-  color: var(--color-error);
-}
-
-/* Range row — two fields side by side inside optionControl */
-.rangeRow {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 8px;
-}
-
-.rangeField {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-/* Fields */
-.dataRow {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 16px;
-}
-
-.field {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.fieldLabel {
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--color-text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.input {
-  width: 100%;
-  padding: 14px 16px;
-  border: 1px solid var(--color-border);
-  border-radius: 8px;
-  font-size: 15px;
-  background: var(--color-bg-input);
-  color: var(--color-text-primary);
-  transition: border-color 0.2s ease;
-  box-sizing: border-box;
-  font-family: inherit;
-}
-
-.input:focus {
-  outline: none;
-  border-color: var(--color-focus-border);
-}
-
-.input::placeholder { color: var(--color-text-tertiary); }
-
-.inputError { border-color: var(--color-error); }
-.inputError:focus { border-color: var(--color-error); }
-
-.errorText {
-  font-size: 12px;
-  color: var(--color-error);
-}
-
-.hint {
-  font-size: 12px;
-  color: var(--color-text-tertiary);
-}
 
 /* Submit area — right-aligned, same as CreateEventForm */
 .submitArea {

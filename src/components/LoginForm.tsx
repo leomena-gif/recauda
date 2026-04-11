@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import styles from './LoginForm.module.css';
 import Button from './Button';
+import Input from '@/components/Input';
 
 interface LoginData {
   phone: string;
@@ -69,25 +70,18 @@ const LoginForm: React.FC = () => {
       </p>
 
       <form className={styles.loginForm} onSubmit={handleSubmit}>
-        <div className={`${styles.formGroup} ${errors.phone ? styles.error : ''}`}>
-          <label htmlFor="phone" className={styles.formLabel}>
-            Tu teléfono
-          </label>
-          <input
-            type="tel"
-            id="phone"
-            name="phone"
-            className={styles.formInput}
-            placeholder="Ej: 3584129488"
-            aria-describedby="phone-helper"
-            value={formData.phone}
-            onChange={handleInputChange}
-            required
-          />
-          <p id="phone-helper" className={styles.phoneInstruction}>
-            Escribe el número sin 0 y sin 15
-          </p>
-        </div>
+        <Input
+          label="Tu teléfono"
+          type="tel"
+          id="phone"
+          name="phone"
+          placeholder="Ej: 3584129488"
+          value={formData.phone}
+          onChange={handleInputChange}
+          required
+          error={errors.phone ? "El teléfono es requerido" : undefined}
+          hint="Escribe el número sin 0 y sin 15"
+        />
 
         <Button type="submit" variant="primary" size="lg" fullWidth className={styles.submitButton}>
           Ingresar
