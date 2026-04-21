@@ -12,7 +12,7 @@ import MobileListRow from '@/components/MobileListRow';
 import MobileFilterSheet from '@/components/MobileFilterSheet';
 import BottomSheet from '@/components/BottomSheet';
 import MobileStickyActionBar from '@/components/MobileStickyActionBar';
-import EmptyState from '@/components/EmptyState';
+import { LayoutGrid, Phone } from 'lucide-react';
 import listStyles from '@/styles/list.module.css';
 import styles from './SellersList.module.css';
 
@@ -536,14 +536,18 @@ export default function SellersList() {
                 <td>
                   <div className={listStyles.eventInfo}>
                     {seller.assignedEvents.length > 0 ? (
-                      <div className={listStyles.eventName}>
-                        {(() => {
-                          const firstEvent = events.find(e => e.id === seller.assignedEvents[0]);
-                          return firstEvent ? firstEvent.name : 'Sin evento';
-                        })()}
+                      <div className={`${listStyles.eventChip} ${listStyles.eventChipActive}`}>
+                        <span>
+                          {(() => {
+                            const firstEvent = events.find(e => e.id === seller.assignedEvents[0]);
+                            return firstEvent ? firstEvent.name : 'Sin evento';
+                          })()}
+                        </span>
                       </div>
                     ) : (
-                      <div className={listStyles.noEvent}>Sin evento asignado</div>
+                      <div className={`${listStyles.eventChip} ${listStyles.eventChipEmpty}`}>
+                        <span>Sin evento asignado</span>
+                      </div>
                     )}
                   </div>
                 </td>

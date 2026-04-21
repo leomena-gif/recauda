@@ -1,153 +1,15 @@
-@import 'react-datepicker/dist/react-datepicker.css';
-
-/* CSS Variables - Dark Mode Mobile First */
+/* CSS Variables - Light Mode First (Default) */
 :root {
-  /* Colors - Brand / Primary */
+  /* Colors - Brand / Primary (Shared) */
   --color-brand: #064E3B;
   --color-brand-hover: #064E3B;
   --color-brand-accent: #10B981; /* Vibrant Emerald */
 
-  /* Eradicate the legacy blue primary, alias primary to brand for consistency */
   --color-primary: var(--color-brand-accent);
   --color-primary-hover: #059669;
   --color-primary-light: rgba(16, 185, 129, 0.1);
 
-  /* Colors - UI (Dark Mode - Deep Slate base) */
-  --color-bg-topbar: rgba(9, 9, 11, 0.85); /* Glass base */
-  --color-bg-input: #18181B; /* Raised surface */
-  --color-bg-modal: #121215; /* Main surface */
-  --color-menu-bg: #121215;
-  --color-menu-hover: #1C1C1F;
-  --color-menu-active: #27272A;
-
-  /* Colors - Dark Mode Neutral */
-  --color-white: #FFFFFF;
-  --color-black: #000000;
-  
-  /* Absolute Dark but allowing for depth and perspective */
-  --color-bg-primary: #09090B;   /* Background base */
-  --color-bg-secondary: #121215; /* Cards and major containers */
-  --color-bg-tertiary: #18181B;  /* Buttons and interactive elements */
-  
-  --color-text-primary: #FAFAFA;   /* Maximum contrast Zinc */
-  --color-text-secondary: #A1A1AA; /* Muted contrast Zinc */
-  --color-text-tertiary: #71717A;  /* Disabled/Low-key contrast Zinc */
-  --color-border: rgba(255, 255, 255, 0.08);       /* Defined but subtle border */
-  --color-border-light: rgba(255, 255, 255, 0.04); /* Ultra-subtle border */
-
-  /* Semantic - Vibrant but slightly desaturated for dark mode avoidance of eye fatigue */
-  --color-success: #10B981;
-  --color-error: #EF4444;
-  --color-warning: #F59E0B;
-  --color-info: #3B82F6;
-
-  /* Legacy Gray Scale mapping to modern slates */
-  --color-gray-50: #0A0A0A;
-  --color-gray-100: #111111;
-  --color-gray-200: #1C1C1E;
-  --color-gray-300: #2C2C2E;
-  --color-gray-400: #3A3A3C;
-  --color-gray-500: #636366;
-  --color-gray-600: #8E8E93;
-  --color-gray-700: #AEAEB2;
-  --color-gray-800: #C7C7CC;
-  --color-gray-900: #E5E5EA;
-
-  /* Spacing */
-  --space-xs: 8px;
-  --space-sm: 12px;
-  --space-md: 16px;
-  --space-lg: 20px;
-  --space-xl: 24px;
-  --space-2xl: 32px;
-  --space-3xl: 48px;
-
-  /* Typography */
-  --font-size-xs: 12px;
-  --font-size-sm: 14px;
-  --font-size-base: 16px;
-  --font-size-lg: 18px;
-  --font-size-xl: 20px;
-  --font-size-2xl: 24px;
-  --font-size-3xl: 30px;
-
-  --font-weight-normal: 400;
-  --font-weight-medium: 500;
-  --font-weight-semibold: 600;
-  --font-weight-bold: 700;
-
-  /* Border Radius */
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-full: 9999px;
-
-  /* Shadows - Dark Mode Highlights */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.8);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.8), 0 2px 4px -2px rgba(0, 0, 0, 0.8);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.8), 0 4px 6px -4px rgba(0, 0, 0, 0.8);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.8), 0 8px 10px -6px rgba(0, 0, 0, 0.8);
-
-  /* Shadows - Cards (Inner light for depth on dark) */
-  --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 2px 12px rgba(0, 0, 0, 0.5);
-  --shadow-card-hover: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 24px rgba(0, 0, 0, 0.8);
-  --shadow-card-active: inset 0 1px 0 rgba(255, 255, 255, 0.02), 0 2px 8px rgba(0, 0, 0, 0.4);
-  --shadow-sheet: 0 -8px 32px rgba(0, 0, 0, 0.6);
-
-  /* Borders - Cards */
-  --color-border-card: rgba(255, 255, 255, 0.05);
-  --color-border-card-hover: rgba(255, 255, 255, 0.1);
-  --color-border-card-inner: rgba(255, 255, 255, 0.04);
-  --color-border-divider: rgba(255, 255, 255, 0.08);
-
-  /* Tab / nav active indicator */
-  --color-tab-indicator: var(--color-text-primary);
-
-  /* Status pill semantic tokens - Refined for Deep Slate */
-  --color-pill-success-bg: rgba(16, 185, 129, 0.1);
-  --color-pill-success-border: rgba(16, 185, 129, 0.2);
-  --color-pill-warning-bg: rgba(245, 158, 11, 0.1);
-  --color-pill-warning-border: rgba(245, 158, 11, 0.2);
-  --color-pill-active-bg: rgba(16, 185, 129, 0.12); /* Matching new emerald */
-  --color-pill-active-border: rgba(16, 185, 129, 0.2);
-  --color-pill-neutral-bg: rgba(255, 255, 255, 0.06);
-  --color-pill-neutral-border: rgba(255, 255, 255, 0.1);
-
-  /* Progress gradient */
-  --color-progress-gradient: linear-gradient(90deg, #1e413e 0%, var(--color-brand-accent) 100%);
-
-  /* Overlays */
-  --color-surface-overlay: rgba(255, 255, 255, 0.05);
-  --color-surface-overlay-hover: rgba(255, 255, 255, 0.08);
-  --color-surface-overlay-active: rgba(255, 255, 255, 0.12);
-  --color-avatar-bg: rgba(255, 255, 255, 0.1);
-  --color-avatar-border: rgba(255, 255, 255, 0.15);
-  --color-track-bg: rgba(255, 255, 255, 0.08);
-  --color-divider-subtle: rgba(255, 255, 255, 0.05);
-  
-  /* Focus Rings modernos alineados a la marca */
-  --color-focus-border: rgba(39, 137, 106, 0.5);
-
-  /* Transitions */
-  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-base: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
-  /* Layout */
-  --header-height: 60px;
-  --mobile-header-height: 60px;
-
-  /* Breakpoints */
-  --breakpoint-sm: 640px;
-  --breakpoint-md: 768px;
-  --breakpoint-lg: 1024px;
-  --breakpoint-xl: 1280px;
-}
-
-/* Light Theme Override */
-[data-theme="light"] {
-  /* Topbar & Modules */
+  /* Colors - Light Mode UI (Base) */
   --color-bg-topbar: #FFFFFF;
   --color-bg-input: #FFFFFF;
   --color-bg-modal: #FFFFFF;
@@ -162,8 +24,14 @@
   
   /* Modern Neutral Texts */
   --color-text-primary: #0F172A;
-  --color-text-secondary: #475569;
-  --color-text-tertiary: #94A3B8;
+  --color-text-secondary: #334155;  /* ↑ was #475569 — 5.9:1 → ~8:1 on white */
+  --color-text-tertiary: #64748B;   /* ↑ was #94A3B8 — 2.5:1 → 4.7:1 on white (WCAG AA) */
+
+  /* Semantic */
+  --color-success: #10B981;
+  --color-error: #EF4444;
+  --color-warning: #F59E0B;
+  --color-info: #3B82F6;
 
   /* Status pills — border adds definition on light backgrounds */
   --color-pill-success-bg: rgba(16, 185, 129, 0.1);
@@ -176,13 +44,14 @@
   --color-pill-neutral-border: #E2E8F0;
 
   /* Borders */
-  --color-border: #E2E8F0;
-  --color-border-light: #F1F5F9;
+  --color-border: #CBD5E1;           /* ↑ was #E2E8F0 — more visible borders */
+  --color-border-light: #E2E8F0;     /* ↑ was #F1F5F9 — more visible subtle borders */
+  --color-border-divider: #CBD5E1;   /* ↑ was #E2E8F0 — clearer dividers */
 
-  --color-white: #0F172A;
+  --color-white: #0F172A; /* Inverted logic for 'white' utility name if used for text */
   --color-black: #FFFFFF;
 
-  /* Deep mapping for Grays */
+  /* Legacy Gray Scale mapping to modern slates */
   --color-gray-50: #FFFFFF;
   --color-gray-100: #F8FAFC;
   --color-gray-200: #F1F5F9;
@@ -194,16 +63,52 @@
   --color-gray-800: #334155;
   --color-gray-900: #0F172A;
 
-  /* Overlay surfaces — light grays */
-  --color-surface-overlay: rgba(15, 23, 42, 0.05);
-  --color-surface-overlay-hover: rgba(15, 23, 42, 0.08);
-  --color-surface-overlay-active: rgba(15, 23, 42, 0.12);
-  --color-avatar-bg: #F1F5F9;
-  --color-avatar-border: #E2E8F0;
-  --color-track-bg: #E2E8F0;
-  --color-divider-subtle: #F1F5F9;
+  /* Spacing (Shared) */
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 16px;
+  --space-lg: 20px;
+  --space-xl: 24px;
+  --space-2xl: 32px;
+  --space-3xl: 48px;
 
-  /* Elevations & Depth - Soft Glass Shadows */
+  /* Typography (Shared) */
+  --font-size-xs: 12px;
+  --font-size-sm: 14px;
+  --font-size-base: 16px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+
+  --font-weight-normal: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Border Radius (Shared) */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-full: 9999px;
+
+  /* Transitions (Shared) */
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-base: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+  /* Layout (Shared) */
+  --header-height: 60px;
+  --mobile-header-height: 60px;
+
+  /* Breakpoints (Shared) */
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+
+  /* Elevations & Depth - Soft Glass Shadows (Light Mode) */
   --shadow-sm: 0 1px 2px 0 rgba(15, 23, 42, 0.04);
   --shadow-md: 0 4px 6px -1px rgba(15, 23, 42, 0.06), 0 2px 4px -2px rgba(15, 23, 42, 0.04);
   --shadow-lg: 0 10px 15px -3px rgba(15, 23, 42, 0.08), 0 4px 6px -4px rgba(15, 23, 42, 0.04);
@@ -214,10 +119,100 @@
   --shadow-card-active: 0 1px 2px 0 rgba(15, 23, 42, 0.02);
   --shadow-sheet: 0 -4px 20px rgba(15, 23, 42, 0.08);
 
-  --color-border-card: #E2E8F0;
-  --color-border-card-hover: #CBD5E1;
-  --color-border-card-inner: #F1F5F9;
-  --color-border-divider: #E2E8F0;
+  --color-border-card: #CBD5E1;       /* ↑ was #E2E8F0 — more visible card borders */
+  --color-border-card-hover: #94A3B8; /* ↑ was #CBD5E1 — stronger hover */
+  --color-border-card-inner: #E2E8F0; /* ↑ was #F1F5F9 — more defined inner */
+
+  /* Overlays */
+  --color-surface-overlay: rgba(15, 23, 42, 0.05);
+  --color-surface-overlay-hover: rgba(15, 23, 42, 0.08);
+  --color-surface-overlay-active: rgba(15, 23, 42, 0.12);
+  --color-avatar-bg: #E2E8F0;        /* ↑ was #F1F5F9 */
+  --color-avatar-border: #CBD5E1;    /* ↑ was #E2E8F0 */
+  --color-track-bg: #D1DCE8;         /* ↑ was #E2E8F0 — more visible progress tracks */
+  --color-divider-subtle: #E2E8F0;   /* ↑ was #F1F5F9 — clearer dividers */
+  --color-tab-indicator: var(--color-text-primary);
+  --color-progress-gradient: linear-gradient(90deg, #1e413e 0%, var(--color-brand-accent) 100%);
+  --color-card-progress-active: var(--color-progress-gradient); /* EventCard - active event */
+  --color-card-progress-muted: #94A3B8;                         /* EventCard - ended/cancelled */
+  --color-focus-border: rgba(30, 65, 62, 0.4);
+}
+
+/* Dark Mode Override */
+[data-theme="dark"] {
+  /* Colors - UI (Dark Mode - Deep Slate base) */
+  --color-bg-topbar: rgba(9, 9, 11, 0.85);
+  --color-bg-input: #18181B;
+  --color-bg-modal: #121215;
+  --color-menu-bg: #121215;
+  --color-menu-hover: #1C1C1F;
+  --color-menu-active: #27272A;
+
+  --color-bg-primary: #09090B;   
+  --color-bg-secondary: #121215; 
+  --color-bg-tertiary: #18181B;  
+  
+  --color-text-primary: #FAFAFA;   
+  --color-text-secondary: #A1A1AA; 
+  --color-text-tertiary: #71717A;  
+
+  --color-white: #FFFFFF;
+  --color-black: #000000;
+
+  /* Legacy Gray Scale mapping to modern slates */
+  --color-gray-50: #0A0A0A;
+  --color-gray-100: #111111;
+  --color-gray-200: #1C1C1E;
+  --color-gray-300: #2C2C2E;
+  --color-gray-400: #3A3A3C;
+  --color-gray-500: #636366;
+  --color-gray-600: #8E8E93;
+  --color-gray-700: #AEAEB2;
+  --color-gray-800: #C7C7CC;
+  --color-gray-900: #E5E5EA;
+
+  /* Borders */
+  --color-border: rgba(255, 255, 255, 0.08);       
+  --color-border-light: rgba(255, 255, 255, 0.04); 
+  --color-border-divider: rgba(255, 255, 255, 0.08);
+
+  /* Shadows - Dark Mode Highlights */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.8);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.8), 0 2px 4px -2px rgba(0, 0, 0, 0.8);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.8), 0 4px 6px -4px rgba(0, 0, 0, 0.8);
+  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.8), 0 8px 10px -6px rgba(0, 0, 0, 0.8);
+
+  --shadow-card: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 2px 12px rgba(0, 0, 0, 0.5);
+  --shadow-card-hover: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 24px rgba(0, 0, 0, 0.8);
+  --shadow-card-active: inset 0 1px 0 rgba(255, 255, 255, 0.02), 0 2px 8px rgba(0, 0, 0, 0.4);
+  --shadow-sheet: 0 -8px 32px rgba(0, 0, 0, 0.6);
+
+  /* Borders - Cards */
+  --color-border-card: rgba(255, 255, 255, 0.05);
+  --color-border-card-hover: rgba(255, 255, 255, 0.1);
+  --color-border-card-inner: rgba(255, 255, 255, 0.04);
+
+  /* Status pills */
+  --color-pill-success-bg: rgba(16, 185, 129, 0.1);
+  --color-pill-success-border: rgba(16, 185, 129, 0.2);
+  --color-pill-warning-bg: rgba(245, 158, 11, 0.1);
+  --color-pill-warning-border: rgba(245, 158, 11, 0.2);
+  --color-pill-active-bg: rgba(16, 185, 129, 0.12);
+  --color-pill-active-border: rgba(16, 185, 129, 0.2);
+  --color-pill-neutral-bg: rgba(255, 255, 255, 0.06);
+  --color-pill-neutral-border: rgba(255, 255, 255, 0.1);
+
+  /* Overlays */
+  --color-surface-overlay: rgba(255, 255, 255, 0.05);
+  --color-surface-overlay-hover: rgba(255, 255, 255, 0.08);
+  --color-surface-overlay-active: rgba(255, 255, 255, 0.12);
+  --color-avatar-bg: rgba(255, 255, 255, 0.1);
+  --color-avatar-border: rgba(255, 255, 255, 0.15);
+  --color-track-bg: rgba(255, 255, 255, 0.08);
+  --color-divider-subtle: rgba(255, 255, 255, 0.05);
+  --color-card-progress-active: var(--color-progress-gradient); /* EventCard - active event */
+  --color-card-progress-muted: #52525B;                         /* EventCard - ended/cancelled (dark) */
+  --color-focus-border: rgba(39, 137, 106, 0.5);
 }
 
 /* Reset and base styles */
@@ -373,78 +368,37 @@ body {
   border: 1px solid var(--color-border) !important;
 }
 
-/* Light mode button overrides */
-[data-theme="light"] .btn-primary {
-  background-color: var(--color-primary);
-  color: #ffffff;
-  box-shadow: none;
-  border: 1px solid transparent; 
+/* Base button refinements for defaults */
+.btn-primary {
+  color: #FFFFFF !important; /* Force white text for better contrast on emerald in both modes */
 }
 
-[data-theme="light"] .btn-primary:hover:not(:disabled) {
-  background-color: var(--color-primary-hover);
-  color: #ffffff;
-  box-shadow: none;
-  transform: translateY(-1px);
-}
-
-[data-theme="light"] .btn-primary:active:not(:disabled) {
-  background-color: var(--color-primary-hover);
-  filter: brightness(0.9);
-  box-shadow: none;
-  transform: translateY(1px);
-}
-
-[data-theme="light"] .btn-secondary {
+/* Dark mode specific button overrides if needed */
+[data-theme="dark"] .btn-secondary {
   background-color: var(--color-surface-overlay);
   color: var(--color-text-primary);
   border-color: var(--color-border);
 }
 
-[data-theme="light"] .btn-secondary:hover:not(:disabled) {
-  background-color: var(--color-surface-overlay-hover);
-}
-
-[data-theme="light"] .btn-secondary:active:not(:disabled) {
-  background-color: var(--color-surface-overlay-active);
-}
-
-[data-theme="light"] .btn-tertiary {
+[data-theme="dark"] .btn-tertiary {
   background-color: transparent;
   color: var(--color-text-secondary);
   border-color: var(--color-border);
 }
 
-[data-theme="light"] .btn-tertiary:hover:not(:disabled) {
-  background-color: var(--color-surface-overlay);
-  border-color: var(--color-text-primary);
-}
-
-[data-theme="light"] .btn-tertiary:active:not(:disabled) {
-  background-color: var(--color-surface-overlay-active);
-}
-
 /* Focus Visible - Accessibility */
 *:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.5);
+  outline: 2px solid var(--color-focus-border);
   outline-offset: 2px;
-}
-
-[data-theme="light"] *:focus-visible {
-  outline-color: rgba(30, 65, 62, 0.6);
 }
 
 /* Selection Color */
 ::selection {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: var(--color-primary-light);
   color: var(--color-text-primary);
 }
 
-[data-theme="light"] ::selection {
-  background-color: rgba(30, 65, 62, 0.15);
-}
-
-/* Light mode: bottom gradient footer */
-[data-theme="light"] .bottomButtonContainer {
-  background: linear-gradient(to top, rgba(248, 250, 252, 0.98) 70%, rgba(248, 250, 252, 0) 100%);
+/* Mode-specific: bottom gradient footer */
+.bottomButtonContainer {
+  background: linear-gradient(to top, var(--color-bg-primary) 70%, transparent 100%);
 }

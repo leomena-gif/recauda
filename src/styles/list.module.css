@@ -739,10 +739,10 @@
 
 .mobileListRow {
   display: flex;
-  align-items: flex-start;
-  gap: var(--space-sm);
-  padding: 10px 0;
-  min-height: 60px;
+  align-items: center;
+  gap: var(--space-md);
+  padding: var(--space-md) 0;
+  min-height: 64px;
   border-bottom: 1px solid var(--color-border-light);
   transition: background-color var(--transition-base);
   touch-action: manipulation;
@@ -814,46 +814,71 @@
   display: flex;
   flex-direction: column;
   gap: 2px;
-  overflow: visible;
 }
 
 .mobileRowTop {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: var(--space-sm);
-  min-height: 0;
-  overflow: visible;
-}
-
-.mobileRowTop .mobileMenuContainer {
-  flex-shrink: 0;
 }
 
 .mobileRowName {
-  flex: 1;
-  min-width: 0;
-  font-size: var(--font-size-base);
+  font-size: 17px;
   font-weight: var(--font-weight-semibold);
   color: var(--color-text-primary);
-  line-height: 1.3;
   margin: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.mobileRowPhone {
-  font-size: var(--font-size-sm);
-  color: var(--color-text-secondary);
-  margin: 0 0 2px 0;
-  font-weight: var(--font-weight-normal);
+.mobileRowMetadata {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
-.mobileRowEventLine {
-  font-size: var(--font-size-sm);
+.metadataItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   color: var(--color-text-secondary);
+}
+
+.metadataIcon {
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.mobileRowPhone {
+  font-size: 13.5px;
   margin: 0;
-  font-weight: var(--font-weight-normal);
+}
+
+.eventChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 0;
+  font-size: 13px;
+  font-weight: var(--font-weight-medium);
+  width: fit-content;
+  max-width: 100%;
+}
+
+.eventChipActive {
+  color: var(--color-text-primary);
+}
+
+.eventChipEmpty {
+  color: var(--color-text-tertiary);
+}
+
+.mobileRowSellerLine {
+  font-size: 12px;
+  color: var(--color-text-tertiary);
+  margin: 4px 0 0 0;
 }
 
 /* ─── Mobile Context Menu ────────────────────────────────────────────────── */
@@ -896,8 +921,8 @@
   margin-top: var(--space-xs);
   background: var(--color-menu-bg);
   border-radius: var(--radius-md);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--color-border-light);
   min-width: 180px;
   z-index: 10000;
   overflow: hidden;

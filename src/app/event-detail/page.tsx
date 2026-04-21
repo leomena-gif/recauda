@@ -377,10 +377,12 @@ function EventDetailContent() {
                   return (
                     <div key={i} className={styles.dishRow}>
                       <span className={styles.dishName}>{dish.name}</span>
-                      <div className={styles.dishTrack}>
-                        <div className={styles.dishFill} style={{ width: `${pct}%` }} />
+                      <div className={styles.dishRowLower}>
+                        <div className={styles.dishTrack}>
+                          <div className={styles.dishFill} style={{ width: `${pct}%` }} />
+                        </div>
+                        <span className={styles.dishStats}>{sold}/{total}</span>
                       </div>
-                      <span className={styles.dishStats}>{sold}/{total}</span>
                     </div>
                   );
                 })}
