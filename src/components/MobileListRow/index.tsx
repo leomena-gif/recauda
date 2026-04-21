@@ -1,4 +1,5 @@
 import React from 'react';
+import { Phone, LayoutGrid } from 'lucide-react';
 import styles from '@/styles/list.module.css';
 
 interface MobileListRowProps {
@@ -7,7 +8,7 @@ interface MobileListRowProps {
   isSelected?: boolean;
   checkboxSlot?: React.ReactNode;
   /** Content rendered inside the <h3> name element */
-  name: React.ReactNode;
+  name: string;
   phone: string;
   eventLine: string;
   sellerLine?: string;
@@ -28,6 +29,8 @@ export default function MobileListRow({
   menuSlot,
   onClick,
 }: MobileListRowProps) {
+  const hasEvent = eventLine && eventLine !== 'Sin evento asignado' && eventLine !== 'Sin evento';
+
   return (
     <article
       role="listitem"
@@ -40,15 +43,28 @@ export default function MobileListRow({
       onClick={onClick}
     >
       {checkboxSlot && <div className={styles.mobileRowCheckbox}>{checkboxSlot}</div>}
+      
       <div className={styles.mobileRowMain}>
         <div className={styles.mobileRowTop}>
           <h3 className={`${styles.mobileRowName} ${isInactive ? styles.mobileRowNameInactive : ''}`}>{name}</h3>
           {menuSlot}
         </div>
-        <p className={styles.mobileRowPhone}>{phone}</p>
-        {sellerLine && <p className={styles.mobileRowEventLine}>{sellerLine}</p>}
-        <p className={styles.mobileRowEventLine}>{eventLine}</p>
+        
+        <div className={styles.mobileRowMetadata}>
+          <div className={styles.metadataItem}>
+            <Phone size={12} className={styles.metadataIcon} />
+            <span className={styles.mobileRowPhone}>{phone}</span>
+          </div>
+          
+          <div className={`${styles.eventChip} ${hasEvent ? styles.eventChipActive : styles.eventChipEmpty}`}>
+            <span>{eventLine}</span>
+          </div>
+        </div>
+        
+        {sellerLine && <p className={styles.mobileRowSellerLine}>{sellerLine}</p>}
       </div>
     </article>
   );
 }
+
+

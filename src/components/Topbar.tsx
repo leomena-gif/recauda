@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react';
 import { useRouter, usePathname, useSearchParams } from 'next/navigation';
-import { Home, Users, Plus, LogOut, ChevronDown, X, Menu } from 'lucide-react';
+import { Home, Users, Plus, LogOut, ChevronDown, X, Menu, Sun, Moon } from 'lucide-react';
 import { ROUTES } from '@/constants';
 import RecaudaLogo from './RecaudaLogo';
 import styles from './Topbar.module.css';
@@ -22,13 +22,7 @@ const mockUser = {
   institution: 'Club Deportivo San Martín',
 };
 
-const getInitials = (name: string): string =>
-  name
-    .split(' ')
-    .filter(Boolean)
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join('');
+
 
 const Topbar: React.FC = () => {
   const router = useRouter();
@@ -36,7 +30,7 @@ const Topbar: React.FC = () => {
   const searchParams = useSearchParams();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
-  const { theme } = useTheme(); // Keeping theme for conditional logic, but removing toggleTheme
+  const { theme, toggleTheme } = useTheme();
 
   const handlePlusAction = () => {
     if (pathname.startsWith(ROUTES.EVENT_DETAIL)) {
@@ -96,12 +90,12 @@ const Topbar: React.FC = () => {
           {/* Right actions */}
           <div className={styles.rightActions}>
             {pathname.startsWith(ROUTES.EVENT_DETAIL) ? (
-              <button className={`btn btn-sm btn-tertiary ${styles.mobileOnly}`} onClick={handlePlusAction}>
-                Registrar venta
+              <button className={`${styles.plusButtonMobile} ${styles.mobileOnly}`} onClick={handlePlusAction} aria-label="Registrar venta">
+                <Plus size={24} />
               </button>
             ) : pathname === ROUTES.SELLERS_LIST ? (
-              <button className={`btn btn-sm btn-tertiary ${styles.mobileOnly}`} onClick={handlePlusAction}>
-                Agregar vendedor
+              <button className={`${styles.plusButtonMobile} ${styles.mobileOnly}`} onClick={handlePlusAction} aria-label="Agregar vendedor">
+                <Plus size={24} />
               </button>
             ) : pathname !== ROUTES.HOME &&
                 pathname !== ROUTES.CREATE_EVENT &&
@@ -110,10 +104,14 @@ const Topbar: React.FC = () => {
               <button className={styles.plusButton} onClick={handlePlusAction} aria-label="Crear evento">
                 <Plus size={26} />
               </button>
-            )}
-
-
-
+            )}            {/* Theme toggle - Desktop Only */}
+            <button
+              className={`${styles.themeToggle} ${styles.desktopOnly}`}
+              onClick={toggleTheme}
+              aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+            >
+              {theme === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+            </button>
             {/* User menu — desktop only */}
             <div className={`${styles.userMenuWrapper} ${styles.desktopOnly}`}>
               <button
@@ -133,7 +131,6 @@ const Topbar: React.FC = () => {
                   <div className={styles.userMenuOverlay} onClick={() => setIsUserMenuOpen(false)} />
                   <div className={styles.userDropdown}>
                     <div className={styles.dropdownUserInfo}>
-                      <div className={styles.dropdownAvatar}>{getInitials(mockUser.name)}</div>
                       <div className={styles.dropdownUserText}>
                         <span className={styles.dropdownUserName}>{mockUser.name}</span>
                         <span className={styles.dropdownUserInstitution}>{mockUser.institution}</span>
@@ -167,23 +164,28 @@ const Topbar: React.FC = () => {
               <X size={20} />
             </button>
           </div>
-
-          {/* User profile */}
-          <div className={styles.fullMenuProfile}>
-            <div className={styles.fullMenuAvatar}>{getInitials(mockUser.name)}</div>
-            <div className={styles.fullMenuProfileInfo}>
-              <span className={styles.fullMenuProfileName}>{mockUser.name}</span>
-              <span className={styles.fullMenuProfileInstitution}>{mockUser.institution}</span>
-            </div>
-          </div>
-
           {/* Nav items */}
           <nav className={styles.fullMenuNav}>
-            {navItems.map((item) => (
+            <div className={styles.fullMenuSectionHeader}>Explorar</div>
+            {navItems.filter(item => item.id !== 'create-event').map((item, index) => (
               <button
                 key={item.id}
                 className={`${styles.fullMenuNavItem} ${pathname === item.path ? styles.fullMenuNavItemActive : ''}`}
                 onClick={() => handleNavigation(item.path)}
+                style={{ transitionDelay: `${0.1 + index * 0.05}s` }}
+              >
+                <span className={styles.fullMenuNavIcon}>{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            ))}
+
+            <div className={styles.fullMenuSectionHeader}>Gestionar</div>
+            {navItems.filter(item => item.id === 'create-event').map((item, index) => (
+              <button
+                key={item.id}
+                className={`${styles.fullMenuNavItem} ${pathname === item.path ? styles.fullMenuNavItemActive : ''}`}
+                onClick={() => handleNavigation(item.path)}
+                style={{ transitionDelay: `${0.2 + index * 0.05}s` }}
               >
                 <span className={styles.fullMenuNavIcon}>{item.icon}</span>
                 <span>{item.label}</span>
@@ -191,9 +193,32 @@ const Topbar: React.FC = () => {
             ))}
           </nav>
 
-          {/* Footer */}
-          <div className={styles.fullMenuFooter}>
+          {/* User profile - Repositioned to bottom */}
+          <div className={styles.fullMenuProfile} style={{ transitionDelay: '0.35s' }}>
+            <div className={styles.fullMenuProfileInfo}>
+              <span className={styles.fullMenuProfileName}>{mockUser.name}</span>
+              <span className={styles.fullMenuProfileInstitution}>{mockUser.institution}</span>
+            </div>
+          </div>
 
+          {/* Footer */}
+          <div className={styles.fullMenuFooter} style={{ transitionDelay: '0.45s' }}>
+            <div className={styles.fullMenuThemeRow}>
+              <span className={styles.fullMenuThemeLabel}>
+                {theme === 'dark' ? 'Modo oscuro' : 'Modo claro'}
+              </span>
+              <button
+                className={styles.fullMenuThemeToggle}
+                onClick={toggleTheme}
+                aria-label={theme === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro'}
+              >
+                <span className={`${styles.fullMenuThemeTrack} ${theme === 'dark' ? styles.fullMenuThemeTrackActive : ''}`}>
+                  <span className={styles.fullMenuThemeThumb}>
+                    {theme === 'dark' ? <Moon size={10} /> : <Sun size={10} />}
+                  </span>
+                </span>
+              </button>
+            </div>
             <button className={styles.fullMenuLogout} onClick={handleLogout}>
               <LogOut size={16} />
               Cerrar sesión

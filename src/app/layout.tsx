@@ -25,8 +25,8 @@ export default function RootLayout({
   return (
     <html lang="es" className={inter.variable}>
       <head>
-        {/* Anti-flash: apply stored theme before React hydrates */}
-        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('recauda-theme');if(t==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}})();` }} />
+        {/* Anti-flash: apply stored dark theme before React hydrates */}
+        <script dangerouslySetInnerHTML={{ __html: `(function(){try{var t=localStorage.getItem('recauda-theme');if(t==='dark')document.documentElement.setAttribute('data-theme','dark');}catch(e){}})();` }} />
       </head>
       <body>
         <ThemeProvider>
